@@ -49,8 +49,18 @@ CREATE DATABASE test;
 
 <img src="reference/create-database.png" width=800 height=308 alt="creating first database" />
 
+- list up all the users(roles) with command \du. 
+
+<img src="reference/postgres-user-login.png" width=675 height=276 alt="listing postgres users" />
+
+- Create/drop a new user with a few authorizations by below psql command.
+
+```sql
+CREATE ROLE username WITH CREATEDB CREATEROLE LOGIN
+```
+
 ### Connection options
-With command psql --help, you can check connection options. 
+- With command psql --help, you can check connection options. 
 
 <img src="reference/connection-options.png" width=652 height=148 alt="psql help command" />
 
