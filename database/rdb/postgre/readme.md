@@ -6,7 +6,15 @@ Took below courses and summarized essentials.
 ## What is PostgreSQL?
 > PostgreSQL is a powerful, open source object-relational database system with over 30 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance.
 
+<p>
 Install the latest PostgreSQL and follow the install manager instruction. pgAdmin 4(GUI for PostgreSQL) and SQL Shell comes to gether. 
+</p>
+
+Check Postgre version with command below.
+
+```shell
+$postgres -V
+```
 
 ## Connecting to DB server
 Once the database is installed and up, basically your computer becomes a database server that anyone can connect. You can connect the database by tools like 
@@ -23,6 +31,28 @@ Or you can simply access it with pgAdmin4.
 ### Adding psql to path
 Add your PostgreSQL bin directory to environment variable so that you can call the database in anywhere. 
 
+## Creating databse with PSQL commands
+Access to psql shell and check created databases with below command. 
+
+```shell
+# list out databases created
+\l
+```
+
+<img src="reference/postgres-database-list.png" width=967 height=229 alt="psql database list" />
+
+Create a test database and check out result. 
+
+```sql
+CREATE DATABASE test;
+```
+
+<img src="reference/create-database.png" width=800 height=308 alt="creating first database" />
+
+### Connection options
+With command psql --help, you can check connection options. 
+
+<img src="reference/connection-options.png" width=652 height=148 alt="psql help command" />
 
 ## Reference
 - [Postgre official](https://www.postgresql.org/)
