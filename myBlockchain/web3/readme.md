@@ -43,7 +43,7 @@ Unit map in the web3 instance shows you how Ethereum can be converted to smaller
 
 ```js
  unitMap: {
-      noether: '0',
+   noether: '0',
       wei: '1', // the smallest unit
       kwei: '1000',
       Kwei: '1000',
@@ -102,8 +102,22 @@ Code example of ABI is as follows. It's from Etherscan MekaApes Game contract.
 [{"inputs":[{"internalType":"address","name":"_logic","type":"address"},{"internalType":"address","name":"admin_","type":"address"},{"internalType":"bytes","name":"_data","type":"bytes"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"previousAdmin","type":"address"},{"indexed":false,"internalType":"address","name":"newAdmin","type":"address"}],"name":"AdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"beacon","type":"address"}],"name":"BeaconUpgraded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"implementation","type":"address"}],"name":"Upgraded","type":"event"},{"stateMutability":"payable","type":"fallback"},{"inputs":[],"name":"admin","outputs":[{"internalType":"address","name":"admin_","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newAdmin","type":"address"}],"name":"changeAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"implementation","outputs":[{"internalType":"address","name":"implementation_","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"}],"name":"upgradeTo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"upgradeToAndCall","outputs":[],"stateMutability":"payable","type":"function"},{"stateMutability":"payable","type":"receive"}]
 ```
 
+## Ethereum transaction
+Anything that uses data in Ethereum triggers a transaction, which costs a gas fee. Once transaction gets triggered, it will broadcast to entire ethereum blockchain.
 
+- all transactions in **development kit**(e.g Ganache), accounts are **unlocked**(no sign, no private key required)
+- In real blockchain, transaction should be **_signed_** before broadcasting. 
 
+```js
+// account 1 : send 5 ethers to account 2
+web3.eth.sendTransaction( { 
+    from : account1, 
+    to : account2, 
+    value : web3.utils.toWei('5', 'ether')
+})
+```
+
+<img src="reference/ganache-transaction.png" width=818 height=209 alt="ganache transactions" /> 
 
 
 ## Reference
