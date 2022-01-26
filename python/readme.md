@@ -1,22 +1,34 @@
-# Learning Python Essetials
+# Learning Python Essentials
+Learn Python. Life is short, so is Python. 
 
-## Table of contents
-- [content here]()
-- [content here]()
-- [content here]()
-- [content here]()
+## Basics
+- namespace, 
+- iterator, 
+- property, 
+- wrap, 
+- staticmethod, classmethod
+- variable argument, keyword argument 
+- decorator, 
 
-## Python
-This is a self-practice repo, mainly focusing on sharing what I have learned while playing around with Python.
+### Magic method
+> Magic methods in Python are the special methods that **start and end with the double underscores**.
+> Magic methods are not meant to be invoked directly by you, but **the invocation happens internally from the class on a certain action**. For example, when you add two numbers using the + operator, internally, the __add__() method will be called.
 
-## What's included - (1)
-You can find the basic and unique characteristics of Python such as : 
-1. namespace, iterator, factorial & recursion, lambda, reduce
-2. inheritance, decorator, descriptor, property, wrap, staticmethod, classmethod, variable argument, keyword argument, and many more. **
+> __new__() method
+Languages such as Java and C# use the new operator to create a new instance of a class. In Python the __new__() magic method is implicitly called before the __init__() method. The __new__() method returns a new object, which is then initialized by __init__().
 
-## What's included - (2)
-Also, there are a few "mini-projects": 
+> Magic methods are most frequently **used to define overloaded behaviours of predefined operators** in Python. For instance, arithmetic operators by default operate upon numeric operands. This means that numeric objects must be used along with operators like +, -, *, /, etc. The + operator is also defined as a concatenation operator in string, list and tuple classes. We can say that the + operator is overloaded.
 
-1. Screenshot automator - Scheduling screeshot at certain timeschedules to automate attendance. 
+### Paradiams
+#### Object oriented 
+- Inheritance, 
+- Descriptor
 
-2. Single-sign-on basic concept demo - Practicing OOP programming in Python, using descriptor, abstract class, decorator. 
+#### Function
+- factorial 
+- recursion
+- lambda
+- reduce
+
+## Reference
+- [Python - Magic or Dunder Methods](https://www.tutorialsteacher.com/python/magic-methods-in-python)
