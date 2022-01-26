@@ -1,36 +1,31 @@
 # My Open Code Box - Backend
-This is a open code box of developerasun, containing the sum of his blood, sweat, and tears. The list is as follows :  
+This is a open code box of Jake Sung, containing the sum of his blood, sweat, and tears. The list is as follows :  
 
 ## Go
-contents will be added
+<details>
+<summary>Outputs</summary>
 
-- go project 1 
-(video here)
-- go project 1 
-(video here)
-- go project 1 
-(video here)
+- video here 
+- video here 
+- video here 
+</details>
 
 ## Python
-contents will be added
+<details>
+<summary>Outputs</summary>
 
-- python project 1 
-(video here)
+1. Screenshot automator(2021.06) - Scheduling auto desktop screeshot at a certain time. 
+- video here 
 
-- python project 1 
-(video here)
-
-- python project 1 
-(video here)
+2. Single-sign-on(2021.07) - Planning a simple single-sign-on application 
+- video here 
+</details>
 
 ## C sharp
-contents will be added
+<details>
+<summary>Outputs</summary>
 
-- python project 1 
-(video here)
-
-- python project 1 
-(video here)
-
-- python project 1 
-(video here)
+- video here 
+- video here 
+- video here 
+</details>
