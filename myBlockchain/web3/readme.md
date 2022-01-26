@@ -103,7 +103,7 @@ Code example of ABI is as follows. It's from Etherscan MekaApes Game contract.
 ```
 
 ## Ethereum transaction
-Anything that uses data in Ethereum triggers a transaction, which costs a gas fee. Once transaction gets triggered, it will broadcast to entire ethereum blockchain.
+Anything that uses **data in Ethereum triggers a transaction, which costs a gas fee**. Once transaction gets triggered, it will broadcast to entire ethereum blockchain.
 
 - all transactions in **development kit**(e.g Ganache), accounts are **unlocked**(no sign, no private key required)
 - In real blockchain, transaction should be **_signed_** before broadcasting. 
@@ -119,6 +119,49 @@ web3.eth.sendTransaction( {
 
 <img src="reference/ganache-transaction.png" width=818 height=209 alt="ganache transactions" /> 
 
+### Preparation
+1. Prepare a fake ether. Use websites like below
+- [Ropsten testnet faucet](https://faucet.egorfine.com/)
+
+2. Create a fake account to test. Set address and private key. Use web3.eth method like below
+```js
+web3.eth.accounts.create()
+```
+
+### Broadcasting
+1. Set transaction details.
+2. Broadcast the transaction.
+
+```js
+// set transaction details
+const txObject = {
+
+    to : account2,
+    // value needs to be in wei, which is the smallest Ethereum unit
+    value : web3.utils.toWei('0.01', 'ether'),  // send 0.01 ETH
+
+    // transaction commission threshold
+    gas : '21000', 
+    gasPrice : web3.utils.toWei('10', 'gwei')
+}
+
+// broadcast transaction
+const signedTransaction = web3.eth.accounts.signTransaction(txObject, PK1)
+signedTransaction.then(signedTx => {
+    const sentTx = web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    sentTx.on("receipt", receipt => {
+        console.log("receipt : ", receipt)
+    })
+    sentTx.on("error", error => {
+        console.log("error : ", error)
+    })
+})
+```
+
+3. check result in terminal and ropsten etherscan. 
+<img src="reference/transaction-result-log.png" width=800 height=300 alt="ropsten transaction" /> <br/>
+
+<img src="reference/ropsten-test-transaction-result.png" width=640 height=900 alt="ropsten etherscan result" /> 
 
 ## Reference
 - [Web3.js - Readme](https://github.com/ChainSafe/web3.js/blob/1.x/README.md)
