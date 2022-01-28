@@ -1,0 +1,16 @@
+{
+  "name": "learn-art-engine",
+  "version": "1.0.0",
+  "description": "Learn HashLips Art Engine",
+  "main": "index.js",
+  "scripts": {
+    "build": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jake Sung",
+  "contributors": ["Daniel Eugene Botha (HashLips)"],
+  "license": "MIT",
+  "dependencies": {
+    "canvas": "^2.8.0"
+  }
+}
