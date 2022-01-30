@@ -121,5 +121,37 @@ console.log(`Updated baseUri for images to ===> ${baseUri}`);
 
 ```
 
+## Metadata
+The metadata created for the image is as follows(as of version 1.0.4)
+
+```json
+  {
+    // dna is hashed
+    "dna": "577a7a41b2d5feb0e5efca3cca8470c31b2e24bf",
+    "name": "#1",
+    "description": "This is the description of your NFT project, remember to replace this",
+    // image will be hosted in IPFS
+    "image": "ipfs://QmNfPMWLPTEbFpBtPFy4wkYEHRVWcz8dzjziTcPbebzF53/1.png",
+    "edition": 1,
+    "date": 1643475333380,
+    "attributes": [
+      {
+        // layer folder and its value here
+        "trait_type": "background",
+        "value": "BlackRect"
+      },
+      {
+        "trait_type": "edge",
+        "value": "Middle"
+      },
+      {
+        "trait_type": "paw",
+        "value": "CircularPaw"
+      }
+    ],
+    "compiler": "HashLips Art Engine"
+  },
+```
+
 ## Reference
 - [HashLips release](https://github.com/HashLips/hashlips_art_engine/releases?page=2)

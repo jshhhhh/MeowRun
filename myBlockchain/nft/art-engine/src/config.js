@@ -1,10 +1,25 @@
+const { MODE } = require("./blendMode.js");
 const description =
   "This is the description of your NFT project, remember to replace this";
-const baseUri = "https://hashlips/nft";
+const baseUri = "ipfs://QmNfPMWLPTEbFpBtPFy4wkYEHRVWcz8dzjziTcPbebzF53";
 
-const layersOrder = [
-  { name: "background" },
-  { name: "paw" },
+const layerConfigurations = [
+  {
+    growEditionSizeTo: 5,
+    layersOrder: [
+      { name: "background", opacity : 0.5 },
+      { name: "edge", blend : MODE.color },
+      { name: "paw" },
+    ],
+  },
+  {
+    growEditionSizeTo: 10,
+    layersOrder: [
+      { name: "background", opacity : 0.5 },
+      { name: "edge" },
+      { name: "fish" },
+    ],
+  },
 ];
 
 const format = {
@@ -17,16 +32,24 @@ const background = {
   brightness: "80%",
 };
 
+const preview = {
+  thumbPerRow: 5,
+  thumbWidth: 50,
+  imageRatio: format.width / format.height,
+  imageName: "preview.png",
+};
+
+const rarityDelimiter = "@";
+
 const uniqueDnaTorrance = 10000;
 
-const editionSize = 10;
-
 module.exports = {
-  layersOrder,
   format,
-  editionSize,
   baseUri,
   description,
   background,
   uniqueDnaTorrance,
+  layerConfigurations,
+  rarityDelimiter,
+  preview,
 };
