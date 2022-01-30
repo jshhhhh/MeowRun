@@ -153,5 +153,47 @@ The metadata created for the image is as follows(as of version 1.0.4)
   },
 ```
 
+## Extra configuration
+In version 1.0.6, there have been a few more configurations added. 
+
+```js
+// shuffle end result file order
+const shuffleLayerConfigurations = true;
+
+// log details
+const debugLogs = false;
+
+// add extra metadata to created json files
+const extraMetadata = {
+  contributor : "Jake"
+};
+```
+
+## Gif export support
+In version 1.0.9, blockchain metadata selection(ethereum and solana) and gif export has been added. 
+
+```js
+// Change blockchain : ethereuem, solana
+const network = NETWORK.eth;
+
+// gif config
+const gif = {
+  export: true,
+  repeat: 0,
+  quality: 100,
+  delay: 500,
+};
+```
+
+## Latest engine update
+Version 1.1.2 is the latest version of HashLips art engine. Updates are as follows : 
+
+1. Metadata rarity update
+2. Node js version fix
+3. Gif as a preview
+4. Metadata from colors
+5. Community improvements
+
+
 ## Reference
 - [HashLips release](https://github.com/HashLips/hashlips_art_engine/releases?page=2)
