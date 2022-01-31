@@ -27,6 +27,11 @@ Naming in Solidity code is as follows :
 
 <img src="../reference/natspec-snippets.png" width=800 height=227 alt="NatSpec snippets" />
 
+### Address
+> The address type comes in two flavours, which are largely identical: 1) address: Holds a 20 byte value (size of an Ethereum address). 2) address payable: Same as address, but with the additional members transfer and send.
+
+> The idea behind this distinction is that address payable is an address you can send Ether to, while a plain address cannot be sent Ether. Implicit conversions from address payable to address are allowed, whereas conversions from address to address payable must be explicit via payable(<address>).
+
 ## Remix
 Remix is a online editor to compile Solidity. You can either go below website, 
 
