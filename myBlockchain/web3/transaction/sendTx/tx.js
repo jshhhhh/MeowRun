@@ -1,8 +1,9 @@
 import Web3 from 'web3'
 import Transaction from '@ethereumjs/tx'
+import { GANACHE } from '../../config/key'
 
 // Up and running Ganache 
-const web3 = new Web3("HTTP://127.0.0.1:8545")
+const web3 = new Web3(GANACHE.SERVER)
 
 // Get some accounts 
 const account1 = '0x9E6C43796215BEC2a95A4fBD07911eed7A254A20'

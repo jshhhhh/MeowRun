@@ -19,7 +19,7 @@ web3.eth.getBalance(account1, (err, bal) => {
     console.log(web3.utils.fromWei(bal, 'ether'))
 })
 
-// build transaction
+// set transaction details
 const txObject = {
 
     to : account2,
@@ -31,6 +31,7 @@ const txObject = {
     gasPrice : web3.utils.toWei('10', 'gwei')
 }
 
+// broadcast transaction
 const signedTransaction = web3.eth.accounts.signTransaction(txObject, PK1)
 signedTransaction.then(signedTx => {
     const sentTx = web3.eth.sendSignedTransaction(signedTx.rawTransaction)
