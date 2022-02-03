@@ -43,6 +43,46 @@ or install extension in VS code.
 
 > This project brings Remix plugins to Visual Studio Code. Remix plugins can perform a variety of tasks such as verifying contracts, linting, generating documentation, running tutorials, compiling, debugging and much more. The Remix Plugin API allows plugins that run in Remix to run in Visual Studio Code too. It allows developers to access and interact with the file system, components, extensions and other Remix plugins without actually having to create a different code base.
 
+## State variable
+Variables in solidity contract lie in blockchain and are called state variable.
+
+```solidity
+pragma solidity ^0.8.0;
+
+contract MyVariables { 
+    uint256 number = 20; // state variable
+    bool paused = true; // state variable
+}
+```
+
+## Inheritance
+Contracts in one solidty file can interact each other by inheritance. For example, 
+
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract MyVariables { 
+    uint256 public myNumber = 20; // state variable, living forever with smart contract
+
+    function myFunc() public view {
+        // empty function
+    }
+}
+
+// Inheritance in Solidity
+contract YourVariables is MyVariables { 
+    uint256 public yourVar = 200; 
+}
+```
+
+Compile the above code and deploy it to Ganache blockchain. Then you can check below result. 
+
+<img src="reference/parent-contract.png" width=330 height=310 alt="parent contract in solidity" />
+
+Child contract can access to the parent contract's function and variables. 
+
+<img src="reference/child-contract.png" width=316 height=418 alt="child contract in solidity" />
 
 ## Reference
 - [Solidity official](https://docs.soliditylang.org/en/v0.8.11/)
