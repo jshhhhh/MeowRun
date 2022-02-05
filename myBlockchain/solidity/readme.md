@@ -73,8 +73,36 @@ SPDX
 
 > Every transaction on Ethereum Virtual Machine costs us some amount of Gas. The lower the Gas consumption the better is your Solidity code. The Gas consumption of Memory is not very significant as compared to the gas consumption of Storage. Therefore, it is always better to use Memory for intermediate calculations and store the final result in Storage.
 
-### Pure function
+### Function
+#### Modifier
+> Modifiers can be used to change the behaviour of functions in a declarative way. For example, you can use a modifier to automatically check a condition prior to executing the function.
+
+> Modifiers are inheritable properties of contracts and may be overridden by derived contracts, but only if they are marked virtual
+
+```solidity
+modifier onlyOwner {
+        require(
+            msg.sender == owner,
+            "Only owner can call this function."
+        );
+        _;
+    }
+```
+
+#### Pure function
 > Functions can be declared pure in which case they promise not to read from or modify the state. In particular, it should be possible to evaluate a pure function at compile-time given only its inputs and msg.data, but without any knowledge of the current blockchain state. This means that reading from immutable variables can be a non-pure operation.
+
+### Contract
+> Contracts in Solidity are similar to classes in object-oriented languages. They contain persistent data in state variables, and functions that can modify these variables. Calling a function on a different contract (instance) will perform an EVM function call and thus switch the context such that state variables in the calling contract are inaccessible. A contract and its functions need to be called for anything to happen. There is no “cron” concept in Ethereum to call a function at a particular event automatically.
+
+> One way to create contracts programmatically on Ethereum is via the JavaScript API web3.js. It has a function called web3.eth.Contract to facilitate contract creation.
+
+#### Constructor
+> When a contract is created, its constructor (a function declared with the constructor keyword) is executed once.
+
+> A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
+
+> After the constructor has executed, the final code of the contract is stored on the blockchain. This code includes all public and external functions and all functions that are reachable from there through function calls. The deployed code does not include the constructor code or internal functions only called from the constructor.
 
 ### Error handling
 > Solidity provides various functions for error handling. Generally when an error occurs, the state is reverted back to its original state. Other checks are to prevent unauthorized code access. Following are some of the important methods used in error handling −
@@ -150,6 +178,27 @@ assert(1 gwei == 1e9);
 assert(1 ether == 1e18);
 ```
 
+### Event
+> Events are convenience interfaces with the EVM logging facilities.
+> Solidity events give an abstraction on top of the EVM’s logging functionality. Applications can subscribe and listen to these events through the RPC interface of an Ethereum client.
+
+> When you call them, they cause the arguments to be stored in the transaction’s log - a special data structure in the blockchain. These logs are associated with the address of the contract, are incorporated into the blockchain, and stay there as long as a block is accessible (forever as of now, but this might change with Serenity). The Log and its event data is not accessible from within contracts (not even from the contract that created them).
+
+```solidity
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.4.21 <0.9.0;
+
+contract SimpleAuction {
+    event HighestBidIncreased(address bidder, uint amount); // Event
+
+    function bid() public payable {
+        // ...
+        emit HighestBidIncreased(msg.sender, msg.value); // Triggering event
+    }
+}
+```
+
+
 ## Blockchain basics
 > Blockchains as a concept are not too hard to understand for programmers. The reason is that most of the complications (mining, hashing, elliptic-curve cryptography, peer-to-peer networks, etc.) are just there to provide a certain set of features and promises for the platform. Once you accept these features as given, you do not have to worry about the underlying technology - or do you have to know how Amazon’s AWS works internally in order to use it?
 
@@ -167,3 +216,4 @@ assert(1 ether == 1e18);
 - [Oracle : Pragmas](https://docs.oracle.com/cd/E19957-01/806-3571/Pragmas.html#:~:text=A%20pragma%20is%20a%20compiler,pragmas%20are%20also%20called%20directives.)
 - [Storage vs Memory - Geeks for geeks](https://www.geeksforgeeks.org/storage-vs-memory-in-solidity/#:~:text=Much%20like%20RAM%2C%20Memory%20in,off%20for%20the%20next%20execution.&text=Function%20arguments%20are%20in%20memory.)
 - [Solidity error handling - tutorialspoint](https://www.tutorialspoint.com/solidity/solidity_error_handling.htm)
+- [Solidity Contract - Solidity official](https://docs.soliditylang.org/en/v0.8.11/contracts.html)
