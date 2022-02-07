@@ -123,7 +123,8 @@ web3.eth.sendTransaction( {
 1. Prepare a fake ether. Use websites like below
 - [Ropsten testnet faucet](https://faucet.egorfine.com/)
 
-2. Create a fake account to test. Set address and private key. Use web3.eth method like below
+2. Create a fake account to test. Set address and private key. Use web3.eth method to create dummy account like below. 
+
 ```js
 web3.eth.accounts.create()
 ```
@@ -133,9 +134,8 @@ web3.eth.accounts.create()
 2. Broadcast the transaction.
 
 ```js
-// set transaction details
+// create a transaction object to set transaction details
 const txObject = {
-
     to : account2,
     // value needs to be in wei, which is the smallest Ethereum unit
     value : web3.utils.toWei('0.01', 'ether'),  // send 0.01 ETH
@@ -145,13 +145,17 @@ const txObject = {
     gasPrice : web3.utils.toWei('10', 'gwei')
 }
 
-// broadcast transaction
+// sign the transaction
 const signedTransaction = web3.eth.accounts.signTransaction(txObject, PK1)
+
+// broadcast the transaction
 signedTransaction.then(signedTx => {
     const sentTx = web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    
     sentTx.on("receipt", receipt => {
         console.log("receipt : ", receipt)
     })
+    
     sentTx.on("error", error => {
         console.log("error : ", error)
     })
@@ -166,4 +170,3 @@ signedTransaction.then(signedTx => {
 ## Reference
 - [Web3.js - Readme](https://github.com/ChainSafe/web3.js/blob/1.x/README.md)
 - [web3.js - Ethereum JavaScript API](https://web3js.readthedocs.io/en/v1.7.0/)
-- [Infura - Ethereum JavaScript API](https://web3js.readthedocs.io/en/v1.7.0/)
