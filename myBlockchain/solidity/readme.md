@@ -74,6 +74,11 @@ SPDX
 > Every transaction on Ethereum Virtual Machine costs us some amount of Gas. The lower the Gas consumption the better is your Solidity code. The Gas consumption of Memory is not very significant as compared to the gas consumption of Storage. Therefore, it is always better to use Memory for intermediate calculations and store the final result in Storage.
 
 ### Function
+#### Overriding
+> Base functions can be overridden by inheriting contracts to change their behavior if they are marked as virtual. The overriding function must then use the override keyword in the function header. The overriding function may only change the visibility of the overridden function from external to public. The mutability may be changed to a more strict one following the order: nonpayable can be overridden by view and pure. view can be overridden by pure. payable is an exception and cannot be changed to any other mutability.
+
+> Starting from Solidity 0.8.8, the override keyword is not required when overriding an interface function, except for the case where the function is defined in multiple bases.
+
 #### Modifier
 > Modifiers can be used to change the behaviour of functions in a declarative way. For example, you can use a modifier to automatically check a condition prior to executing the function.
 
@@ -216,6 +221,67 @@ contract SimpleAuction {
 > One major obstacle to overcome is what (in Bitcoin terms) is called a “double-spend attack”: What happens if two transactions exist in the network that both want to empty an account? Only one of the transactions can be valid, typically the one that is accepted first. The problem is that “first” is not an objective term in a peer-to-peer network.
 
 > The abstract answer to this is that you do not have to care. A globally accepted order of the transactions will be selected for you, solving the conflict. The transactions will be bundled into what is called a “block” and then they will be executed and distributed among all participating nodes. If two transactions contradict each other, the one that ends up being second will be rejected and not become part of the block.
+
+## Ethereum token standard 
+> Ethereum tokens are smart contracts that can represent assets or services. The first token standard was ERC20, used in ICO in 2017-2018. Since then, a lot of other token standards have popped up, like ERC721 for crypto-collectible games, or ERC1155 for DeFi.
+
+### ERC-20
+ERC-20 is a fungible token. 
+
+> One of the most significant Ethereum tokens is known as ERC-20. ERC-20 has emerged as the technical standard; it is used for all smart contracts on the Ethereum blockchain for token implementation and provides a list of rules that all Ethereum-based tokens must follow.
+
+> The ERC-20 commands vital importance; it defines a common list of rules that all Ethereum tokens must adhere to. Some of these rules include how the tokens can be transferred, how transactions are approved, how users can access data about a token, and the total supply of tokens.
+
+> In terms of implementation coding for ERC-20 tokens, the six basic coding functions are:
+
+1. total supply
+1. balance of
+1. allowance
+1. transfer
+1. approve
+1. transfer from
+
+The example of ERC20 tokens are as follows :
+
+1. Tether
+1. Chainlink 
+1. Huobi Token
+1. USD coin 
+
+ERC20 are fungible tokens. Read [ERC20 interface docs](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md) from Ethereum github. 
+
+#### Weakness
+Tokens in smart contract following ERC20 can be lost if transfer function is not presented in the contract. Smart contract interacts with users only by functions in the contract. For example, 
+
+```solidity 
+pragma ^0.8.10;
+
+contract MyContract {
+    function transfer(address _to, uint256 _amount) external {
+        // now tokens can be moved
+    }
+} 
+```
+
+And recipient smart contract cannot react to incoming ERC20 token trasnfers, which led to creating ERC223.
+
+### ERC-721
+ERC-721 is a non-fungible token standard. ERC721 requires address and token id(integer) to identify an unique asset in smart contract while ERC20 only needs address.
+
+|Type|ERC20                   |ERC721                        |
+|:--:|:----------------------:|:----------------------------:|
+|Identify|by address     |identify by address + token id| 
+|Asset|store only one asset    |store multiple assets         |  
+|balanceOf| amount of the asset    |number of assets in contract   |  
+|approve| specify address, amount    |specify address, token id   |  
+
+### ERC1155
+ERC1155 is a multi token standard, including fungible/non-fungible token. Smart contract following ERC-1155 can manage different types of assets. 
+
+## Reference 
+- [Ethereum tokens - Eat the block](https://www.youtube.com/watch?v=ryeFqc64Dog&list=PLbbtODcOYIoGOvl0KH57_nfvEKOYV6qdT&index=1)
+- [What Is ERC-20 and What Does It Mean for Ethereum?](https://www.investopedia.com/news/what-erc20-and-what-does-it-mean-ethereum/)
+
 
 ## Reference
 - [Solidity official](https://docs.soliditylang.org/en/v0.8.11/)
