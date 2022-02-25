@@ -8,8 +8,8 @@
 <details>
 <summary>✅ 구현 목록</summary>
 
-1. content here
-1. content here
+1. 캐릭터 움직임
+1. 맵 디자인
 1. content here
 </details>
 
@@ -55,3 +55,4 @@
 
 ## 레퍼런스 
 - [3D 에셋 번들링 : quaternius](https://www.patreon.com/quaternius)
+- [Unity 에셋 스토어](https://assetstore.unity.com/)
