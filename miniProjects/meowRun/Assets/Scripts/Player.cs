@@ -1,12 +1,14 @@
+using System.Transactions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
     private Animator animator;
-
+    
     private Transform _transform;
     public bool _isJumping;
     //오브젝트의 초기 높이
@@ -26,7 +28,7 @@ public class Player : MonoBehaviour
         UnityEngine.Debug.Log("Game started");
 
         animator = GetComponent<Animator>();
-
+        
         _transform = transform;
         _isJumping = false;
         _posY = transform.position.y;
@@ -42,7 +44,7 @@ public class Player : MonoBehaviour
         //캐릭터 회전값 고정(뒤집어지지 않게)
         transform.eulerAngles = new Vector3(transform.rotation.x, 90.0f, transform.rotation.z);
 
-
+        
         xMove = 0;
         zMove = 0;
 
@@ -52,9 +54,10 @@ public class Player : MonoBehaviour
             _isJumping = true;
             _posY = _transform.position.y;
         }
- 
+
         if (_isJumping)
         {
+            // To do : 점프 사운드 추가
             Jump();
         }
 
@@ -88,5 +91,17 @@ public class Player : MonoBehaviour
             _jumpTime = 0.0f;
             _transform.position = new Vector3(_transform.position.x, _posY, _transform.position.z);
         }
+    }
+
+    // 플레이어 리스폰 로직 : 오브젝트 태그가 'Enemies'일 경우 scene 리로드.
+    void OnCollisionEnter(Collision other)
+    {
+        print("on collision executed");
+        // Destroy Player object when collision happens
+        if (other.gameObject.CompareTag("Enemies"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        
     }
 }
