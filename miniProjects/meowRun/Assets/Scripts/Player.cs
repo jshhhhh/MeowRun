@@ -21,11 +21,12 @@ public class Player : MonoBehaviour
     private float _jumpTime;
 
     private float xMove, zMove;
-    private float speed = 3f;
+    [SerializeField] float speed = 3f; // 유니티 에디터에서 스피드 변수 조정 가능
+    Rigidbody character;
 
     void Start()
     {
-        UnityEngine.Debug.Log("Game started");
+        print("Game started"); // UnityEngine.Debug.Log => print(same but shorter)
 
         animator = GetComponent<Animator>();
         
@@ -35,16 +36,14 @@ public class Player : MonoBehaviour
         _gravity = 9.8f;
         _jumpPower = 5.0f;
         _jumpTime = 0.0f;
-    }
 
-    // 키보드 컨트롤 삽입
+        character = this.GetComponent<Rigidbody>(); // 게임 시작 시 캐릭터 선택
+    }
 
     void Update()
     {
         //캐릭터 회전값 고정(뒤집어지지 않게)
         transform.eulerAngles = new Vector3(transform.rotation.x, 90.0f, transform.rotation.z);
-
-        
         xMove = 0;
         zMove = 0;
 
@@ -57,22 +56,26 @@ public class Player : MonoBehaviour
 
         if (_isJumping)
         {
-            // To do : 점프 사운드 추가
-            Jump();
+            Jump(); // To do : 점프 사운드 추가할 것
         }
 
-        //키보드 A, D 기능(좌, 우 이동)
-        if(Input.GetKey(KeyCode.A))
-        {
-            zMove = -speed *Time.deltaTime;
-        }
-        else if(Input.GetKey(KeyCode.D))
-        {
-            zMove = speed *Time.deltaTime;
-        }
-        this.transform.Translate(new Vector3(0, 0, zMove));
+        // FIX : 키보드 상/하/좌/우 A, S, D, W. 3D 맵상에서 상하좌우로 움직일 수 있어야 한다고 판단, 
+        // 기존 좌/우 움직임 제한 => 상/하/좌/우 확대
+        moveCharacter();
     }
 
+
+    // ================= 플레이어 이동 로직 ================= //
+    // 키보드 세팅
+    void moveCharacter() {
+        string INPUT_HORIZONTAL = "Horizontal";
+        string INPUT_VERTICAL = "Vertical";
+        float horizontalInput = Input.GetAxis(INPUT_HORIZONTAL);
+        float verticalInput = Input.GetAxis(INPUT_VERTICAL);
+        character.velocity = new Vector3(horizontalInput*speed, character.velocity.y, verticalInput*speed);
+    }
+
+    // 점프 기능
     void Jump()
     {
         //y=-a*x+b에서 (a: 중력가속도, b: 초기 점프속도)
@@ -82,7 +85,7 @@ public class Player : MonoBehaviour
         _transform.position = new Vector3(_transform.position.x, _posY + height, _transform.position.z);
         //점프시간을 증가시킨다.
         _jumpTime += Time.deltaTime;
- 
+
         //처음의 높이 보다 더 내려 갔을때 => 점프전 상태로 복귀한다.
         if (height < 0.0f)
         {
@@ -92,16 +95,23 @@ public class Player : MonoBehaviour
             _transform.position = new Vector3(_transform.position.x, _posY, _transform.position.z);
         }
     }
+    // ================= 플레이어 이동 로직 ================= //
 
-    // 플레이어 리스폰 로직 : 오브젝트 태그가 'Enemies'일 경우 scene 리로드.
+
+    // TO DO : 플레이어 이동 로직 <=> 리스폰 로직 서로 다른 스크립트로 분리하기. 
+    // ================= 플레이어 리스폰 로직 ================= //
+    // 장애물 충돌시 리스폰
     void OnCollisionEnter(Collision other)
     {
         print("on collision executed");
-        // Destroy Player object when collision happens
+        // 오브젝트 태그가 'Enemies'일 경우 scene 리로드
         if (other.gameObject.CompareTag("Enemies"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         
     }
+
+    // To do : 인공지능 적군 추가할 것.
+    // ================= 플레이어 리스폰 로직 ================= //
 }
