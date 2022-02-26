@@ -8,9 +8,10 @@
 <details>
 <summary>✅ 구현 목록</summary>
 
-1. 캐릭터 움직임
+1. 플레이어 애니메이션
+1. 플레이어 움직임
 1. 맵 디자인
-1. content here
+1. 타이틀 씬
 </details>
 
 ## 컨벤션
