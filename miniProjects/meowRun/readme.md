@@ -1,8 +1,8 @@
-# MeowRun 게임 프로젝트
-## 프로젝트 개요
-- 종류 : 3D platformer
+# MeowRun
+## 개요
+- 종류 : 3D endless runner 
 - 기간 : 2022.02.15 ~ 2022.04.31
-- 참여 인원 : 2명
+- 인원 : 2명
 
 ## 기능 구현
 <details>
@@ -25,30 +25,11 @@
 1. refactor : 기존 코드 개선
 </details>
 
-<details>
-<summary>✅ 스크립팅</summary>
+## 역할
+- will be added
 
-1. content here
-1. content here
-1. content here
-</details>
-
-<details>
-<summary>✅ 주석</summary>
-
-1. content here
-1. content here
-1. content here
-</details>
-
-## 3D 모델링
-<details>
-<summary>✅ 모델링 목록</summary>
-
-1. content here
-1. content here
-1. content here
-</details>
+## 배포 
+- [link will be added]()
 
 ## 참여자
 - [정석환 KOR](https://github.com/jshhhhh)
@@ -57,3 +38,4 @@
 ## 레퍼런스 
 - [3D 에셋 번들링 : quaternius](https://www.patreon.com/quaternius)
 - [Unity 에셋 스토어](https://assetstore.unity.com/)
+- [Trash Dash : Mr Readcode:Unity 3D](https://youtu.be/vxCSpTwI9PM)
