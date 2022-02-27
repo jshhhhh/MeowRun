@@ -23,13 +23,13 @@ There are many details to create one game project.
 
 - start screen ===(level 1)====>(...)====>(last level)====> end screen
 
-### Unity Hub
+## Unity Hub
 You can add modules for more supports such as Web GL and Linux build in Unity hub. Install Webl GL to publish your game. 
 
 <img src="reference/webgl-module.png" width=273 height=329 alt="unity build setting" />
 
 ## Beginner-friendly scripting tutorials
-C# script in Unity is considered behavior component. For example, you can change object's color with the script. 
+C# script in Unity is considered a behavior component. For example, you can change object's color with the script. 
 
 ```c# 
 public class EaxmpleBehaviour : MonoBehaviour {
@@ -41,6 +41,35 @@ public class EaxmpleBehaviour : MonoBehaviour {
     }
 }
 ```
+
+## C# script
+> For anyone just starting out with Unity, or anyone with previous knowledge of object-oriented programming, C# is the best Unity programming language to begin with. In fact, C# is the only Unity coding language worth learning for the platform, and with good reason.
+
+> Unity uses Mono, which is a cross-platform implementation of Microsoft's .NET framework. C# is the primary language of .NET, and all of Unity's libraries are built using C# code.
+
+> Unity has made it clear that it considers C# to be the only truly canon language for Unity development.
+
+> C++ is the most common Unity development language used for plugin creation. People use plugins for a number of reasons, including speed and access to a codebase that's already written in another language. Building these scripts into dynamic link library (DLL) plugins saves you the trouble of rewriting code, and can even improve performance in some cases.
+
+> Rust is a language with a lot of buzz around it. It was created by Mozilla in 2009, as a way for developers to develop high-performance software quickly. Experienced programmers love it for the incredible amount of control it gives, all while eliminating the pitfalls of languages like C++, which can feel less friendly at times. While it isn't possible to write Rust in Unity directly, you can access functions and methods written in Rust from your Unity code.
+
+## Scripting
+> Scripting is an essential ingredient in all applications you make in Unity. Most applications need scripts to respond to input from the player and to arrange for events in the gameplay to happen when they should. Beyond that, scripts can be used to create graphical effects, control the physical behaviour of objects or even implement a custom AI system for characters in the game.
+
+### Unit testing
+> As your project grows, and the number of scripts
+, classes and methods in your project increases, it can become difficult to ensure that a change in one part of your code doesn’t break things somewhere else.
+
+> Automated testing helps you check that all parts of your code are functioning as expected. It saves time by identifying where and when problems occur as soon as they are introduced during development, rather than relying on manual testing, or even worse - bug reports from your end users.
+
+> The Unity Test Framework package (formerly the “Unity Test Runner”) is a tool that allows you to test your code in both Edit mode and Play mode, and also on target platforms such as Standalone, Android, or iOS.
+
+### Creating and Using Scripts
+> The behavior of GameObjects is controlled by the Components that are attached to them. Although Unity’s built-in Components can be very versatile, you will soon find you need to go beyond what they can provide to implement your own gameplay features. Unity allows you to create your own Components using scripts. These allow you to trigger game events, modify Component properties over time and respond to user input in any way you like.
+
+> Unity supports the C# programming language natively. C# (pronounced C-sharp) is an industry-standard language similar to Java or C++.
+
+> When you double-click a script Asset in Unity, it will be opened in a text editor. By default, Unity will use Visual Studio, but you can select any editor you like from the External Tools panel in Unity’s preferences (go to Unity > Preferences).
 
 
 ## Learning by doing
@@ -74,7 +103,7 @@ public class firstScript : MonoBehaviour
     private void OnEnable() { Debug.Log("OnEnable executed"); }
 ```
 
-> Start funciton gets called **before the first Update function**. used to initialize data. Awake => OnEnable => Start
+> Start function gets called **before the first Update function**. used to initialize data. Awake => OnEnable => Start
 
 ```c#
 private void Start() { Debug.Log("Start function exectued"); }
@@ -116,5 +145,6 @@ Vectors can be combined such as : 1) dot product 2) cross product and Unity supp
 ## Reference
 - [Unity Introduction(KOR)](https://youtube.com/playlist?list=PLC2Tit6NyVida7Jh6gSlw1BicuEUCFV6V)
 - [Unity Beginner Tutorials(ENG)](https://youtube.com/playlist?list=PLPV2KyIb3jR5QFsefuO2RlAgWEz6EvVi6)
-- [Unity Introduction(KOR)](https://youtube.com/playlist?list=PLC2Tit6NyVida7Jh6gSlw1BicuEUCFV6V)
+- [Unity official docs](https://docs.unity3d.com/Manual/ScriptingSection.html)
 - [Beginner-friendly scripting tutorials](https://www.youtube.com/watch?v=Z0Z7xc18CcA&list=PLX2vGYjWbI0S9-X2Q021GUtolTqbUBB9B&index=1&t=14s)
+- [The 5 Unity Game Development Languages: Which Should You Learn?](https://www.makeuseof.com/tag/unity-game-development-languages/)
