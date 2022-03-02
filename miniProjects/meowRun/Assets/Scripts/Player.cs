@@ -8,8 +8,9 @@ public class Player : MonoBehaviour
 {
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
     private Animator animator;
-    
+
     private Transform _transform;
+    private Rigidbody playerRigidbody;
     public bool _isJumping;
     //오브젝트의 초기 높이
     private float _posY;
@@ -19,60 +20,69 @@ public class Player : MonoBehaviour
     private float _jumpPower;
     //점프 이후 경과시간
     private float _jumpTime;
-
-    private float xMove, zMove;
     [SerializeField] float speed = 3f; // 유니티 에디터에서 스피드 변수 조정 가능
-    Rigidbody character;
+
+    //키보드 조작 가능 여부
+    private bool canMove = true;
+    //플레이어 좌표값 고정 여부
+    private bool stopPosition = false;
+    //플레이어 좌표를 고정하기 위한 위치값
+    private Vector3 temp;
 
     void Start()
     {
         print("Game started"); // UnityEngine.Debug.Log => print(same but shorter)
 
         animator = GetComponent<Animator>();
-        
+        playerRigidbody = this.GetComponent<Rigidbody>(); // 게임 시작 시 캐릭터 선택
+
         _transform = transform;
         _isJumping = false;
         _posY = transform.position.y;
         _gravity = 9.8f;
         _jumpPower = 5.0f;
         _jumpTime = 0.0f;
-
-        character = this.GetComponent<Rigidbody>(); // 게임 시작 시 캐릭터 선택
     }
 
     void Update()
     {
         //캐릭터 회전값 고정(뒤집어지지 않게)
+        //
         transform.eulerAngles = new Vector3(transform.rotation.x, 90.0f, transform.rotation.z);
-        xMove = 0;
-        zMove = 0;
 
-        if (Input.GetKeyDown(KeyCode.Space) && !_isJumping)
+        if (canMove)
         {
-            animator.SetBool("playerJump", true);
-            _isJumping = true;
-            _posY = _transform.position.y;
+            if (Input.GetKeyDown(KeyCode.Space) && !_isJumping)
+            {
+                animator.SetBool("playerJump", true);
+                _isJumping = true;
+                _posY = _transform.position.y;
+            }
+
+            if (_isJumping)
+            {
+                Jump(); // To do : 점프 사운드 추가할 것
+            }
+
+            // FIX : 키보드 상/하/좌/우 A, S, D, W. 3D 맵상에서 상하좌우로 움직일 수 있어야 한다고 판단, 
+            // 기존 좌/우 움직임 제한 => 상/하/좌/우 확대
+            moveCharacter();
         }
 
-        if (_isJumping)
-        {
-            Jump(); // To do : 점프 사운드 추가할 것
-        }
-
-        // FIX : 키보드 상/하/좌/우 A, S, D, W. 3D 맵상에서 상하좌우로 움직일 수 있어야 한다고 판단, 
-        // 기존 좌/우 움직임 제한 => 상/하/좌/우 확대
-        moveCharacter();
+        if(stopPosition)
+            this.transform.position = temp;
     }
 
 
     // ================= 플레이어 이동 로직 ================= //
     // 키보드 세팅
-    void moveCharacter() {
+    void moveCharacter()
+    {
         string INPUT_HORIZONTAL = "Horizontal";
         string INPUT_VERTICAL = "Vertical";
         float horizontalInput = Input.GetAxis(INPUT_HORIZONTAL);
         float verticalInput = Input.GetAxis(INPUT_VERTICAL);
-        character.velocity = new Vector3(horizontalInput*speed, character.velocity.y, verticalInput*speed);
+        playerRigidbody.velocity = new Vector3(horizontalInput * speed, playerRigidbody.velocity.y, verticalInput * speed);
     }
 
     // 점프 기능
@@ -107,10 +117,31 @@ public class Player : MonoBehaviour
         // 오브젝트 태그가 'Enemies'일 경우 scene 리로드
         if (other.gameObject.CompareTag("Enemies"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //닿았을 때의 위치값 저장
+            temp = transform.position;
+            StartCoroutine(playerDieCoroutine());
         }
-        
     }
+
+    IEnumerator playerDieCoroutine()
+    {
+        stopPosition = true;
+        canMove = false;
+        this.GetComponent<BoxCollider>().enabled = false;
+        playerRigidbody.useGravity = false;
+
+        //플레이어가 쓰러지는 애니메이션 재생
+        animator.SetBool("playerDie", true);
+
+        //1초 대기
+        yield return new WaitForSeconds(1f);
+
+        //플레이어 오브젝트가 재생성되면서 초기값인 false로 바뀌므로 변경 불필요
+        //stopPosition = false;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+
 
     // To do : 인공지능 적군 추가할 것.
     // ================= 플레이어 리스폰 로직 ================= //
