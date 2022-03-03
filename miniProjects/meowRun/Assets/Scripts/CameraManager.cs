@@ -35,7 +35,7 @@ public class CameraManager : MonoBehaviour
         if(target.gameObject != null)
         {
             //대상의 현재 위치값(카메라를 x축으로 조금 더 옮김)
-            targetPosition.Set(target.transform.position.x + 1f, target.transform.position.y + 1f, target.transform.position.z - 4f);
+            targetPosition.Set(target.transform.position.x, target.transform.position.y + 3f, target.transform.position.z - 3f);
 
             //카메라를 움직임(Lerp: A값과 B값까지 t의 속도로 움직임)
             //1초에 moveSpeed만큼 이동

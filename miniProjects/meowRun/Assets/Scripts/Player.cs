@@ -8,25 +8,15 @@ public class Player : MonoBehaviour
 {
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
     private Animator animator;
-    private Transform _transform;
     private Rigidbody playerRigidbody;
-
-    //오브젝트의 초기 높이
-    private float _posY;
-    //중력가속도
-    private float _gravity = 9.8f;
-    //점프력
-    private float _jumpPower = 5.0f;
-    //점프 이후 경과시간
-    private float _jumpTime = 0.0f;
-    [SerializeField] float speed = 3f; // 유니티 에디터에서 스피드 변수 조정 가능
-    //점프하는 동안 Jump 함수를 반복해서 호출하기 위한 변수
-    public bool _isJumping = false;
+    public float speed = 3f; //public으로 유니티 에디터에서 스피드 변수 조정 가능
+    public float jumpPower = 6f; //public으로 유니티 에디터에서 점프 변수 조정 가능
+    public bool canJump = true;
     //키보드 조작 가능 여부
     private bool canMove = true;
     //플레이어 좌표값 고정 여부
     private bool stopPosition = false;
-    //플레이어 좌표를 고정하기 위한 위치값
+    //플레이어 좌표를 고정하기 위한 임시 위치값
     private Vector3 temp;
 
     public float heightFromHit;
@@ -48,53 +38,49 @@ public class Player : MonoBehaviour
 
         animator = GetComponent<Animator>();
         playerRigidbody = this.GetComponent<Rigidbody>(); // 게임 시작 시 캐릭터 선택
-
-        _transform = transform;
-        _posY = transform.position.y;
     }
 
     void Update()
     {
         //Ray를 시각적으로 표시
-        Debug.DrawRay(transform.position, -transform.up * 5f, Color.blue);
+        Debug.DrawRay(transform.position, -transform.up * 0.5f, Color.red);
 
         RaycastHit hit;
-        
-        //Ray와 닿는 오브젝트의 태그
-        if (Physics.Raycast(transform.position, -transform.up, out hit))
+
+        //Ray와 닿는 오브젝트의 태그 추출
+        if (Physics.Raycast(transform.position, -transform.up, out hit, 0.1f))
             tagOfHit = hit.collider.tag;
         else
-            tagOfHit = "";
+            tagOfHit = null;
 
         //태그가 Floor(바닥)이면
         if (tagOfHit == "Floor")
         {
             //플레이어와 물체의 거리인 heightFromHit 계산
             heightFromHit = Vector3.Distance(transform.position, hit.point);
-            if(minHeight >= heightFromHit)
+            if (minHeight >= heightFromHit)
                 minHeight = heightFromHit;
         }
+        else
+        {
+            animator.SetBool("playerJump", true);
+            heightFromHit = 0f;
+        }
 
-        //캐릭터 회전값 고정(뒤집어지지 않게) -> 인스펙터에서 고정했음
+        //캐릭터 회전값 고정(뒤집어지지 않게) -> 인스펙터창에서 고정했으므로 지금은 필요X
         //transform.eulerAngles = new Vector3(transform.rotation.x, 90.0f, transform.rotation.z);
 
         if (canMove)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && !_isJumping)
+            if (Input.GetKeyDown(KeyCode.Space) && canJump)
             {
                 animator.SetBool("playerJump", true);
-                _isJumping = true;
-                _posY = _transform.position.y;
+                canJump = false;
+                Jump();
             }
 
-            if (_isJumping)
-            {
-                Jump(); // To do : 점프 사운드 추가할 것
-            }
-
-            // FIX : 키보드 상/하/좌/우 A, S, D, W. 3D 맵상에서 상하좌우로 움직일 수 있어야 한다고 판단, 
-            // 기존 좌/우 움직임 제한 => 상/하/좌/우 확대
-            moveCharacter();
+            //FIX : 게임 방식 변경에 따라 카메라 각도에 맞게 움직임 변경
+            movePlayer();
         }
 
         if (stopPosition)
@@ -118,7 +104,8 @@ public class Player : MonoBehaviour
 
     // ================= 플레이어 이동 로직 ================= //
     // 키보드 세팅
-    void moveCharacter()
+    //TO DO : 자동으로 앞으로 가되 w, s키로 앞뒤 움직임 말고 앞으로 가는 속도 조절 필요
+    void movePlayer()
     {
         string INPUT_HORIZONTAL = "Horizontal";
         string INPUT_VERTICAL = "Vertical";
@@ -130,25 +117,8 @@ public class Player : MonoBehaviour
     // 점프 기능
     void Jump()
     {
-        //y=-a*x+b에서 (a: 중력가속도, b: 초기 점프속도)
-        //적분하여 y = (-a/2)*x*x + (b*x) 공식을 얻는다.(x: 점프시간, y: 오브젝트의 높이)
-        //변화된 높이 height를 기존 높이 _posY에 더한다.
-        float height = (_jumpTime * _jumpTime * (-_gravity) / 2) + (_jumpTime * _jumpPower);
-        _transform.position = new Vector3(_transform.position.x, _posY + height, _transform.position.z);
-        //점프시간을 증가시킨다.
-        _jumpTime += Time.deltaTime;
-
-        //처음의 높이 보다 더 내려 갔을때 => 점프전 상태로 복귀한다.
-        if (height < 0.0f)
-        {
-            animator.SetBool("playerDie", false);
-            _isJumping = false;
-            _jumpTime = 0.0f;
-            _transform.position = new Vector3(_transform.position.x, _posY, _transform.position.z);
-        }
-
-        //점프 알고리즘
-        //playerRigidbody.AddForce(Vector3.up * 5f, ForceMode.Impulse);
+        playerRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        animator.SetBool("playerJump", true);
     }
     // ================= 플레이어 이동 로직 ================= //
 
@@ -156,18 +126,34 @@ public class Player : MonoBehaviour
     // TO DO : 플레이어 이동 로직 <=> 리스폰 로직 서로 다른 스크립트로 분리하기. 
     // ================= 플레이어 리스폰 로직 ================= //
     // 장애물 충돌시 리스폰
-    void OnCollisionEnter(Collision other)
+    //FIX : 충돌이 유지된다면 매 프레임마다 호출되는 OnCollisionStay 변경
+    void OnCollisionStay(Collision collision)
     {
+        //플레이어가 바닥을 딛고 서있을 경우(옆으로의 충돌 배제)
+        if (collision.gameObject.CompareTag("Floor") && tagOfHit == "Floor")
+        {
+            animator.SetBool("playerJump", false);
+            canJump = true;
+        }
+        //바닥과 닿았지만 착지하지 않았을 때
+        else if(collision.gameObject.CompareTag("Floor") && tagOfHit == null)
+        {
+            animator.SetBool("playerJump", true);
+            canJump = false;
+        }
+
         //print("on collision executed");
-        if (other.gameObject.CompareTag("Enemies"))
+        if (collision.gameObject.CompareTag("Enemies"))
         {
             //충돌했을 때의 위치값 저장
             temp = transform.position;
             StartCoroutine(playerDieCoroutine());
         }
+
         // 오브젝트 태그가 'Enemies'일 경우 scene 리로드
     }
 
+    //TO DO : 게임오버의 조건 설정, playerDieCoroutine과 게임오버 기능(씬 로드 포함)을 GameManager 스크립트로 분리
     IEnumerator playerDieCoroutine()
     {
         stopPosition = true;
