@@ -9,6 +9,11 @@ public class Player : MonoBehaviour
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
     private Animator animator;
     private Rigidbody playerRigidbody;
+    private AudioManager AM;
+    private SoundManager SM;
+    public AudioClip jumpSound;
+    public AudioClip dieSound;
+    public AudioClip respawnSound;
     public float speed = 3f; //public으로 유니티 에디터에서 스피드 변수 조정 가능
     public float jumpPower = 6f; //public으로 유니티 에디터에서 점프 변수 조정 가능
     public bool canJump = true;
@@ -18,10 +23,14 @@ public class Player : MonoBehaviour
     private bool stopPosition = false;
     //플레이어 좌표를 고정하기 위한 임시 위치값
     private Vector3 temp;
-
-    public float heightFromHit;
     public string tagOfHit;
-    public float minHeight = 100f;
+
+    //바닥에 
+    public float heightFromHit;
+    public float maxHeight = 0f;
+
+    //태그명 const로 대체(오타 방지)
+    private const string FLOOR = "Floor", ENEMIES = "Enemies";
 
     //상태로써 활용할 방법 생각 중
     public enum playerState
@@ -38,31 +47,33 @@ public class Player : MonoBehaviour
 
         animator = GetComponent<Animator>();
         playerRigidbody = this.GetComponent<Rigidbody>(); // 게임 시작 시 캐릭터 선택
+        AM = FindObjectOfType<AudioManager>();
+        SM = FindObjectOfType<SoundManager>();
     }
 
     void Update()
     {
         //Ray를 시각적으로 표시
-        Debug.DrawRay(transform.position, -transform.up * 0.5f, Color.red);
+        Debug.DrawRay(transform.position, -transform.up * 0.08f, Color.blue);
 
         RaycastHit hit;
 
         //Ray와 닿는 오브젝트의 태그 추출
-        if (Physics.Raycast(transform.position, -transform.up, out hit, 0.1f))
+        if (Physics.Raycast(transform.position, -transform.up, out hit, 0.08f))
             tagOfHit = hit.collider.tag;
         else
             tagOfHit = null;
 
         //태그가 Floor(바닥)이면
-        if (tagOfHit == "Floor")
+        if (tagOfHit == FLOOR)
         {
             //플레이어와 물체의 거리인 heightFromHit 계산
             heightFromHit = Vector3.Distance(transform.position, hit.point);
-            if (minHeight >= heightFromHit)
-                minHeight = heightFromHit;
         }
+        //태그가 Floor(바닥)이 아니라면(체공)
         else
         {
+            canJump = false;
             animator.SetBool("playerJump", true);
             heightFromHit = 0f;
         }
@@ -74,6 +85,8 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space) && canJump)
             {
+                //AM.Play("jumpSound");
+                SM.RandomizeSfx(jumpSound);
                 animator.SetBool("playerJump", true);
                 canJump = false;
                 Jump();
@@ -118,7 +131,7 @@ public class Player : MonoBehaviour
     void Jump()
     {
         playerRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-        animator.SetBool("playerJump", true);
+        //animator.SetBool("playerJump", true);
     }
     // ================= 플레이어 이동 로직 ================= //
 
@@ -130,42 +143,55 @@ public class Player : MonoBehaviour
     void OnCollisionStay(Collision collision)
     {
         //플레이어가 바닥을 딛고 서있을 경우(옆으로의 충돌 배제)
-        if (collision.gameObject.CompareTag("Floor") && tagOfHit == "Floor")
+        if (collision.gameObject.CompareTag(FLOOR) && tagOfHit == FLOOR)
         {
+            //바닥을 딛었을 때의 최대 높이 측정(임시)
+            if (maxHeight <= heightFromHit)
+                maxHeight = heightFromHit;
             animator.SetBool("playerJump", false);
             canJump = true;
         }
         //바닥과 닿았지만 착지하지 않았을 때
-        else if(collision.gameObject.CompareTag("Floor") && tagOfHit == null)
+        // else if (collision.gameObject.CompareTag("Floor") && tagOfHit == null)
+        else
         {
             animator.SetBool("playerJump", true);
             canJump = false;
         }
+    }
 
-        //print("on collision executed");
-        if (collision.gameObject.CompareTag("Enemies"))
+    // 오브젝트 태그가 'Enemies'일 경우 scene 리로드
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag(ENEMIES))
         {
-            //충돌했을 때의 위치값 저장
-            temp = transform.position;
+            print("적과 충돌함");
             StartCoroutine(playerDieCoroutine());
         }
-
-        // 오브젝트 태그가 'Enemies'일 경우 scene 리로드
     }
 
     //TO DO : 게임오버의 조건 설정, playerDieCoroutine과 게임오버 기능(씬 로드 포함)을 GameManager 스크립트로 분리
     IEnumerator playerDieCoroutine()
     {
+        //충돌했을 때의 위치값 저장
+        temp = transform.position;
+        //AM.Play("dieSound");
+        SM.PlaySingle(dieSound);
         stopPosition = true;
         canMove = false;
         this.GetComponent<BoxCollider>().enabled = false;
         playerRigidbody.useGravity = false;
-
         //플레이어가 쓰러지는 애니메이션 재생
         animator.SetBool("playerDie", true);
 
-        //1초 대기
+        //1초 대기(애니메이션이 끝날 때까지)
         yield return new WaitForSeconds(1f);
+
+        //AM.Play("respawnSound");
+        SM.PlaySingle(respawnSound);
+
+        //오디오가 끝날 때까지 대기
+        yield return new WaitUntil(() => !SM.efxSource.isPlaying);
 
         //플레이어 오브젝트가 재생성되면서 초기값인 false로 바뀌므로 변경 불필요
         //stopPosition = false;
