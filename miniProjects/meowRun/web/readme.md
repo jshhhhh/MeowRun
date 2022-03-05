@@ -29,7 +29,12 @@ will be added
 </details>
 
 ## 역할
-- will be added
+<details>
+<summary>구성<summary>
+
+- 정기 : 웹 서버, 웹 클라이언트 (메인)
+- 종현 : 웹 서버, 웹 클라이언트 (서브)
+</details>
 
 ## 배포 
 - [link will be added]()
@@ -37,3 +42,6 @@ will be added
 ## 참여자
 - [김정기 KOR](https://github.com/omago123)
 - [DeveloperAsun](https://github.com/developerasun)
+
+## 레퍼런스 
+- will be added
