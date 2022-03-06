@@ -44,7 +44,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         print("Game started"); // UnityEngine.Debug.Log => print(same but shorter)
-
+        print($"current player location : {this.transform.position}");
         animator = GetComponent<Animator>();
         playerRigidbody = this.GetComponent<Rigidbody>(); // 게임 시작 시 캐릭터 선택
         AM = FindObjectOfType<AudioManager>();
