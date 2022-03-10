@@ -8,6 +8,11 @@ public interface IEnemyBehavior
         Die, // when player jumps over enemy
     }
 
+    public enum playerDistanceState { 
+        TooFar, // can't detect player
+        Within // detect player
+    }
+
     // should implement all the functions from interface
     void Fire();
     void Die(); 
