@@ -4,43 +4,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/*
+Player logic flow
+1. w,s,space키로 좌우 이동 및 점프 기능
+2. 자동으로 일정한 속도로 앞으로 진행
+3. 장애물이나 enemy에 닿으면 체력 감소
+4. 체력이 모두 감소하면 게임 오버
+5. 플레이어가 점프해서 누를 경우 enemy 죽음
+*/
 public class Player : MonoBehaviour
 {
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
     private Animator animator;
     private Rigidbody playerRigidbody;
-    private AudioManager AM;
     private SoundManager SM;
     public AudioClip jumpSound;
     public AudioClip dieSound;
+    public AudioClip damagedSound;
     public AudioClip respawnSound;
     public float speed = 3f; //public으로 유니티 에디터에서 스피드 변수 조정 가능
     public float jumpPower = 6f; //public으로 유니티 에디터에서 점프 변수 조정 가능
-    public bool canJump = true;
-    //플레이어 좌표값 고정 여부
+    private bool canJump = true;
+    //데미지를 입을 수 있는 상태
+    private bool canDamaged = true;
+    private bool playerDied = false;
+    //true가 되는 순간의 좌표를 저장하여 플레이어를 고정시킴
     private bool stopPosition = false;
     //플레이어 좌표를 고정하기 위한 임시 위치값
     private Vector3 temp;
+
     //플레이어의 발에 닿은 오브젝트의 태그
     public string tagOfFooting;
 
-    //플레이어의 속도
-    public float velocity;
-    //상태를 체크하기 위한 사실상 정지 상태의 속도
-    private float stoppedVelocity = 0.0001f;
-    //현재 위치값과 1프레임 뒤의 위치값을 비교하기 위한 변수
-    private Vector3 lastPosition;
+    // //플레이어의 속도
+    // public float velocity;
+    // //상태를 체크하기 위한 사실상 정지 상태의 속도
+    // private float stoppedVelocity = 0.0001f;
+    // //현재 위치값과 1프레임 뒤의 위치값을 비교하기 위한 변수
+    // private Vector3 lastPosition;
 
     //태그명 const로 대체(오타 방지)
     private const string FLOOR = "Floor", ENEMIES = "Enemies";
 
     //플레이어의 상태
+    //상태에 따라 플레이어의 행동 구분
     public enum playerState
     {
         Idle,
         Move,
-        //Die는 게임오버 조건에 따라 수정할 예정
-        //일단은 기존 방식인 코루틴으로
+        Jump,
+        Damaged,
         Die
     }
     public playerState _state = playerState.Idle;
@@ -48,32 +61,37 @@ public class Player : MonoBehaviour
     void Start()
     {
         print("Game started"); // UnityEngine.Debug.Log => print(same but shorter)
-        print($"current player location : {this.transform.position}");
+
         animator = GetComponent<Animator>();
-        playerRigidbody = this.GetComponent<Rigidbody>(); // 게임 시작 시 캐릭터 선택
-        AM = FindObjectOfType<AudioManager>();
+        playerRigidbody = this.GetComponent<Rigidbody>();
         SM = FindObjectOfType<SoundManager>();
 
-        lastPosition = transform.position;
+        StartCoroutine(startMoveCoroutine());
+
+        //lastPosition = transform.position;
     }
 
-    //일정한 주기로 호출되는 함수(물리 계산 관련 함수에 사용됨)
-    void FixedUpdate()
+    //게임 시작 전 딜레이를 주는 코루틴
+    IEnumerator startMoveCoroutine()
     {
-        //속력을 구하는 공식
-        //멈춰 있을 때 수치가 0으로 표시되지 않는 경우가 있음(소수점 5자리(ex: 1.192093e-05) 등으로 표시됨)
-        //stoppedVelocity와 비교하여 움직임을 판단
-        velocity = (((transform.position - lastPosition).magnitude) / Time.deltaTime);
-        lastPosition = transform.position;
+        yield return new WaitForSeconds(2f);
+        _state = playerState.Move;
     }
+
+    // //일정한 주기로 호출되는 함수(물리 계산 관련 함수에 사용됨)
+    // void FixedUpdate()
+    // {
+    //     //속력을 구하는 공식
+    //     //멈춰 있을 때 수치가 0으로 표시되지 않는 경우가 있음(소수점 5자리(ex: 1.192093e-05) 등으로 표시됨)
+    //     //stoppedVelocity와 비교하여 움직임을 판단
+    //     velocity = (((transform.position - lastPosition).magnitude) / Time.deltaTime);
+    //     lastPosition = transform.position;
+    // }
 
     void Update()
     {
         //딛고 있는 오브젝트의 태그 추출
         tagOfFooting = returnTagOfFooting();
-
-        if (stopPosition)
-            this.transform.position = temp;
 
         //상태에 따라 다른 Update문 호출
         switch (_state)
@@ -84,68 +102,108 @@ public class Player : MonoBehaviour
             case playerState.Move:
                 UpdateMove();
                 break;
+            case playerState.Jump:
+                UpdateJump();
+                break;
+            case playerState.Damaged:
+                UpdateDamaged();
+                break;
             case playerState.Die:
-                //UpdateDie();
+                UpdateDie();
                 break;
         }
+
+        //true가 되는 순간의 좌표를 저장하여 플레이어를 고정시킴
+        if (stopPosition)
+            this.transform.position = temp;
     }
 
-    //유휴 상태
+    //서 있는 상태
+    //Idle 애니메이션만 재생됨
     void UpdateIdle()
     {
-        //디폴트 애니메이션 재생(다른 애니메이션 끔)
-        animator.SetBool("playerWalk", false);
-        animator.SetBool("playerJump", false);
-
-        playerMove();
-
-        if (Input.GetKeyDown(KeyCode.Space) && canJump)
-            playerJump();
-
-        //속도가 있으면 Move 상태
-        if (velocity >= stoppedVelocity)
-            _state = playerState.Move;
+        animator.SetInteger("animationState", 0);
     }
 
     //움직이는 상태
+    //움직이거나 점프할 수 있음
     void UpdateMove()
     {
-        //점프와 걷기 애니메이션 컨트롤
-        if(canJump)
-        {
-            animator.SetBool("playerWalk", true);
-            animator.SetBool("playerJump", false);
-        }
-        else
-        {
-            animator.SetBool("playerWalk", false);
-            animator.SetBool("playerJump", true);
-        }
+        animator.SetInteger("animationState", 1);
+
+        canJump = true;
 
         playerMove();
 
-        //바닥을 딛고 있으면(또는 착지하면)
-        if (tagOfFooting == FLOOR)
-        {
-            //점프 가능
-            canJump = true;
-            //속도가 0이면 Idle 상태
-            if (velocity < stoppedVelocity)
-                _state = playerState.Idle;
-        }
-        //바닥을 딛고 있지 않으면 점프 불가능
-        else
-            canJump = false;
+        //상태 전환 조건
+        //바닥을 딛고 있지 않으면 Jump 상태로(낙하 포함)
+        if (tagOfFooting != FLOOR)
+            _state = playerState.Jump;
 
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
-        {
             playerJump();
-        }
     }
 
+    //점프 또는 떨어지는 상태
+    //움직일 수는 있지만 점프할 수 없음
+    void UpdateJump()
+    {
+        animator.SetInteger("animationState", 2);
+
+        canJump = false;
+
+        playerMove();
+
+        //상태 전환 조건
+        //바닥을 딛고 있으면 Moving 상태로
+        if (tagOfFooting == FLOOR)
+            _state = playerState.Move;
+    }
+
+    //데미지를 입고 있는 상태
+    void UpdateDamaged()
+    {
+        animator.SetInteger("animationState", 3);
+
+        if(canDamaged)
+            StartCoroutine(playerDamagedCoroutine());
+
+        canJump = false;
+        canDamaged = false;
+    }
+
+    IEnumerator playerDamagedCoroutine()
+    {
+        //충돌했을 때의 위치값 저장 후 플레이어를 정지시킴
+        temp = transform.position;
+        stopPosition = true;
+        playerRigidbody.useGravity = false;
+
+        SM.PlaySingle(damagedSound);
+
+        //Game manager에서 체력 감소 구현 필요
+
+        yield return new WaitForSeconds(1f);
+        
+        //꺼놓은 중력을 다시 켜고 정지 해제
+        playerRigidbody.useGravity = true;
+        stopPosition = false;
+
+        //상태 전환 조건
+        //바닥을 딛고 있으면 Move, 아니면 Jump
+        if (tagOfFooting == FLOOR)
+            _state = playerState.Move;
+        else if (tagOfFooting != FLOOR)
+            _state = playerState.Jump;
+
+        canDamaged = true;
+    }
+    
+    //죽는 과정의 상태
     void UpdateDie()
     {
-
+        if (!playerDied)
+            StartCoroutine(playerDieCoroutine());
     }
 
     //플레이어의 발에 닿은 오브젝트의 태그 추출
@@ -177,13 +235,13 @@ public class Player : MonoBehaviour
     void playerMove()
     {
         playerRigidbody.velocity =
-            new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
+            //new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
+            new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, speed);
     }
 
     // 점프(점프할 때 한 번만 호출)
     void playerJump()
     {
-        //AM.Play("jumpSound");
         SM.RandomizeSfx(jumpSound);
         playerRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
     }
@@ -193,13 +251,16 @@ public class Player : MonoBehaviour
     // TO DO : 플레이어 이동 로직 <=> 리스폰 로직 서로 다른 스크립트로 분리하기. 
     // ================= 플레이어 리스폰 로직 ================= //
     // 장애물 충돌시 리스폰
-    // 오브젝트 태그가 'Enemies'일 경우 scene 리로드
+    // 오브젝트 태그가 'Enemies'일 경우 Damaged 상태로
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag(ENEMIES))
         {
-            print("적과 충돌함");
-            StartCoroutine(playerDieCoroutine());
+            if(canDamaged)
+            {
+                print("적과 충돌함");
+                _state = playerState.Damaged;
+            }
         }
     }
 
@@ -208,18 +269,16 @@ public class Player : MonoBehaviour
     {
         //충돌했을 때의 위치값 저장
         temp = transform.position;
-        //AM.Play("dieSound");
-        SM.PlaySingle(dieSound);
         stopPosition = true;
         this.GetComponent<BoxCollider>().enabled = false;
         playerRigidbody.useGravity = false;
-        //플레이어가 쓰러지는 애니메이션 재생
-        animator.SetBool("playerDie", true);
 
-        //1초 대기(애니메이션이 끝날 때까지)
+        SM.PlaySingle(dieSound);
+        //플레이어가 쓰러지는 애니메이션 재생
+        animator.SetInteger("animationState", 4);
+
         yield return new WaitForSeconds(1f);
 
-        //AM.Play("respawnSound");
         SM.PlaySingle(respawnSound);
 
         //오디오가 끝날 때까지 대기
