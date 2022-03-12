@@ -234,9 +234,11 @@ public class Player : MonoBehaviour
     //TO DO : 자동으로 앞으로 가되 w, s키로 앞뒤 움직임 말고 앞으로 가는 속도 조절 필요
     void playerMove()
     {
+        // DISCUSS : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
+        // 변경이 좀 필요할 듯 해유. 인공지능 적군도 피하거나 죽이려면 그게 나을 거 같은데 한 번 검토해주세용
         playerRigidbody.velocity =
-            //new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
-            new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, speed);
+            new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
+            // new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, speed);
     }
 
     // 점프(점프할 때 한 번만 호출)
