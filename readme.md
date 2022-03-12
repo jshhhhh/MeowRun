@@ -4,6 +4,13 @@
 - 기간 : 2022.02.15 ~ 2022.04.31
 - 인원 : 3명
 
+## 아키텍처
+<details>
+<summary>✅ 이미지</summary>
+
+ - will be added
+</details>
+
 ## 컨벤션
 <details>
 <summary>✅ 커밋</summary>
@@ -21,24 +28,24 @@
 <summary>✅ 구현 목록</summary>
 
 ### 유니티
-1. 플레이어 애니메이션
-1. 플레이어 움직임
-1. 맵 디자인
-1. 타이틀 씬
+1. 플레이어 : movement/jump, life/health, animation
+1. 적 : idle, track, fire, die
+1. 맵 디자인 : terrain, platforms
+1. 레벨/씬 설계 : easy, intermediate, difficult
 
 ### 웹
-1. 랜딩 페이지
-1. 반응형 웹디자인
-1. 로그인
+1. 랜딩 페이지 : MeowRun 소개
+1. 반응형 웹디자인 : 내용 추가 예정
+1. 로그인 : 내용 추가 예정
 </details>
 
 ## 역할
 <details>
-<summary>✅ 구성<summary>
+<summary>✅ 구성</summary>
 
 ### 유니티
-1. 석환 : 유니티 클라이언트(메인)
-1. Jake : 유니티 클라이언트(서브)
+1. 석환 : 유니티 클라이언트 => 플레이어 로직, View UI 설계
+1. Jake : 유니티 클라이언트 => 적 로직, 맵 디자인
 
 ### 웹
 1. 정기 : 웹 서버, 웹 클라이언트 (메인)
@@ -46,11 +53,16 @@
 </details>
 
 ## 배포 
+<details>
+<summary>✅ 링크</summary>
+  
 ### 유니티 
 - [link will be added]()
 ### 웹
 - [link will be added]()
+</details>
 
+  
 ## 참여자
 - [정석환 KOR](https://github.com/jshhhhh)
 - [김정기 KOR](https://github.com/omago123)
