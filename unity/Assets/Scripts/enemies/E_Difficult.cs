@@ -3,18 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-// Enemy logic flow 
-// 1. 플레이어가 일정 거리(50f) 바깥이면 패트롤링
-// 2. 일정 거리 안으로 들어오면 추적 시작(updateState => updateBehavior)
-// 3. 난이도 별로 논리 상이하게 적용(easy : 충돌 시 플레이어 죽음, intermediate & difficult : 사격)
-// 4. 플레이어가 일정 거리 밖으로 나가면 추적/사격 중단 후 다시 패트롤링
-// 5. 플레이어가 점프해서 누를 경우 enemy 죽음
-
-// Enemy type : rat
-public class E_rat : MonoBehaviour, IEnemyBehavior
+// Enemy type : Difficult
+public class E_Difficult : MonoBehaviour, IEnemyBehavior
 {
     private Player player; 
     private float distance; // Player ~ enemy 사이 거리
+    private string difficultType;
     
     public IEnemyBehavior.enemyState current; // enemy 상태
     public IEnemyBehavior.playerDistanceState isDetected; // enemy의 player 탐지  
@@ -30,6 +24,7 @@ public class E_rat : MonoBehaviour, IEnemyBehavior
         current = IEnemyBehavior.enemyState.Idle; // awake시 상태는 idle
         player = FindObjectOfType<Player>();
         _agent = this.GetComponent<NavMeshAgent>();
+        difficultType = IEnemyBehavior.enemyType.Easy.ToString();
         _agent.autoBraking = false; // for continuous movement between points
         isDetected = IEnemyBehavior.playerDistanceState.TooFar;
         print($"player is at : {player.transform.position}");
@@ -108,7 +103,7 @@ public class E_rat : MonoBehaviour, IEnemyBehavior
 
     public void Fire() 
     {
-        print("Enemy Rat does not fire");
+        print("Difficult Enemy firing projectiles faster");
     }
 
     public void Die() 
