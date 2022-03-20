@@ -87,6 +87,9 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
         if (distance < detectLimit) {
             isDetected = IEnemyBehavior.playerDistanceState.Within;
         }
+
+        //  플레이어가 탐지 거리 바깥이면 패트롤 시작
+        if (distance > detectLimit) isDetected = IEnemyBehavior.playerDistanceState.TooFar;
     }
     // ============== Enemy state and behavior ============== // 
 
