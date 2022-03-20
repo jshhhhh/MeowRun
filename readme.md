@@ -27,10 +27,7 @@
 
 ## 기능 구현
 <details>
-<summary>✅ 구현 목록</summary>
-
-<details>
-<summary>:scroll:	lists</summary>
+<summary>:scroll:	구현 목록</summary>
 
 <div align="center">
   <table>
@@ -64,13 +61,11 @@
   </table>
 
 </div>
-
-</details>
 </details>
 
 ## 역할
 <details>
-<summary>✅ 구성<summary>
+<summary>✅ 구성</summary>
 
 ### 유니티
 1. 석환 : 유니티 클라이언트(메인)
@@ -88,6 +83,7 @@
 ## 배포 
 - will be added
 
+  
 ## 참여자
 - [정석환 KOR](https://github.com/jshhhhh)
 - [김정기 KOR](https://github.com/omago123)

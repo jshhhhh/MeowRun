@@ -18,4 +18,5 @@ public interface IEnemyBehavior
     void Die(); 
     void Idle(); 
     void Track();
+    void Patrol();
 }
