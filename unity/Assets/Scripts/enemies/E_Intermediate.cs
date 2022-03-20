@@ -16,9 +16,13 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     private NavMeshAgent _agent; // enemy 인공지능 인스턴스
     [SerializeField] Transform[] AgentRoutes; // enemy 인공지능 인스턴스 path
     private int routeIndex = 0;
-    public GameObject projectile; // Fire 메소드 발사체
+    private bool shouldFixedUpdate = false;
+    [SerializeField] ParticleSystem shootingEffect;
+    [Range (0,10)][SerializeField] float forceRange = 4f;
+    public GameObject projectile; // Fire 메소드 발사체 원본
+    public GameObject clone; // cloned projectile
     public GameObject projectileCreator; // Fire 메소드 발사체 creator
-    public GameObject clone;
+
     [Range (0,15)] public float detectLimit = 5f; // enemy 감지 거리 한계, 에디터에서 설정 가능하도록 세팅
     [Range (0,15)] public float fireLimit = 2.5f; // enemy 사격 거리 한계, detectLimit보다 작게 설정할 것.
 
@@ -27,12 +31,14 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     void Awake()
     {
         InitSetup();
+        print($"{player.transform.position.y} is y location");
     }
     void Update()
     {
         updateState();
         updateBehavior();
     }
+
     void InitSetup() 
     {
         // 플레이어 & NavMesh 초기화
@@ -53,7 +59,7 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     // ============== Enemy state and behavior ============== // 
     public void updateState()
     {
-        calculateDistance(); // isDetected 변수 상태 change
+        calculateDistance(); // isDetected, shouldFire 변수 상태 change
         switch (isDetected) {
             case IEnemyBehavior.playerDistanceState.TooFar :
                 current = IEnemyBehavior.enemyState.Idle;
@@ -99,6 +105,9 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
         shouldFire = false;
         _agent.isStopped = false;
 
+        //  플레이어가 탐지 거리 바깥이면 패트롤 시작
+        if (distance > detectLimit) isDetected = IEnemyBehavior.playerDistanceState.TooFar;
+
         // 플레이어가 탐지 거리 이하 좁혀지면 추적 시작
         if (distance < detectLimit) {
             isDetected = IEnemyBehavior.playerDistanceState.Within;
@@ -128,9 +137,12 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     {
         print($"{intermediateType} enemy fires an object");
         _agent.isStopped = true; // 제자리에서 오브젝트 슈팅 시작
-        _agent.transform.LookAt(player.transform); // should look at player after stopped
+        
+        // 플레이어가 점프하지 않는 경우만 시선 고정
+        Vector3 playerPosWithLockedYAxis = new Vector3(player.transform.position.x, _agent.transform.position.y, player.transform.position.z); 
+        _agent.transform.LookAt(playerPosWithLockedYAxis);
 
-        // 슈팅 논리 전개
+        // 슈팅 논리 : Raycast로 플레이어 감지, cast hit시 오브젝트 생성/발사
         RaycastHit hit;
         bool isHit = Physics.Raycast(
             _agent.transform.position, 
@@ -139,28 +151,30 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
             fireLimit);
 
         if (isHit) {
-            // StartCoroutine(name, param)
-            StartCoroutine(enemyShootCoroutine(0.1f));
+            // FIX: change fixed update condition for Rigidbody update
+            StartCoroutine(enemyShootCoroutine(1f));
         }
     }
 
-    // Player die coroutine
     IEnumerator enemyShootCoroutine(float time) { 
         print("ray casted and enemyShootCoroutine started");
 
-        // 데미지 logic
-        // 1. 발사체 오브젝트 생성
+        // 슈팅 논리 전개
         if (Input.GetKeyDown(KeyCode.Space)) {
+            // 1. 발사체 오브젝트 생성
             GameObject _clone = Instantiate(projectile, projectileCreator.transform.position, Quaternion.identity);
             clone = _clone;
-        }
-        
-        yield return new WaitForSeconds(time); 
-        // 2. 발사체 플레이어에게 투척
-        clone.transform.position = Vector3.MoveTowards(clone.transform.position, player.transform.position, Time.deltaTime *4f);
 
-        yield return new WaitForSeconds(time);
-        print("player got hit!!");
+            // 2. 발사체 오브젝트 투척
+            Rigidbody rg = clone.GetComponent<Rigidbody>();
+            shootingEffect.Play(); // Particle system 이펙트 적용
+            rg.AddForce(
+                projectileCreator.transform.forward*forceRange, 
+                ForceMode.VelocityChange // 위치 변화 반영
+            );
+        } 
+        
+        yield return null; // 코루틴 종료
     }
 
     public void Die() 
