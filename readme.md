@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/83855174/159703631-4beab680-5e9c-4e16-af24-7e5b99fca565.jpg" alt="meowrun banner" width="100%"/>
+</div>
+
 # MeowRun
 ## 개요
 - 종류 : 3D endless runner 
@@ -9,7 +13,7 @@
 <summary>:black_nib: Diagram </summary>
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/83855174/159143047-6af4a7d0-42db-402c-9ac3-008575153616.jpg" width="800" height="600" alt="project architecture" />
+  <img src="https://user-images.githubusercontent.com/83855174/159143047-6af4a7d0-42db-402c-9ac3-008575153616.jpg" width="70%" height="50%" alt="project architecture" />
 </div>
 </details>
 
