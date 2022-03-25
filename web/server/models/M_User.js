@@ -23,5 +23,6 @@ const userSchema = new Schema({
 });
 
 const User = mongoose.model('User',userSchema);
+User.collection.createIndex( { email: 1 }, { unique: true } )
 
 export default User
