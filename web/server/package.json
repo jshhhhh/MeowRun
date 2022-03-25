@@ -6,8 +6,8 @@
   "scripts": {
     "start": "nodemon server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords" : ["MeowRun", "Unity 3d game" , "Lending Page"] 
+  "author" : "Jungi Kim"
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
