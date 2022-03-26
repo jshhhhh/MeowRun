@@ -27,7 +27,8 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     [Range (0,15)] [SerializeField] float detectLimit = 5f; // enemy 감지 거리 한계, 에디터에서 설정 가능하도록 세팅
     [Range (0,15)] [SerializeField] float fireLimit = 2.5f; // enemy 사격 거리 한계, detectLimit보다 작게 설정할 것.
 
-
+    [SerializeField] GameObject beeSting;
+    [SerializeField] GameObject stingCreator;
     // ============== Object initialization and update ============== // 
     void Awake()
     {
@@ -52,7 +53,7 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
             current = IEnemyBehavior.enemyState.Idle; 
             isDetected = IEnemyBehavior.playerDistanceState.TooFar;
             difficultType = IEnemyBehavior.enemyType.Difficult.ToString();
-            // _agent.autoBraking = false; // NavMeshAgent 연속적인 움직임 설정
+            this.GetComponent<Rigidbody>().useGravity = false; // flying enemy 중력사용 x
         } 
     }
     // ============== Object initialization and update ============== // 
@@ -155,6 +156,30 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     {
         print("Difficult Enemy firing projectiles faster");
         ShouldLookAtPlayer();
+        StartCoroutine(EnemyFireCoroutine());
+    }
+
+    // FIX : infinite instantiation
+    IEnumerator EnemyFireCoroutine()
+    {
+        bool shouldFireAgain = false;
+        // 1. fire 사정 거리 체크
+        // 2. 사정 거리 이내면 sting 발사
+        yield return new WaitForSeconds(0.1f);
+        // Invoke("spawnSting", 2f);
+        if (shouldFire)
+        {
+            beeSting.transform.position = Vector3.MoveTowards(beeSting.transform.position, player.transform.position, Time.deltaTime*4f);
+            shouldFireAgain = true;
+        }
+
+        if (shouldFireAgain)
+        {
+            GameObject clone = Instantiate(beeSting, stingCreator.transform.position, Quaternion.identity);
+            shouldFireAgain = false;
+        }
+
+        yield return null;
     }
 
     public void Die() 

@@ -12,7 +12,7 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     private string intermediateType;
     private IEnemyBehavior.enemyState current; // enemy 상태
     private IEnemyBehavior.playerDistanceState isDetected; // enemy의 player 탐지  
-    private bool shouldFire = false; // intermediate enemy는 fire 가능
+    private bool shouldFire = false; // intermediate, difficult enemy는 fire 가능
     private NavMeshAgent _agent; // enemy 인공지능 인스턴스
     [SerializeField] Transform[] AgentRoutes; // enemy 인공지능 인스턴스 path
     private int routeIndex = 0;
@@ -31,7 +31,6 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     void Awake()
     {
         InitSetup();
-        print($"{player.transform.position.y} is y location");
     }
     void Update()
     {
@@ -152,12 +151,12 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
 
         if (isHit) {
             // FIX: change fixed update condition for Rigidbody update
-            StartCoroutine(enemyShootCoroutine(1f));
+            StartCoroutine(EnemyFireCoroutine(1f));
         }
     }
 
-    IEnumerator enemyShootCoroutine(float time) { 
-        print("ray casted and enemyShootCoroutine started");
+    IEnumerator EnemyFireCoroutine(float time) { 
+        print("ray casted and EnemyFireCoroutine started");
 
         // 슈팅 논리 전개
         if (Input.GetKeyDown(KeyCode.Space)) {
