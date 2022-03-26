@@ -27,7 +27,7 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     [Range (0,15)] [SerializeField] float detectLimit = 5f; // enemy 감지 거리 한계, 에디터에서 설정 가능하도록 세팅
     [Range (0,15)] [SerializeField] float fireLimit = 2.5f; // enemy 사격 거리 한계, detectLimit보다 작게 설정할 것.
 
-    [SerializeField] GameObject beeSting;
+    [SerializeField] Rigidbody beeSting;
     [SerializeField] GameObject stingCreator;
     // ============== Object initialization and update ============== // 
     void Awake()
@@ -54,6 +54,7 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
             isDetected = IEnemyBehavior.playerDistanceState.TooFar;
             difficultType = IEnemyBehavior.enemyType.Difficult.ToString();
             this.GetComponent<Rigidbody>().useGravity = false; // flying enemy 중력사용 x
+            beeSting.useGravity = false; // 벌침 중력 사용 x
         } 
     }
     // ============== Object initialization and update ============== // 
@@ -159,27 +160,33 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
         StartCoroutine(EnemyFireCoroutine());
     }
 
-    // FIX : infinite instantiation
+
     IEnumerator EnemyFireCoroutine()
     {
-        bool shouldFireAgain = false;
-        // 1. fire 사정 거리 체크
-        // 2. 사정 거리 이내면 sting 발사
+        // 사정 거리 이내면 sting 오브젝트 발사, 발사 궤도 시각화
         yield return new WaitForSeconds(0.1f);
-        // Invoke("spawnSting", 2f);
-        if (shouldFire)
+        if (shouldFire && Input.GetKeyDown(KeyCode.Space))
         {
-            beeSting.transform.position = Vector3.MoveTowards(beeSting.transform.position, player.transform.position, Time.deltaTime*4f);
-            shouldFireAgain = true;
-        }
+            Rigidbody clone = Instantiate(beeSting, stingCreator.transform.position, Quaternion.identity);
+            clone.transform.LookAt(player.transform); // 발사체 오브젝트 방향 로테이션 => 플레이어
+            clone.name = beeSting.name; // 복제된 오브젝트 네이밍 리셋
+            clone.AddForce(stingCreator.transform.forward * 10f, ForceMode.VelocityChange); // 발사체 플레이어 방향으로 슈팅
 
-        if (shouldFireAgain)
-        {
-            GameObject clone = Instantiate(beeSting, stingCreator.transform.position, Quaternion.identity);
-            shouldFireAgain = false;
+            // FIX : 발사 이후 오브젝트 파괴
+            // @jshhhhh : 아래 코루틴 없을 경우 미니맵상에서 오브젝트가 사라지지 않고 
+            // 계속 addForce 방향으로 직진함. But Destroy 메소드 사용에도 불구하고 
+            // 오브젝트 자체는 지워지지 않음.
+            StartCoroutine(DestroyCloneCoroutine(clone));
         }
-
-        yield return null;
+    }
+    
+    IEnumerator DestroyCloneCoroutine(Rigidbody _clone)
+    {
+        // 발사체 0.5초 후 파괴
+        yield return new WaitForSeconds(0.5f);
+        _clone.useGravity = true;
+        Destroy(_clone);
+        print($"{_clone.name} destroyed");
     }
 
     public void Die() 
