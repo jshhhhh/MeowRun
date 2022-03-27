@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Object type enemy는 IEnemyBehavior를 상속하지 않음.
 public class E_balls : MonoBehaviour
 {
     // ==================== 변수 세팅 ==================== //
+    private string objectType;
     public GameObject target; // 3D object sphere
     public GameObject ballCreator; // 공 생성 위치
     public int height = 10; // 공 생성 이후 y축 위치 변수
@@ -16,11 +18,19 @@ public class E_balls : MonoBehaviour
 
     // ==================== 변수 세팅 ==================== //
 
+
+    // ============== Object initialization and update ============== // 
     void Awake()
     {
         print("spawnBall executed");
+        InitSetup();
         InvokeRepeating("spawnBalls", invokeTime, repeatTime);
     }
+    void InitSetup() 
+    {
+        objectType = IEnemyBehavior.enemyType.Object.ToString();
+    }
+    // ============== Object initialization and update ============== // 
 
     void spawnBalls() 
     {
