@@ -7,11 +7,19 @@ TagManager:
   - Enemies
   - Floor
 <<<<<<< HEAD
+<<<<<<< HEAD
   - Terrain
   - AgentRoute
 =======
   - GameOver
 >>>>>>> 45625414f23279d6cee047fb21a9c0936597bd23
+=======
+  - GameOver
+=======
+  - Terrain
+  - AgentRoute
+>>>>>>> 1c063d00dea8de2959d67557057b1cc94e53b08b
+>>>>>>> DaeguDev-main
   layers:
   - Default
   - TransparentFX
