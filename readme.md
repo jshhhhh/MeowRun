@@ -1,14 +1,20 @@
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/83855174/159703631-4beab680-5e9c-4e16-af24-7e5b99fca565.jpg" alt="meowrun banner" width="100%"/>
+</div>
+
 # MeowRun
 ## 개요
 - 종류 : 3D endless runner 
-- 기간 : 2022.02.15 ~ 2022.04.31
+- 기간 : 2022.02.15 ~ 2022.05.31
 - 인원 : 3명
 
 ## 아키텍처
 <details>
-<summary>✅ 이미지</summary>
+<summary>:black_nib: Diagram </summary>
 
- - will be added
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/83855174/159143047-6af4a7d0-42db-402c-9ac3-008575153616.jpg" width="70%" height="50%" alt="project architecture" />
+</div>
 </details>
 
 ## 컨벤션
@@ -25,18 +31,40 @@
 
 ## 기능 구현
 <details>
-<summary>✅ 구현 목록</summary>
+<summary>:scroll:	구현 목록</summary>
 
-### 유니티
-1. 플레이어 : movement/jump, life/health, animation
-1. 적 : idle, track, fire, die
-1. 맵 디자인 : terrain, platforms
-1. 레벨/씬 설계 : easy, intermediate, difficult
+<div align="center">
+  <table>
+    <thead>
+      <th>A : will be added</td>
+      <th>B : will be added</td>
+    </thead>
+    <tbody>
+        <td>
+          <img src="" width=200 height=300 />
+        </td>
+        <td>
+          <img src="" width=200 height=300 />
+        </td>
+    </tbody>
+  </table>
 
-### 웹
-1. 랜딩 페이지 : MeowRun 소개
-1. 반응형 웹디자인 : 내용 추가 예정
-1. 로그인 : 내용 추가 예정
+  <table>
+    <thead>
+      <th>A1 : will be added</td>
+      <th>B1 : will be added</td>
+    </thead>
+    <tbody>
+        <td>
+          <img src="" width=200 height=300 />
+        </td>
+        <td>
+          <img src="" width=200 height=300 />
+        </td>
+    </tbody>
+  </table>
+
+</div>
 </details>
 
 ## 역할
@@ -44,23 +72,20 @@
 <summary>✅ 구성</summary>
 
 ### 유니티
-1. 석환 : 유니티 클라이언트 => 플레이어 로직, View UI 설계
-1. Jake : 유니티 클라이언트 => 적 로직, 맵 디자인
+1. 석환 : 유니티 클라이언트(메인)
+1. Jake : 유니티 클라이언트(메인)
 
 ### 웹
 1. 정기 : 웹 서버, 웹 클라이언트 (메인)
 1. Jake : 웹 서버, 웹 클라이언트 (서브)
+
+### 모바일
+1. 석환 : 모바일 클라이언트 (메인)
+1. Jake : 모바일 클라이언트 (메인)
 </details>
 
 ## 배포 
-<details>
-<summary>✅ 링크</summary>
-  
-### 유니티 
-- [link will be added]()
-### 웹
-- [link will be added]()
-</details>
+- will be added
 
   
 ## 참여자
