@@ -6,13 +6,17 @@ TagManager:
   tags:
   - Enemies
   - Floor
+<<<<<<< HEAD
   - Terrain
   - AgentRoute
+=======
+  - GameOver
+>>>>>>> 45625414f23279d6cee047fb21a9c0936597bd23
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - 
