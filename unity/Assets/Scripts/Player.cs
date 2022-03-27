@@ -306,6 +306,7 @@ public class Player : MonoBehaviour
     // 키보드 세팅
     void playerMove()
     {
+<<<<<<< HEAD
         playerTurn();
 
         // Fix : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
@@ -314,6 +315,13 @@ public class Player : MonoBehaviour
 
         // vector.Set(Input.GetAxisRaw("Horizontal"), playerRigidbody.velocity.y, Input.GetAxisRaw("Vertical"));
         // transform.Translate(vector.x * speed / 100f, 0, vector.z * speed / 100f);
+=======
+        // DISCUSS : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
+        // 변경이 좀 필요할 듯 해유. 인공지능 적군도 피하거나 죽이려면 그게 나을 거 같은데 한 번 검토해주세용
+        playerRigidbody.velocity =
+            new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
+            // new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, speed);
+>>>>>>> 1c063d00dea8de2959d67557057b1cc94e53b08b
     }
 
     // 점프(점프할 때 한 번만 호출)

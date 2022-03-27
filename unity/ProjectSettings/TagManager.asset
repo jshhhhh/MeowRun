@@ -6,7 +6,12 @@ TagManager:
   tags:
   - Enemies
   - Floor
+<<<<<<< HEAD
   - GameOver
+=======
+  - Terrain
+  - AgentRoute
+>>>>>>> 1c063d00dea8de2959d67557057b1cc94e53b08b
   layers:
   - Default
   - TransparentFX
