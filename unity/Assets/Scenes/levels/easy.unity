@@ -5268,3 +5268,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6407167202109410921}
   m_Mesh: {fileID: -560847371858820455, guid: 5de06dd39ac097649a5d371ca0564f7d, type: 3}
+=======
+version https://git-lfs.github.com/spec/v1
+oid sha256:1c8da217c890e044d98b1807b986d7f45da3d5617d1f886f4b53ab7e32ed87b9
+size 191215
