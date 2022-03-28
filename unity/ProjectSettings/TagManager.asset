@@ -3,20 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Enemies
-  - Floor
-<<<<<<< HEAD
-  - GameOver
-=======
-  - Terrain
-  - AgentRoute
->>>>>>> 1c063d00dea8de2959d67557057b1cc94e53b08b
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - 
   - Water
   - UI
   - 
