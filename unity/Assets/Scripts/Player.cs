@@ -38,7 +38,11 @@ public class Player : MonoBehaviour
 
     private RaycastHit hit;
     //ray의 길이
+<<<<<<< HEAD
     private float lengthOfRay = 0.2f;
+=======
+    private float lengthOfRay = 0.1f;
+>>>>>>> e8b04652059c4eff673f71b96c669ab8fab65798
     //BoxCast의 크기
     private Vector3 localScale = new Vector3(0.35f, 0.01f, 0.35f);
     //ray가 물체에 닿았는지의 여부
@@ -49,12 +53,23 @@ public class Player : MonoBehaviour
     //플레이어의 속도
     public float velocity;
     //상태를 체크하기 위한 사실상 정지 상태의 속도
+<<<<<<< HEAD
     private float zeroVelocity = 0.2f;
+=======
+    private float zeroVelocity = 0.01f;
+>>>>>>> e8b04652059c4eff673f71b96c669ab8fab65798
     //현재 위치값과 1프레임 뒤의 위치값을 비교하기 위한 변수
     private Vector3 lastPosition;
 
     //회전값을 계산하기 위한 변수
+<<<<<<< HEAD
     public float horizontal, vertical;
+=======
+    public float horizontal = 0f;
+    public float vertical = 0f;
+    //플레이어의 최종 회전값을 담을 변수
+    public float direction = 0f;
+>>>>>>> e8b04652059c4eff673f71b96c669ab8fab65798
 
     //태그명 const로 대체(오타 방지)
     private const string FLOOR = "Floor", ENEMIES = "Enemies", GAME_OVER = "GameOver", ANIMATION_STATE = "animationState";
@@ -121,6 +136,11 @@ public class Player : MonoBehaviour
     {
         returnTag();
 
+<<<<<<< HEAD
+=======
+        preventFlip();
+
+>>>>>>> e8b04652059c4eff673f71b96c669ab8fab65798
         //상태에 따라 다른 Update문 호출
         switch (_state)
         {
@@ -311,13 +331,21 @@ public class Player : MonoBehaviour
             Gizmos.DrawWireCube(transform.position + -transform.up * hit.distance, localScale);
         }
         else
+<<<<<<< HEAD
             Debug.DrawRay(transform.position, -transform.up * lengthOfRay, Color.red);
+=======
+        {
+            Debug.DrawRay(transform.position, -transform.up * lengthOfRay, Color.red);
+            tagOfFooting = null;
+        }
+>>>>>>> e8b04652059c4eff673f71b96c669ab8fab65798
     }
 
     // ================= 플레이어 이동 로직 ================= //
     // 키보드 세팅
     void playerMove()
     {
+<<<<<<< HEAD
         // Fix : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
@@ -326,6 +354,13 @@ public class Player : MonoBehaviour
         }
 
         playerTurn();
+=======
+        playerTurn();
+
+        // Fix : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
+        playerRigidbody.velocity =
+            new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
+>>>>>>> e8b04652059c4eff673f71b96c669ab8fab65798
     }
 
     // 점프(점프할 때 한 번만 호출)
@@ -347,6 +382,17 @@ public class Player : MonoBehaviour
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
         }
+<<<<<<< HEAD
+=======
+        else
+            direction = horizontal + vertical;
+
+        //계산한 회전값을 Lerp 함수로 플레이어에 적용
+        if(direction != 0)
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.rotation.x, direction, transform.rotation.z), Time.deltaTime * 50f);
+
+        tempRotation = transform.rotation;
+>>>>>>> e8b04652059c4eff673f71b96c669ab8fab65798
     }
 
     private void preventFlip()
