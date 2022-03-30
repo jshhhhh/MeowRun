@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4bcdbfbc390dc2ba87f6f40ddc74ae147f528a6d
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
@@ -5272,5 +5275,9 @@ MeshFilter:
 =======
 version https://git-lfs.github.com/spec/v1
 oid sha256:1c8da217c890e044d98b1807b986d7f45da3d5617d1f886f4b53ab7e32ed87b9
+<<<<<<< HEAD
 size 191215
 >>>>>>> f69795c6ce0a137d23bca4b1e41d467f779992aa
+=======
+size 191215
+>>>>>>> 4bcdbfbc390dc2ba87f6f40ddc74ae147f528a6d
