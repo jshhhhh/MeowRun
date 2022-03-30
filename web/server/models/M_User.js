@@ -11,6 +11,7 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
+        trim: true,
         minlength: 8    
     },
 
@@ -18,10 +19,11 @@ const userSchema = new Schema({
         type: String,
         required: true,
         minlength: 10
-    }
-    
+    },
+    refreshToken: String
 });
 
 const User = mongoose.model('User',userSchema);
+User.collection.createIndex( { email: 1 }, { unique: true } )
 
 export default User

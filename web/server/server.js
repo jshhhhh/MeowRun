@@ -3,8 +3,8 @@ import cookieParser from "cookie-parser";
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { ConnectDB } from "./config/dbconn.js";
-import UserRoute from "./routers/R_Login.js"
-
+import UserRoute from "./routers/R_Login.js";
+import mongoose from 'mongoose';
 
 dotenv.config()
 const app = express()
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 })
 
 // 로그인 루트
-app.get('/auth', (req,res, next) => {
+app.get('/auth',UserRoute, (req,res, next) => {
     
     next()
 })
@@ -45,10 +45,12 @@ app.use('/user',UserRoute)
 // app.use()
 // app.use()
 // app.use()
-// app.use()
 // ====================== middlewares ====================== //
 
 
 
 
-app.listen(PORT, () =>  console.log(`Server running on port ${PORT}`));
+mongoose.connection.once('open', () => {
+    console.log('Connected to MongoDB')
+    app.listen(PORT, () =>  console.log(`Server running on port ${PORT}`));
+})
