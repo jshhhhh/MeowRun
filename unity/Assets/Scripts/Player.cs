@@ -17,12 +17,14 @@ public class Player : MonoBehaviour
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
     private Animator animator;
     private Rigidbody playerRigidbody;
+
     private SoundManager SM;
     public AudioClip SJump;
     public AudioClip SDie;
     public AudioClip SDamaged;
     public AudioClip SRespawn;
-    public float speed = 2f; //public으로 유니티 에디터에서 스피드 변수 조정 가능
+
+    public float speed = 3.5f; //public으로 유니티 에디터에서 스피드 변수 조정 가능
     public float jumpPower = 6f; //public으로 유니티 에디터에서 점프 변수 조정 가능
     public bool canJump = true;
     //데미지를 입을 수 있는 상태
@@ -34,20 +36,25 @@ public class Player : MonoBehaviour
     private Vector3 tempPosition;
     private Quaternion tempRotation;
 
-
+    private RaycastHit hit;
+    //ray의 길이
+    private float lengthOfRay = 0.2f;
+    //BoxCast의 크기
+    private Vector3 localScale = new Vector3(0.35f, 0.01f, 0.35f);
+    //ray가 물체에 닿았는지의 여부
+    private bool isHit;
     //플레이어의 발에 닿은 오브젝트의 태그
     public string tagOfFooting;
 
     //플레이어의 속도
     public float velocity;
     //상태를 체크하기 위한 사실상 정지 상태의 속도
-    private float zeroVelocity = 0.005f;
+    private float zeroVelocity = 0.2f;
     //현재 위치값과 1프레임 뒤의 위치값을 비교하기 위한 변수
     private Vector3 lastPosition;
 
-    public float horizontal = 0f;
-    public float vertical = 0f;
-    public float direction = 0f;
+    //회전값을 계산하기 위한 변수
+    public float horizontal, vertical;
 
     //태그명 const로 대체(오타 방지)
     private const string FLOOR = "Floor", ENEMIES = "Enemies", GAME_OVER = "GameOver", ANIMATION_STATE = "animationState";
@@ -112,6 +119,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        returnTag();
+
         //상태에 따라 다른 Update문 호출
         switch (_state)
         {
@@ -138,6 +147,7 @@ public class Player : MonoBehaviour
             this.transform.position = tempPosition;
             this.transform.rotation = tempRotation;
         }
+            
     }
 
     //서 있는 상태
@@ -150,6 +160,8 @@ public class Player : MonoBehaviour
         Animator의 파라미터 참고
         */
         AnimationSetter(ANIMATION_STATE, 0);
+
+        playerRigidbody.angularVelocity = Vector3.zero;
 
         playerMove();
 
@@ -199,7 +211,7 @@ public class Player : MonoBehaviour
         //바닥을 딛고 있으면 Moving 상태로
         if (tagOfFooting == FLOOR)
         {
-            if (velocity >= zeroVelocity)
+            if (velocity > zeroVelocity)
                 _state = playerState.Move;
             else
                 _state = playerState.Idle;
@@ -274,54 +286,46 @@ public class Player : MonoBehaviour
         }
     }
 
-    //OnDrawGizmos라는 함수명으로만 Gizmos.DrawWireCube 사용 가능
-    //Ray에 닿은 오브젝트의 태그 가져옴
+    //ray에 닿은 오브젝트의 태그 가져옴
+    private void returnTag()
+    {
+        isHit = Physics.BoxCast(transform.position, localScale, -transform.up, out hit, transform.rotation, lengthOfRay);
+
+        if (isHit)
+            tagOfFooting = hit.collider.tag;
+        else
+            tagOfFooting = null;
+    }
+
+    //Gizmos.DrawWireCube로 시각적으로 ray 표시
+    //Update에 넣을 필요 없이 바로 동작함
     private void OnDrawGizmos()
     {
-        //ray의 길이
-        float minHeightFromHit = 0.1f;
-
         //Ray를 시각적으로 표시
         Gizmos.color = Color.blue;
-        var localScale = new Vector3(0.6f, 0.01f, 0.45f);
-
-        RaycastHit hit;
-        bool isHit = Physics.BoxCast(transform.position, localScale, -transform.up, out hit, transform.rotation, minHeightFromHit);
 
         //Ray를 바닥 방향(-transform.up)으로 minHeightFromHit만큼 짧게 쏘아서 닿는 오브젝트의 태그 추출
         if (isHit)
         {
             Gizmos.DrawRay(transform.position, -transform.up * hit.distance);
             Gizmos.DrawWireCube(transform.position + -transform.up * hit.distance, localScale);
-            tagOfFooting = hit.collider.tag;
         }
         else
-        {
-            Debug.DrawRay(transform.position, -transform.up * minHeightFromHit, Color.red);
-            tagOfFooting = null;
-        }
+            Debug.DrawRay(transform.position, -transform.up * lengthOfRay, Color.red);
     }
 
     // ================= 플레이어 이동 로직 ================= //
     // 키보드 세팅
     void playerMove()
     {
-<<<<<<< HEAD
-        playerTurn();
-
         // Fix : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
-        playerRigidbody.velocity =
-            new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
+        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        {
+            playerRigidbody.velocity =
+                new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
+        }
 
-        // vector.Set(Input.GetAxisRaw("Horizontal"), playerRigidbody.velocity.y, Input.GetAxisRaw("Vertical"));
-        // transform.Translate(vector.x * speed / 100f, 0, vector.z * speed / 100f);
-=======
-        // DISCUSS : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
-        // 변경이 좀 필요할 듯 해유. 인공지능 적군도 피하거나 죽이려면 그게 나을 거 같은데 한 번 검토해주세용
-        playerRigidbody.velocity =
-            new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
-            // new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, speed);
->>>>>>> 1c063d00dea8de2959d67557057b1cc94e53b08b
+        playerTurn();
     }
 
     // 점프(점프할 때 한 번만 호출)
@@ -334,71 +338,29 @@ public class Player : MonoBehaviour
     //방향키에 따라 플레이어가 회전하는 함수
     private void playerTurn()
     {
-        direction = 0f;
+        horizontal = Input.GetAxis("Horizontal");        
+        vertical = Input.GetAxis("Vertical");
 
-        //각 방향키에 따라 회전각 설정
-        if (Input.GetAxisRaw("Horizontal") == 1) horizontal = 90f;
-        else if (Input.GetAxisRaw("Horizontal") == -1) horizontal = -90f;
-        else horizontal = 0f;
-        if (Input.GetAxisRaw("Vertical") == 1) vertical = Mathf.Epsilon;
-        else if (Input.GetAxisRaw("Vertical") == -1) vertical = -180f;
-        else vertical = 0f;
+        Vector3 direction = new Vector3(horizontal, 0, vertical);
 
-        //앞뒤와 좌우키가 동시에 눌렸을 경우 회전값 연산
-        if (Input.GetAxisRaw("Horizontal") != 0 && Input.GetAxisRaw("Vertical") != 0)
+        if (!(horizontal == 0 && vertical == 0))
         {
-            if (Input.GetAxisRaw("Horizontal") == 1)
-                direction = Mathf.Abs((horizontal - vertical) / 2);
-            else
-                direction = (horizontal + vertical) / 2;
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
         }
-        else
-            direction = horizontal + vertical;
-
-        //계산한 회전값을 Lerp 함수로 플레이어에 적용
-        if(direction != 0)
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.rotation.x, direction, transform.rotation.z), Time.deltaTime * 10f);
     }
 
     private void preventFlip()
     {
-        float angleX = 40f;
-        float angleY = 40f;
-        float angleZ = 40f;
+        // if(transform.rotation.eulerAngles.x > 40f || transform.rotation.eulerAngles.x < -40)
+        //     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, transform.rotation.y, transform.rotation.z), Time.deltaTime * 10f);
 
-        if (transform.rotation.eulerAngles.x > angleX)
-        {
-            Debug.Log("X축 + 고정");
-            transform.eulerAngles = new Vector3(angleX, transform.rotation.y, transform.rotation.z);
-        }
+        // if(transform.rotation.eulerAngles.z > 40f || transform.rotation.eulerAngles.z < -40)
+        //     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0), Time.deltaTime * 10f);
 
-        else if (transform.rotation.eulerAngles.x < -angleX)
-        {
-            Debug.Log("X축 - 고정");
-            transform.eulerAngles = new Vector3(-angleX, transform.rotation.y, transform.rotation.z);
-        }
-
-        if (transform.rotation.eulerAngles.x > angleZ)
-        {
-            Debug.Log("Z축 + 고정");
-            transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, angleZ);
-        }
-        else if (transform.rotation.eulerAngles.x < -angleZ)
-        {
-            Debug.Log("Z축 - 고정");
-            transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, -angleZ);
-        }
-
-        if (transform.rotation.eulerAngles.x > angleY)
-        {
-            Debug.Log("Y축 + 고정");
-            transform.eulerAngles = new Vector3(transform.rotation.x, angleY, transform.rotation.z);
-        }
-        else if (transform.rotation.eulerAngles.x < -angleY)
-        {
-            Debug.Log("Y축 - 고정");
-            transform.eulerAngles = new Vector3(transform.rotation.x, -angleY, transform.rotation.z);
-        }
+        // transform.rotation
+        //     = Quaternion.Euler(Mathf.Clamp(transform.rotation.eulerAngles.x, 0, -0),
+        //         transform.rotation.eulerAngles.y,
+        //         Mathf.Clamp(transform.rotation.eulerAngles.z, 0, -0));
     }
 
     //강제로 멈추는 함수
@@ -419,6 +381,8 @@ public class Player : MonoBehaviour
             playerRigidbody.useGravity = true;
         }
     }
+
+    
     // ================= 플레이어 이동 로직 ================= //
 
 
