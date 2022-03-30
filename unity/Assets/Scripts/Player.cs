@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 /*
 Player logic flow
-1. w,s,space키로 좌우 이동 및 점프 기능
+1. a,d,space키로 좌우 이동 및 점프 기능
 2. 자동으로 일정한 속도로 앞으로 진행
 3. 장애물이나 enemy에 닿으면 체력 감소
 4. 체력이 모두 감소하면 게임 오버
@@ -17,34 +17,47 @@ public class Player : MonoBehaviour
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
     private Animator animator;
     private Rigidbody playerRigidbody;
+
     private SoundManager SM;
-    public AudioClip jumpSound;
-    public AudioClip dieSound;
-    public AudioClip damagedSound;
-    public AudioClip respawnSound;
-    public float speed = 3f; //public으로 유니티 에디터에서 스피드 변수 조정 가능
+    public AudioClip SJump;
+    public AudioClip SDie;
+    public AudioClip SDamaged;
+    public AudioClip SRespawn;
+
+    public float speed = 3.5f; //public으로 유니티 에디터에서 스피드 변수 조정 가능
     public float jumpPower = 6f; //public으로 유니티 에디터에서 점프 변수 조정 가능
-    private bool canJump = true;
+    public bool canJump = true;
     //데미지를 입을 수 있는 상태
     private bool canDamaged = true;
     private bool playerDied = false;
     //true가 되는 순간의 좌표를 저장하여 플레이어를 고정시킴
-    private bool stopPosition = false;
+    public bool stopPosition = false;
     //플레이어 좌표를 고정하기 위한 임시 위치값
-    private Vector3 temp;
+    private Vector3 tempPosition;
+    private Quaternion tempRotation;
 
+    private RaycastHit hit;
+    //ray의 길이
+    private float lengthOfRay = 0.2f;
+    //BoxCast의 크기
+    private Vector3 localScale = new Vector3(0.35f, 0.01f, 0.35f);
+    //ray가 물체에 닿았는지의 여부
+    private bool isHit;
     //플레이어의 발에 닿은 오브젝트의 태그
     public string tagOfFooting;
 
-    // //플레이어의 속도
-    // public float velocity;
-    // //상태를 체크하기 위한 사실상 정지 상태의 속도
-    // private float stoppedVelocity = 0.0001f;
-    // //현재 위치값과 1프레임 뒤의 위치값을 비교하기 위한 변수
-    // private Vector3 lastPosition;
+    //플레이어의 속도
+    public float velocity;
+    //상태를 체크하기 위한 사실상 정지 상태의 속도
+    private float zeroVelocity = 0.2f;
+    //현재 위치값과 1프레임 뒤의 위치값을 비교하기 위한 변수
+    private Vector3 lastPosition;
+
+    //회전값을 계산하기 위한 변수
+    public float horizontal, vertical;
 
     //태그명 const로 대체(오타 방지)
-    private const string FLOOR = "Floor", ENEMIES = "Enemies";
+    private const string FLOOR = "Floor", ENEMIES = "Enemies", GAME_OVER = "GameOver", ANIMATION_STATE = "animationState";
 
     //플레이어의 상태
     //상태에 따라 플레이어의 행동 구분
@@ -58,6 +71,18 @@ public class Player : MonoBehaviour
     }
     public playerState _state = playerState.Idle;
 
+    //적 타입 선언
+    public enum enemyType
+    {
+        Easy, // (쥐, 개구리)
+        Intermediate, // (뱀, 거미)
+        Difficult, // (벌, 외계인<2종>)
+        Object // (공)
+    }
+
+    // 타입 활용
+    public string easyEnemyType = enemyType.Easy.ToString();  // "Easy"
+
     void Start()
     {
         print("Game started"); // UnityEngine.Debug.Log => print(same but shorter)
@@ -66,32 +91,35 @@ public class Player : MonoBehaviour
         playerRigidbody = this.GetComponent<Rigidbody>();
         SM = FindObjectOfType<SoundManager>();
 
-        StartCoroutine(startMoveCoroutine());
+        tempPosition = transform.position;
+        tempRotation = transform.rotation;
+        lastPosition = transform.position;
 
-        //lastPosition = transform.position;
+        playerForcedStop(true);
+        StartCoroutine(startMoveCoroutine());
     }
 
     //게임 시작 전 딜레이를 주는 코루틴
     IEnumerator startMoveCoroutine()
     {
         yield return new WaitForSeconds(2f);
-        _state = playerState.Move;
+        playerForcedStop(false);
     }
 
-    // //일정한 주기로 호출되는 함수(물리 계산 관련 함수에 사용됨)
-    // void FixedUpdate()
-    // {
-    //     //속력을 구하는 공식
-    //     //멈춰 있을 때 수치가 0으로 표시되지 않는 경우가 있음(소수점 5자리(ex: 1.192093e-05) 등으로 표시됨)
-    //     //stoppedVelocity와 비교하여 움직임을 판단
-    //     velocity = (((transform.position - lastPosition).magnitude) / Time.deltaTime);
-    //     lastPosition = transform.position;
-    // }
+    //일정한 주기로 호출되는 함수(물리 계산 관련 함수에 사용됨)
+    //속력에 따라 Idle 상태 변환
+    void FixedUpdate()
+    {
+        //속력을 구하는 공식
+        //멈춰 있을 때 수치가 0으로 표시되지 않는 경우가 있음(소수점 5자리(ex: 1.192093e-05) 등으로 표시됨)
+        //stoppedVelocity와 비교하여 움직임을 판단
+        velocity = (((transform.position - lastPosition).magnitude) / Time.deltaTime);
+        lastPosition = transform.position;
+    }
 
     void Update()
     {
-        //딛고 있는 오브젝트의 태그 추출
-        tagOfFooting = returnTagOfFooting();
+        returnTag();
 
         //상태에 따라 다른 Update문 호출
         switch (_state)
@@ -115,21 +143,40 @@ public class Player : MonoBehaviour
 
         //true가 되는 순간의 좌표를 저장하여 플레이어를 고정시킴
         if (stopPosition)
-            this.transform.position = temp;
+        {
+            this.transform.position = tempPosition;
+            this.transform.rotation = tempRotation;
+        }
+            
     }
 
     //서 있는 상태
     //Idle 애니메이션만 재생됨
     void UpdateIdle()
     {
-        animator.SetInteger("animationState", 0);
+        /*
+        애니메이션 파라미터 제어
+        0: Idle, 1: Walk, 2: Jump, 3: Damaged, 4: Die
+        Animator의 파라미터 참고
+        */
+        AnimationSetter(ANIMATION_STATE, 0);
+
+        playerRigidbody.angularVelocity = Vector3.zero;
+
+        playerMove();
+
+        if (velocity > zeroVelocity)
+            _state = playerState.Move;
+
+        if (Input.GetKeyDown(KeyCode.Space) && canJump)
+            playerJump();
     }
 
     //움직이는 상태
     //움직이거나 점프할 수 있음
     void UpdateMove()
     {
-        animator.SetInteger("animationState", 1);
+        AnimationSetter(ANIMATION_STATE, 1);
 
         canJump = true;
 
@@ -139,6 +186,9 @@ public class Player : MonoBehaviour
         //바닥을 딛고 있지 않으면 Jump 상태로(낙하 포함)
         if (tagOfFooting != FLOOR)
             _state = playerState.Jump;
+        //속력이 없으면 Idle 상태로
+        else if (velocity <= zeroVelocity)
+            _state = playerState.Idle;
 
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
             playerJump();
@@ -148,24 +198,31 @@ public class Player : MonoBehaviour
     //움직일 수는 있지만 점프할 수 없음
     void UpdateJump()
     {
-        animator.SetInteger("animationState", 2);
+        AnimationSetter(ANIMATION_STATE, 2);
 
         canJump = false;
 
         playerMove();
 
+        //공중에서 플레이어 수평으로 보정
+        //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0), Time.deltaTime);
+
         //상태 전환 조건
         //바닥을 딛고 있으면 Moving 상태로
         if (tagOfFooting == FLOOR)
-            _state = playerState.Move;
+        {
+            if (velocity > zeroVelocity)
+                _state = playerState.Move;
+            else
+                _state = playerState.Idle;
+        }
     }
 
     //데미지를 입고 있는 상태
     void UpdateDamaged()
     {
-        animator.SetInteger("animationState", 3);
-
-        if(canDamaged)
+        AnimationSetter(ANIMATION_STATE, 3);
+        if (canDamaged)
             StartCoroutine(playerDamagedCoroutine());
 
         canJump = false;
@@ -174,91 +231,179 @@ public class Player : MonoBehaviour
 
     IEnumerator playerDamagedCoroutine()
     {
-        //충돌했을 때의 위치값 저장 후 플레이어를 정지시킴
-        temp = transform.position;
-        stopPosition = true;
-        playerRigidbody.useGravity = false;
-
-        SM.PlaySingle(damagedSound);
+        SM.PlaySingle(SDamaged);
+        playerForcedStop(true);
 
         //Game manager에서 체력 감소 구현 필요
+        //Damaged()
 
         yield return new WaitForSeconds(1f);
-        
-        //꺼놓은 중력을 다시 켜고 정지 해제
-        playerRigidbody.useGravity = true;
-        stopPosition = false;
+
+        playerForcedStop(false);
 
         //상태 전환 조건
         //바닥을 딛고 있으면 Move, 아니면 Jump
         if (tagOfFooting == FLOOR)
-            _state = playerState.Move;
+        {
+            if (velocity >= zeroVelocity)
+                _state = playerState.Move;
+            else
+                _state = playerState.Idle;
+        }
         else if (tagOfFooting != FLOOR)
             _state = playerState.Jump;
+        
+        yield return new WaitForSeconds(0.5f);
 
         canDamaged = true;
     }
-    
-    //죽는 과정의 상태
+
+    //죽는 상태
     void UpdateDie()
     {
         if (!playerDied)
             StartCoroutine(playerDieCoroutine());
+
+        playerDied = true;
     }
 
-    //플레이어의 발에 닿은 오브젝트의 태그 추출
-    private string returnTagOfFooting()
+    //애니메이션 파라미터 타입에 따른 제네릭 함수
+    //향후 애니메이션이 많아질 경우 여러 파라미터를 함수 하나로 제어 가능
+    private void AnimationSetter<T>(string _name, T _condition)
     {
-        //평평한 바닥과의 최소 높이(에디터 상에서 노가다로 대략적인 수치 구함)
-        //내리막에서나 오르막 발판에서의 수치는 아직 불확실
-        float minHeightFromHit = 0.08f;
-        string _tagOfFooting;
+        // 조건 T에 따라 animator.SetBool 또는 animator.SetInteger 실행
+        if (_condition.GetType() == typeof(bool))
+        {
+            // T가 boolean일 경우 => string 변환 => bool 변환
+            //print("애니메이션 조건 : bool");
+            animator.SetBool(_name, bool.Parse(_condition.ToString()));
+        }
+        if (_condition.GetType() == typeof(int))
+        {
+            // T가 int일 경우 => string 변환 => int 변환
+            //print("애니메이션 조건 : int");
+            animator.SetInteger(_name, (int.Parse(_condition.ToString())));
+        }
+    }
 
+    //ray에 닿은 오브젝트의 태그 가져옴
+    private void returnTag()
+    {
+        isHit = Physics.BoxCast(transform.position, localScale, -transform.up, out hit, transform.rotation, lengthOfRay);
+
+        if (isHit)
+            tagOfFooting = hit.collider.tag;
+        else
+            tagOfFooting = null;
+    }
+
+    //Gizmos.DrawWireCube로 시각적으로 ray 표시
+    //Update에 넣을 필요 없이 바로 동작함
+    private void OnDrawGizmos()
+    {
         //Ray를 시각적으로 표시
-        Debug.DrawRay(transform.position, -transform.up * minHeightFromHit, Color.red);
-
-        RaycastHit hit;
+        Gizmos.color = Color.blue;
 
         //Ray를 바닥 방향(-transform.up)으로 minHeightFromHit만큼 짧게 쏘아서 닿는 오브젝트의 태그 추출
-        if (Physics.Raycast(transform.position, -transform.up, out hit, minHeightFromHit))
-            _tagOfFooting = hit.collider.tag;
+        if (isHit)
+        {
+            Gizmos.DrawRay(transform.position, -transform.up * hit.distance);
+            Gizmos.DrawWireCube(transform.position + -transform.up * hit.distance, localScale);
+        }
         else
-            _tagOfFooting = null;
-
-        return _tagOfFooting;
+            Debug.DrawRay(transform.position, -transform.up * lengthOfRay, Color.red);
     }
-
 
     // ================= 플레이어 이동 로직 ================= //
     // 키보드 세팅
-    //TO DO : 자동으로 앞으로 가되 w, s키로 앞뒤 움직임 말고 앞으로 가는 속도 조절 필요
     void playerMove()
     {
-        // DISCUSS : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
-        // 변경이 좀 필요할 듯 해유. 인공지능 적군도 피하거나 죽이려면 그게 나을 거 같은데 한 번 검토해주세용
-        playerRigidbody.velocity =
-            new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
-            // new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, speed);
+        // Fix : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
+        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        {
+            playerRigidbody.velocity =
+                new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
+        }
+
+        playerTurn();
     }
 
     // 점프(점프할 때 한 번만 호출)
     void playerJump()
     {
-        SM.RandomizeSfx(jumpSound);
+        SM.RandomizeSfx(SJump);
         playerRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
     }
+
+    //방향키에 따라 플레이어가 회전하는 함수
+    private void playerTurn()
+    {
+        horizontal = Input.GetAxis("Horizontal");        
+        vertical = Input.GetAxis("Vertical");
+
+        Vector3 direction = new Vector3(horizontal, 0, vertical);
+
+        if (!(horizontal == 0 && vertical == 0))
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
+        }
+    }
+
+    private void preventFlip()
+    {
+        // if(transform.rotation.eulerAngles.x > 40f || transform.rotation.eulerAngles.x < -40)
+        //     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, transform.rotation.y, transform.rotation.z), Time.deltaTime * 10f);
+
+        // if(transform.rotation.eulerAngles.z > 40f || transform.rotation.eulerAngles.z < -40)
+        //     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0), Time.deltaTime * 10f);
+
+        // transform.rotation
+        //     = Quaternion.Euler(Mathf.Clamp(transform.rotation.eulerAngles.x, 0, -0),
+        //         transform.rotation.eulerAngles.y,
+        //         Mathf.Clamp(transform.rotation.eulerAngles.z, 0, -0));
+    }
+
+    //강제로 멈추는 함수
+    private void playerForcedStop(bool stop)
+    {
+        if (stop)
+        {
+            //충돌했을 때의 위치값 저장
+            tempPosition = transform.position;
+            tempRotation = transform.rotation;
+            stopPosition = true;
+            //this.GetComponent<BoxCollider>().enabled = false;
+            playerRigidbody.useGravity = false;
+        }
+        else
+        {
+            stopPosition = false;
+            playerRigidbody.useGravity = true;
+        }
+    }
+
+    
     // ================= 플레이어 이동 로직 ================= //
 
 
     // TO DO : 플레이어 이동 로직 <=> 리스폰 로직 서로 다른 스크립트로 분리하기. 
     // ================= 플레이어 리스폰 로직 ================= //
-    // 장애물 충돌시 리스폰
-    // 오브젝트 태그가 'Enemies'일 경우 Damaged 상태로
+    // 오브젝트 태그가 'Enemies'일 경우 Damaged 상태로, 즉사할 경우 Die 상태로
     private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag(GAME_OVER))
+        {
+            print("플레이어 사망");
+            _state = playerState.Die;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag(ENEMIES))
         {
-            if(canDamaged)
+            //데미지를 입을 수 있는 상태라면
+            if (canDamaged)
             {
                 print("적과 충돌함");
                 _state = playerState.Damaged;
@@ -266,28 +411,23 @@ public class Player : MonoBehaviour
         }
     }
 
-    //TO DO : 게임오버의 조건 설정, playerDieCoroutine과 게임오버 기능(씬 로드 포함)을 GameManager 스크립트로 분리
+    //TO DO : 게임오버의 조건 설정, playerDieCoroutine과 게임오버 기능(씬 로드 포함)을 GameManager 스크립트로 분리 필요
     IEnumerator playerDieCoroutine()
     {
-        //충돌했을 때의 위치값 저장
-        temp = transform.position;
-        stopPosition = true;
-        this.GetComponent<BoxCollider>().enabled = false;
-        playerRigidbody.useGravity = false;
+        playerForcedStop(true);
 
-        SM.PlaySingle(dieSound);
-        //플레이어가 쓰러지는 애니메이션 재생
-        animator.SetInteger("animationState", 4);
+        SM.PlaySingle(SDie);
+        AnimationSetter(ANIMATION_STATE, 4);
 
         yield return new WaitForSeconds(1f);
 
-        SM.PlaySingle(respawnSound);
+        SM.PlaySingle(SRespawn);
 
         //오디오가 끝날 때까지 대기
         yield return new WaitUntil(() => !SM.efxSource.isPlaying);
 
         //플레이어 오브젝트가 재생성되면서 초기값인 false로 바뀌므로 변경 불필요
-        //stopPosition = false;
+        //playerForcedStop(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

@@ -42,6 +42,7 @@ const UserInfo = async(req,res) => {
 const HandleLogin = async(req,res) =>{
     const {user,pwd} = req.body
     
+    // check if user exist 
     const UserCheck = await User.findOne({username: user}).exec()
     if (!UserCheck) return res.sendStatus(StatusCode.NOTFOUND);
 
