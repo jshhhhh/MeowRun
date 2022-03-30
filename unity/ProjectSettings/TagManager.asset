@@ -3,6 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
+<<<<<<< HEAD
   tags:
   - Enemies
   - Floor
@@ -20,11 +21,14 @@ TagManager:
   - AgentRoute
 >>>>>>> 1c063d00dea8de2959d67557057b1cc94e53b08b
 >>>>>>> DaeguDev-main
+=======
+  tags: []
+>>>>>>> player
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - 
   - Water
   - UI
   - 
