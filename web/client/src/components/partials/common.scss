@@ -1,0 +1,16 @@
+$unit: 1rem;
+
+@mixin flexColumn {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+@mixin flexRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+@mixin gridTwoColumns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
