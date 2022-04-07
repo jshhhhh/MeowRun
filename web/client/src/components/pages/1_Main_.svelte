@@ -1,15 +1,15 @@
 <script lang="ts">
 import GridContent from "../sub/GridContent.svelte";
-
+import PlayButton from "../sub/PlayButton.svelte";
 </script>
 
 
 <main id="main">
-
     <GridContent 
-    title="Run wildness, jump as you wish"
+    title="Run into wildness, Jump with heart."
     paragraphs="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium, maiores!"
     imageSource="" />
+    <PlayButton />
 </main>
 
 

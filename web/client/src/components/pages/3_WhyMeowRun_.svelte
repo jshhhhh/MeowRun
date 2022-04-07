@@ -1,5 +1,6 @@
 <script lang="ts">
 import Feature from "../sub/Feature.svelte";
+import PlayButton from "../sub/PlayButton.svelte";
 
 
 </script>
@@ -33,6 +34,7 @@ import Feature from "../sub/Feature.svelte";
         iconSource=""
         title="Easy to play"
         paragraph="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Et, voluptatum?" />
+    <PlayButton />
 </div>
 </main>
 

@@ -4,6 +4,7 @@
         // preventDefault => applied by event modifier
         const loginForm = document.forms[0]
         console.log(loginForm.elements.namedItem("email"))
+        // TO DO: Axios POST request
 }
 </script>
 
@@ -27,7 +28,11 @@
             <input type="password" name="password" id="password" placeholder="more than 6 characters">
             <p class="validationMsg">password validation here</p>
         </fieldset>
-        <button>Sign in</button>
+
+        <div id="buttons">
+            <button id="signin">Sign in</button>
+            <button id="signup">Sign up</button>
+        </div>
 
         <!-- TO DO: fix url later -->
         <u><i><a href="www.google.com">Forgot password?</a></i></u>
@@ -43,8 +48,6 @@
         @include gridTwoColumns();
         align-items: center;
     }
-
-
     #greetings {
         font-size: $unit*1.5;
         font-weight: bold;
@@ -52,6 +55,7 @@
     #loginForm { 
         @include flexColumn();
         background-color: white;
+        color: black;
         justify-content: center;
         align-items: center;
         gap: $unit;
@@ -62,8 +66,12 @@
         button { 
             background-color: rgb(37, 146, 255);
             color: white;
-            padding: $unit*0.8 $unit;
+            padding: $unit*0.8 $unit*1.5;
             left: 0;
+            border-radius: 50px;
+        }
+        #signup { 
+            background-color: rgb(6, 161, 48);
         }
     }
     .validationMsg {
