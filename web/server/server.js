@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import { ConnectDB } from "./config/dbconn.js";
 import UserRoute from "./routers/R_Login.js";
 import mongoose from 'mongoose';
+import corsOption from './config/corsOption.js'
+
 
 dotenv.config()
 const app = express()
@@ -18,18 +20,18 @@ app.use(express.urlencoded({ extended: false}));
 // built-in middleware for json
 app.use(express.json());
 
+// middleware for cookies
+app.use(cookieParser());
+
+// middleware for cors
+app.use(cors(corsOption))
+
 // ====================== routes ====================== // 
 // TO DO : 해당 파트 고쳐쓰기
 // 랜딩 페이지 루트
 app.get('/', (req, res) => {
 
     
-})
-
-// 로그인 루트
-app.get('/auth',UserRoute, (req,res, next) => {
-    
-    next()
 })
 
 // api 루트
@@ -40,8 +42,9 @@ app.get('/apis', (req,res) => {
 // ====================== routes ====================== //
 
 // ====================== middlewares ====================== //
-// TO DO : fix here
-app.use('/user',UserRoute)
+// 로그인 루트
+app.use('/auth',UserRoute)
+
 // app.use()
 // app.use()
 // app.use()
