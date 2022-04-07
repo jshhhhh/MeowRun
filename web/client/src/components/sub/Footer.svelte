@@ -30,6 +30,7 @@
     #footer { 
         display: grid;
         grid-template-columns: repeat(2, 1fr);
+        background-color: $layoutColor;
     }
 
 </style>

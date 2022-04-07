@@ -4,7 +4,7 @@
 
 
 <main>
-
+    <a href="#playMeowRun"><button>Play MeowRun</button></a>
 </main>
 
 

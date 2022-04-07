@@ -12,8 +12,7 @@ import Footer from "./Footer.svelte";
 <slot name="4_How_it_works_"></slot>
 <slot name="5_CharacterVote_"></slot>
 <slot name="6_LoginForm_"></slot>
-
-<slot name="temp"></slot>
+<slot name="7_PlayMeowRun_"></slot>
 <Footer />
 </main>
 
