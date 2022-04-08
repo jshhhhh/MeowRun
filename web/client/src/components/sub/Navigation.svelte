@@ -5,9 +5,10 @@ const handleClick = () => {
 </script>
 
 
-<main id="navigation">
+<nav id="navigation">
     <div id="logo">
-        <img src="" alt="logo">
+        <img src="/meowRunFavicon.png" alt="logo">
+        <span>MeowRun</span>
     </div>
     <ul id="navigationBar">
         <li><a href="#main">Main</a></li>
@@ -19,7 +20,7 @@ const handleClick = () => {
     <div id="auth">
         <a href="#loginPage" on:click={handleClick}><button>Login</button></a>
     </div>
-</main>
+</nav>
 
 
 <style lang="scss">
@@ -34,9 +35,20 @@ const handleClick = () => {
         font-size: $unit;
         margin: 0;
         padding: 0;
+        #logo { 
+            @include flexRow();
+            align-items: center;
+            img { 
+                max-width: 18%;
+                height: auto;
+            }            span { 
+                font-size: $unit*1.5;
+            }
+        }
     }
     #navigationBar {
         @include flexRow();
-        gap: $unit;
+        gap: $unit*1.2;
+        font-size: large;
     }
 </style>
