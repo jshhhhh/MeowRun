@@ -120,6 +120,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         returnTag();
+        playerRigidbody.angularVelocity = Vector3.zero;
 
         //상태에 따라 다른 Update문 호출
         switch (_state)
@@ -160,8 +161,6 @@ public class Player : MonoBehaviour
         Animator의 파라미터 참고
         */
         AnimationSetter(ANIMATION_STATE, 0);
-
-        playerRigidbody.angularVelocity = Vector3.zero;
 
         playerMove();
 
