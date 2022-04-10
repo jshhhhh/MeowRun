@@ -7,7 +7,7 @@ export let paragraph;
 
 <main id="feature">
 <div id="icon">
-    <img src={iconSource} alt="icon">
+    <img src={iconSource} id="iconSource" alt="icon" loading='lazy' />
 </div>
 <div id="texts">
     <span id="title">{title}</span>
@@ -17,5 +17,24 @@ export let paragraph;
 
 
 <style lang="scss">
-
+    @import '../partials/common.scss';
+    #feature {
+        display: flex;
+        flex-flow: column nowrap;
+        padding: $unit;
+        text-align: center;
+        #iconSource {
+            max-width: 25%;
+            height: auto;
+            border-radius: 50%;
+        }
+        #texts {
+            #title {
+                font-size: $unit *1.5;
+            }
+            #paragraph {
+                text-align: left;
+            }
+        }
+    }
 </style>
