@@ -20,5 +20,8 @@ import GridContent from "../sub/GridContent.svelte"
 
 
 <style lang="scss">
-
+    @import '../partials/common.scss';
+    #howItWorks {
+        background-color: $subBgColor;
+    }
 </style>
