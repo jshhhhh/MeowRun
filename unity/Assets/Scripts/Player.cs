@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
     private Animator animator;
     private Rigidbody playerRigidbody;
+    private GameManager gameManager;
 
     private SoundManager SM;
     public AudioClip SJump;
@@ -28,7 +29,7 @@ public class Player : MonoBehaviour
     public float jumpPower = 6f; //public으로 유니티 에디터에서 점프 변수 조정 가능
     public bool canJump = true;
     //데미지를 입을 수 있는 상태
-    private bool canDamaged = true;
+    public bool canDamaged = true;
     private bool playerDied = false;
     //true가 되는 순간의 좌표를 저장하여 플레이어를 고정시킴
     public bool stopPosition = false;
@@ -90,6 +91,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         playerRigidbody = this.GetComponent<Rigidbody>();
         SM = FindObjectOfType<SoundManager>();
+        gameManager = FindObjectOfType<GameManager>();
 
         tempPosition = transform.position;
         tempRotation = transform.rotation;
@@ -120,6 +122,8 @@ public class Player : MonoBehaviour
     void Update()
     {
         returnTag();
+        
+        //플레이어가 구르지 않게 회전속도 멈춤
         playerRigidbody.angularVelocity = Vector3.zero;
 
         //상태에 따라 다른 Update문 호출
@@ -148,7 +152,7 @@ public class Player : MonoBehaviour
             this.transform.position = tempPosition;
             this.transform.rotation = tempRotation;
         }
-            
+
     }
 
     //서 있는 상태
@@ -220,21 +224,26 @@ public class Player : MonoBehaviour
     //데미지를 입고 있는 상태
     void UpdateDamaged()
     {
-        AnimationSetter(ANIMATION_STATE, 3);
         if (canDamaged)
-            StartCoroutine(playerDamagedCoroutine());
+        {
+            canJump = false;
+            canDamaged = false;
+            gameManager.decreaseHealth();
 
-        canJump = false;
-        canDamaged = false;
+            //체력이 0 이하이면 죽음
+            if(gameManager.checkPlayerDied())
+                _state = playerState.Die;
+            //아니라면 데미지 애니메이션 출력
+            else
+                StartCoroutine(playerDamagedCoroutine());
+        }
     }
 
     IEnumerator playerDamagedCoroutine()
     {
+        AnimationSetter(ANIMATION_STATE, 3);
         SM.PlaySingle(SDamaged);
         playerForcedStop(true);
-
-        //Game manager에서 체력 감소 구현 필요
-        //Damaged()
 
         yield return new WaitForSeconds(1f);
 
@@ -251,7 +260,7 @@ public class Player : MonoBehaviour
         }
         else if (tagOfFooting != FLOOR)
             _state = playerState.Jump;
-        
+
         yield return new WaitForSeconds(0.5f);
 
         canDamaged = true;
@@ -337,7 +346,7 @@ public class Player : MonoBehaviour
     //방향키에 따라 플레이어가 회전하는 함수
     private void playerTurn()
     {
-        horizontal = Input.GetAxis("Horizontal");        
+        horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontal, 0, vertical);
@@ -381,22 +390,23 @@ public class Player : MonoBehaviour
         }
     }
 
-    
+
     // ================= 플레이어 이동 로직 ================= //
 
 
     // TO DO : 플레이어 이동 로직 <=> 리스폰 로직 서로 다른 스크립트로 분리하기. 
     // ================= 플레이어 리스폰 로직 ================= //
-    // 오브젝트 태그가 'Enemies'일 경우 Damaged 상태로, 즉사할 경우 Die 상태로
+    //오브젝트 태그가 'GameOver'일 경우 즉사(health를 다 깎고 Die 상태로)
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag(GAME_OVER))
         {
-            print("플레이어 사망");
+            gameManager.decreaseHealth(gameManager.maxHealth);
             _state = playerState.Die;
         }
     }
 
+    // 오브젝트 태그가 'Enemies'일 경우 Damaged 상태로
     private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag(ENEMIES))
