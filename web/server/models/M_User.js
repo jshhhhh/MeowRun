@@ -3,9 +3,19 @@ import mongoose  from 'mongoose';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    username: {
+    email:{
         type: String,
-        required: true
+        required: true,
+        minlength: 10
+    },
+
+    roles: {
+        User: {
+            type: Number,
+            default: 2001
+        },
+        Editor: Number,
+        Admin: Number
     },
 
     password: {
@@ -13,13 +23,8 @@ const userSchema = new Schema({
         required: true,
         trim: true,
         minlength: 8    
-    },
-
-    email:{
-        type: String,
-        required: true,
-        minlength: 10
-    },
+    },    
+    
     refreshToken: String
 });
 
