@@ -1,15 +1,15 @@
-<script lang="ts">
-const handleClick = () => {
-    // TO DO 
-}
+<script lang="ts" >
+import PlayButton from "./PlayButton.svelte";
 </script>
 
 
 <nav id="navigation">
-    <div id="logo">
-        <img src="/meowRunFavicon.png" alt="logo">
-        <span>MeowRun</span>
-    </div>
+    <a href="/">
+        <div id="logo">
+            <img src="/meowRunFavicon.png" alt="logo">
+            <span>MeowRun</span>
+        </div>
+    </a>
     <ul id="navigationBar">
         <li><a href="#main">Main</a></li>
         <li><a href="#about">About</a></li>
@@ -17,9 +17,10 @@ const handleClick = () => {
         <li><a href="#howItWorks">How It Works</a></li>
         <li><a href="#characterVote">Character Vote</a></li>
     </ul>
-    <div id="auth">
-        <a href="#loginPage" on:click={handleClick}><button>Login</button></a>
-    </div>
+    <PlayButton 
+        isTransparent={false}
+        jumpTo="loginPage"
+        buttonText="Login"/>
 </nav>
 
 
