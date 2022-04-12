@@ -30,11 +30,13 @@
     #footer { 
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        background-color: $layoutColor;
+        background-color: $subBgColor;
+        text-align: center;
+        padding: $unit*1.3;
         .title {
             font-size: $unit * 1.3;
             font-weight: bold;
+            padding-bottom: $unit;
         }
     }
-
 </style>

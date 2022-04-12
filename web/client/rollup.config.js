@@ -41,7 +41,7 @@ export default {
 	},
 	plugins: [
 		svelte({
-			preprocess: sveltePreprocess({ sourceMap: !production, sass: sass() }),
+			preprocess: sveltePreprocess({ sourceMap: !production, sass: sass(), preserve:['module'] }),
 			compilerOptions: {
 				// enable run-time checks when not in production
 				dev: !production

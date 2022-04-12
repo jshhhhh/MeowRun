@@ -2,24 +2,41 @@
 // set props
 export let buttonText;
 export let jumpTo;
+export let isTransparent = true;
 </script>
 
 
 <main id="playButton">
-    <a href={`#${jumpTo}`}><button>{buttonText}</button></a>
+    {#if isTransparent}
+        <a href={`#${jumpTo}`}><button id="transparent">{buttonText}</button></a>
+        {:else}
+        <a href={`#${jumpTo}`}><button id="hasBackground">{buttonText}</button></a>
+    {/if}
 </main>
+
 
 
 <style lang="scss">
     @import '../partials/common.scss';
     #playButton {
-        button {
+        #transparent {
             font-size : $unit;
             padding : $unit;
             border-image : linear-gradient(to right, #1B51F2 0%, #F263DA 100%);
             border-image-slice : 4;
-            border-image-width : 0.2rem;
+            border-image-width : $unit *0.2;
             background-color: transparent;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #hasBackground {
+            font-size : $unit;
+            padding : $unit;
+            background-image : linear-gradient(to right, #1B51F2 0%, #F263DA 100%);
+            border-image : linear-gradient(to right, #1B51F2 0%, #F263DA 100%);
+            border-image-slice : 4;
+            border-image-width : $unit *0.2;
             color: white;
             font-weight: bold;
             cursor: pointer;
