@@ -29,9 +29,12 @@ export let shouldImageComeFirst = false;
             <iframe 
                 src={videoSource} 
                 title="MeowRun Play" 
+                width="600"
+                height="400"
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen></iframe>
+                allowfullscreen>
+            </iframe>
         {/if}
     </div>
     <slot name="buttons"></slot>
@@ -59,7 +62,7 @@ export let shouldImageComeFirst = false;
             text-align: left;
         }
         img { 
-            max-width: 50%;
+            max-width: 75%;
             height: auto;
         }
         // variation: when image should come first
