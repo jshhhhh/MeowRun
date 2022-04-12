@@ -2,21 +2,31 @@
     import axios from 'axios'
     import API from '../API/url'
     import {username} from '../store/store'
+    import PlayButton from '../sub/PlayButton.svelte'
     
     let validationMsg = {
         email: 'currently empty', 
         password: 'currently empty'
     }
+    
+    // bind JS value with form value
+    let bindEmail=""
+    let bindPassword=""
 
     const handleSubmit = async () => {
         // preventDefault => applied by event modifier
         const loginForm = document.forms[1]
+        console.log(loginForm)
         const email = loginForm.elements.namedItem("email") as HTMLInputElement
         const password = loginForm.elements.namedItem("password") as HTMLInputElement
-        
+
+        bindEmail = email?.value
+        bindPassword = password?.value
+
+        // send login info to server
         const res = await axios.post(API.AUTH.login, { 
-            email: email.value,
-            password: password.value 
+            email: email?.value,
+            password: password?.value 
         })
 
         console.log(res)
@@ -24,8 +34,18 @@
         if (res.status === 200) {
             // check server response and update svelte store for user email
             username.update((prev) => prev = email.value)
+        } else { 
+            const { errorType } = res.data
+            const message = validateAuth(errorType)
+
+            if (message.includes("email")) validationMsg.email = message
+            else validationMsg.password = message
         }
 
+        // initialize form again
+        bindEmail = ""
+        bindPassword = ""
+        
         // TO DO : add validateAuth() later
     }
 
@@ -52,22 +72,30 @@
     </div>
 
     <form id="loginForm" name="loginForm" on:submit|preventDefault={handleSubmit}>
-        <span id="greetings">Login</span>
-        <p>Log in to MeowRun to continue</p>
+        <span id="greetings">Join MeowRun family</span>
+        <p>
+            Login here using your email and password. Login user has voting capability for upcoming game character selection. 
+            Don't hesitate to become one of the coolest MeowRun members!
+        </p>
         <fieldset>
             <legend>Email address</legend>
-            <input type="email" name="email" id="email" placeholder="abcd@gmail.com">
+            <input type="email" name="email" id="email" placeholder="abcd@gmail.com" bind:value={bindEmail}>
             <p class="validationMsg">{validateAuth("email")}</p>
         </fieldset>
         <fieldset>
             <legend>Password</legend>
-            <input type="password" name="password" id="password" placeholder="more than 6 characters">
+            <input type="password" name="password" id="password" placeholder="more than 6 characters" bind:value={bindPassword}>
             <p class="validationMsg">{validateAuth("password")}</p>
         </fieldset>
 
         <div id="buttons">
-            <button id="signin">Sign in</button>
-            <button id="signup">Sign up</button>
+            <PlayButton 
+            buttonText="Login"
+            jumpTo="" 
+            isTransparent={false} />
+            <PlayButton 
+            buttonText="Sign up"
+            jumpTo="" />
         </div>
 
         <!-- TO DO: fix url later -->
@@ -79,55 +107,57 @@
 
 <style lang="scss">
     @import '../partials/common';
-
-    #loginPage {
-        @include gridTwoColumns();
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        background-color: $subBgColor;
-        color: white;
-        padding:$unit*2;
-    }
-    
-    #welcomeImage { 
-        img { 
-            max-width: 95%;
-            height: auto;
-        }
-    }
-
-    #loginForm { 
+    #loginPage { 
         @include flexColumn();
         justify-content: center;
         align-items: center;
-        gap: $unit;
-        padding: $unit;
-        fieldset {
-            width: 75%;
-        }
-        input { 
-            width: 100%;
-            margin-top: $unit*0.7;
-        }
-        button { 
-            background-color: rgb(37, 146, 255);
-            color: white;
-            padding: $unit*0.8 $unit*1.5;
-            left: 0;
-            border-radius: 50px;
-        }
-        #signup { 
-            background-color: rgb(6, 161, 48);
-        }
-        #greetings {
-            font-size: $unit*3;
-            font-weight: bold;
-        }
+        img { display: none; }
+        #greetings { text-align: center; }
     }
-    .validationMsg {
-        margin: 0; 
-        padding: 0;
-        color: tomato;
+    #loginForm { 
+            @include flexColumn();
+            justify-content: center;
+            align-items: center;
+            gap: $unit;
+            padding: $unit;
+            fieldset {
+                width: 75%;
+            }
+            input { 
+                width: 100%;
+                margin-top: $unit*0.7;
+            }
+            #buttons { 
+                @include flexRow();
+                gap: $unit;
+            }
+            #greetings {
+                font-size: $unit*3;
+                font-weight: bold;
+            }
+        }
+        .validationMsg {
+            margin: 0; 
+            padding: 0;
+            color: tomato;
+        }
+    @media screen and (min-width:$tablet) {
+        #loginPage {
+            @include gridTwoColumns();
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: $subBgColor;
+            color: white;
+            padding:$unit*2;
+        }
+        
+        #welcomeImage { 
+            img { 
+                display: block;
+                max-width: 95%;
+                height: auto;
+            }
+        }
     }
 </style>
