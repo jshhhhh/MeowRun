@@ -5,6 +5,10 @@ const API_URL = {
         refresh: "http://localhost:3001/auth/refresh",
         signout: "http://localhost:3001/TEMP", 
         logout: "http://localhost:3001/TEMP",
+    },
+    VOTE: {
+        currentVotes: "http://localhost:3001/TEMP", 
+        updateVotes: "http://localhost:3001/TEMP"
     }
 }
 
