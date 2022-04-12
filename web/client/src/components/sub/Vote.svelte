@@ -1,5 +1,6 @@
 <script lang="ts">
     import axios from 'axios'
+    import API_URL from '../API/url';
     import PlayButton from './PlayButton.svelte';
 
     // component props
@@ -8,11 +9,27 @@
     export let videoSource ='';
     export let voteCount;
 
+    let errorMessage = ''
+
     const TARGET_COUNTS = 500;
 
     // fetchVotes should update votes
-    const fetchVotes = () => {
-        // TO DO
+    const fetchVotes = async () => {
+        // fetch vote counts from server
+        const res = await axios.get(API_URL.VOTE.currentVotes)
+
+        // store thevote count
+        voteCount = res.data
+    }
+
+    const updateVotes = async () => {
+        const res = await axios.put(API_URL.VOTE.updateVotes, {
+            voteCount: voteCount+1
+        })
+
+        // update current vote count
+        if (res.status = 200 || 204 ) voteCount++
+        else errorMessage = 'Cannot update votes'
     }
 
     // form submission
