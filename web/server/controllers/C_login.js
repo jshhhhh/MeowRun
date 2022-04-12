@@ -2,6 +2,7 @@
 import User from "../models/M_User.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { validationResult } from "express-validator"
 
 
 const StatusCode = {
@@ -16,29 +17,34 @@ const StatusCode = {
 }
 
 const SignUp = async(req,res) => {
-    const {email,pwd} = req.body
-    if (!email || !pwd ) return res.status(StatusCode.BAD_REQUEST).json({'message': 'email and pwd are required'})
-
-    // check for duplicate usernames in the db 
-    const Duplicate = await User.findOne({ email: email}).exec();
-    if (Duplicate) return res.sendStatus(StatusCode.CONFLICT); //Conflict
-    try {
-        //encrypt the password 
-        const saltRounds = 10 // num of hashing
-        const hashedPwd = await bcrypt.hash(pwd, saltRounds);
-        //create and store the new user
-        const result = await User.create({
-             "email"   : email,
-             "password": hashedPwd
-        });
-
-        console.log(result);
-        res.status(StatusCode.CREATED).json({'success' :`New user ${email} created!`});
-    } catch (err){
-        res.status(StatusCode.INTERNAL_SERVER_ERROR).json({'message': err.message});
-    }
-}
-
+    // if email and password are invalid  throw the errors
+    const errors = validationResult(req).array();
+    if (errors && errors.length) {
+    console.log(errors);
+    res.status(400).json({ errors });
+    }else{ 
+        const {email,pwd} = req.body
+        // check for duplicate usernames in the db 
+        const Duplicate = await User.findOne({ email: email}).exec();
+        if (Duplicate) return res.sendStatus(StatusCode.CONFLICT); //Conflict
+        try {
+            //encrypt the password 
+            const saltRounds = 10 // num of hashing
+            const hashedPwd = await bcrypt.hash(pwd, saltRounds);
+            //create and store the new user
+            const result = await User.create({
+                 "email"   : email,
+                 "password": hashedPwd
+            });
+       
+            console.log(result);
+            res.status(StatusCode.CREATED).json({'success' :`New user ${email} created!`});
+        } catch (err){
+            res.status(StatusCode.INTERNAL_SERVER_ERROR).json({'message': err.message});
+        } 
+    }     
+} 
+     
 const HandleLogin = async(req,res) =>{
     const {email,pwd} = req.body
     
@@ -75,7 +81,7 @@ const HandleLogin = async(req,res) =>{
     }
 }
 
-const HandleRefreshToken = async(req,res,next) =>{
+const HandleRefreshToken = async(req,res) =>{
     const cookies = req.cookies
     if(!cookies?.jwt) res.sendStatus(StatusCode.UNAUTHORIZED)
 
