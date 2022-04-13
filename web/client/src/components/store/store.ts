@@ -1,6 +1,12 @@
 import { writable } from "svelte/store";
 
-export const username = writable('')
-export const storeVoteCount = writable(0)
+export const user = writable({
+    isLogin : false, 
+    username : 'NoID@gmail.com' 
+})
 
-// TO DO: add stores for Character votes: Garfield, FishCat, and Tricolor
+export const storeVoteCounts = writable({
+    garfield: 70, 
+    fishCat: 222, 
+    tricolor: 100, 
+})

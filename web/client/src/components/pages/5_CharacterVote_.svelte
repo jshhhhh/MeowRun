@@ -1,18 +1,18 @@
 <script lang="ts">
-
+    
+    import { storeVoteCounts } from "../store/store";
     import Vote from "../sub/Vote.svelte";
-    // below should be changed based on schema
-    let garfieldVote = 70
-    let fishCatVote = 40
-    let tricolorVote = 22
-    let totalVotes = garfieldVote + fishCatVote + tricolorVote
+
+    // calculate total votes
+    let totalVotes = $storeVoteCounts.garfield + $storeVoteCounts.fishCat + $storeVoteCounts.tricolor
 
     let voteList = {
-        "Garfield" : garfieldVote,
-        "FishCat": fishCatVote, 
-        "Tricolor": tricolorVote
+        "Garfield" : $storeVoteCounts.garfield,
+        "FishCat": $storeVoteCounts.fishCat, 
+        "Tricolor": $storeVoteCounts.tricolor
     }
 
+    // decide vote winner
     const revealWinner = () => {
         const mostVoted = Math.max(
             voteList.FishCat, 
@@ -33,17 +33,17 @@
             characterName='Garfield' 
             imageSource=''
             videoSource="https://sketchfab.com/models/224963c5dbc74c3c8eb89fa100d7251c/embed"
-            voteCount={garfieldVote} />
+            voteCount={$storeVoteCounts.garfield} />
         <Vote 
             characterName='FishCat' 
             imageSource=''
             videoSource='https://sketchfab.com/models/c79305df250a4d1e9fe0ffca5f232c1d/embed'
-            voteCount={fishCatVote} />
+            voteCount={$storeVoteCounts.fishCat} />
         <Vote 
             characterName='Tricolor' 
             imageSource=''
             videoSource='https://sketchfab.com/models/eb30bd609a3c422f8cf77d2916b1b559/embed'
-            voteCount={tricolorVote} />
+            voteCount={$storeVoteCounts.tricolor} />
     </div>
 
     <div id="voteResult">

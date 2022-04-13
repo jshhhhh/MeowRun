@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "axios": "^0.26.1",
-    "sirv-cli": "^2.0.0"
+    "sirv-cli": "^2.0.0",
+    "svelte-avatar": "^1.1.1"
   }
 }
