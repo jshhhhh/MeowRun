@@ -122,19 +122,16 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     public void Idle() 
     {
         // 플레이어가 탐지 거리 바깥이면 주변 패트롤
-        print("Enemy being idle");
         Patrol();
     }
 
     public void Track() 
     {
-        print("Enemy detected a player, starting tracking");
         _agent.SetDestination(player.transform.position);
     }
 
     public void Fire() 
     {
-        print($"{intermediateType} enemy fires an object");
         _agent.isStopped = true; // 제자리에서 오브젝트 슈팅 시작
         
         // 플레이어가 점프하지 않는 경우만 시선 고정
@@ -156,8 +153,6 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     }
 
     IEnumerator EnemyFireCoroutine(float time) { 
-        print("ray casted and EnemyFireCoroutine started");
-
         // 슈팅 논리 전개
         if (Input.GetKeyDown(KeyCode.Space)) {
             // 1. 발사체 오브젝트 생성
@@ -178,8 +173,6 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
 
     public void Die() 
     {
-        // TO DO : 플레이어가 밟고 지나가면 죽음
-        print("Enemy died by a player");
         Destroy(this.gameObject);
     }
 
@@ -194,6 +187,10 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
         {
             routeIndex = (routeIndex+1)%AgentRoutes.Length;
         }
+    }
+    public IEnemyBehavior.enemyState GetEnemyState()
+    {
+        return current;
     }
     // ============== IEnemyBehavior implementation ============== // 
 }
