@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1165591320299398719
+--- !u!1 &2871149168425363604
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1974498092632325253}
-  - component: {fileID: 3227119509492347680}
-  - component: {fileID: 805580633355503594}
-  - component: {fileID: 2084158310198892862}
+  - component: {fileID: 3212067469792817710}
+  - component: {fileID: 1962537877482618251}
+  - component: {fileID: 4384432928814876993}
+  - component: {fileID: 3105574050695307838}
+  - component: {fileID: 3105574050695307810}
   m_Layer: 0
-  m_Name: grass floor
+  m_Name: Crate
   m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1974498092632325253
+--- !u!4 &3212067469792817710
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165591320299398719}
-  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: -5.114854, y: -1.0927792, z: 1.4173942}
+  m_GameObject: {fileID: 2871149168425363604}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -23.81284, y: -9.11, z: 40}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
---- !u!33 &3227119509492347680
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1962537877482618251
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165591320299398719}
-  m_Mesh: {fileID: -560847371858820455, guid: 5de06dd39ac097649a5d371ca0564f7d, type: 3}
---- !u!23 &805580633355503594
+  m_GameObject: {fileID: 2871149168425363604}
+  m_Mesh: {fileID: -3660275907326674588, guid: 2acc88c1f602a4f41a35d1be09d0ff3d, type: 3}
+--- !u!23 &4384432928814876993
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165591320299398719}
+  m_GameObject: {fileID: 2871149168425363604}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -62,8 +63,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -2505642851634945670, guid: 5de06dd39ac097649a5d371ca0564f7d, type: 3}
-  - {fileID: 3765266259533036548, guid: 5de06dd39ac097649a5d371ca0564f7d, type: 3}
+  - {fileID: -7805457775891230367, guid: 2acc88c1f602a4f41a35d1be09d0ff3d, type: 3}
+  - {fileID: -4770390735465466038, guid: 2acc88c1f602a4f41a35d1be09d0ff3d, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -85,16 +86,32 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2084158310198892862
+--- !u!54 &3105574050695307838
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2871149168425363604}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &3105574050695307810
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165591320299398719}
+  m_GameObject: {fileID: 2871149168425363604}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.018966042, y: 0.034917485, z: 0.019999962}
-  m_Center: {x: -0.001, y: 0, z: -0.001}
+  m_Size: {x: 0.0100000035, y: 0.010002628, z: 0.009999998}
+  m_Center: {x: 0, y: -0.0000013131646, z: 0}
