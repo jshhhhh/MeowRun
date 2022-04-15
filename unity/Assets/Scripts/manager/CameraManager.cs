@@ -7,7 +7,7 @@ public class CameraManager : MonoBehaviour
     //카메라가 따라갈 대상
     public GameObject target;
     //카메라의 속도
-    public float moveSpeed = 4f;
+    public float moveSpeed = 5f;
     //대상의 현재 위치값
     private Vector3 targetPosition;
 

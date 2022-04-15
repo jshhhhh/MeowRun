@@ -13,13 +13,14 @@ import PlayButton from "../sub/PlayButton.svelte";
     that would be a mean life, truly. Your body needs rest, so is your brain. MeowRun is a great game for you to
     refresh yourself by playing around with cute cat character. 
     "
-    imageSource="/banner/mainBanner.png">
+    imageSource="https://mir-s3-cdn-cf.behance.net/project_modules/1400/6d77bb139168569.62313b59c7519.jpg">
 
     <div slot="buttons" id="buttons">
         <PlayButton 
             buttonText="Play MeowRun"
             jumpTo="playMeowRun"/>
         <PlayButton
+            isTransparent={false}
             buttonText="Sign Up"
             jumpTo="loginPage"/>
     </div>

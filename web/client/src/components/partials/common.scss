@@ -1,6 +1,10 @@
 $unit: 1rem;
 $mainColor: rgb(29, 26, 29);
 $layoutColor: rgb(66, 13, 66);
+$subBgColor: rgb(38, 38, 38);
+$tabBgColor: rgb(123, 123, 123);
+$tablet: 640px;
+$pc: 1024px;
 
 @mixin flexColumn {
     display: flex;

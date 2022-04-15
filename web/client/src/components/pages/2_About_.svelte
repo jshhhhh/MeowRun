@@ -14,11 +14,14 @@ import GridContent from "../sub/GridContent.svelte";
     Started in February by Seokhawn Jung, Junggi Kim, Jake Sung, MeowRun has come a long way from its beginnings. When we first started out, our passion for software engineering drove us to dedicate 100% to develop a great software,
     and gave him the impetus to turn hard work and inspiration into to a booming online game. We now proudly launch this game and are thrilled to be a part of the big game & web dev community. 
     "
-    imageSource="/banner/aboutUs.gif"
+    imageSource="/banner/daegudev.png"
     shouldImageComeFirst={true} />
 </main>
 
 
 <style lang="scss">
-
+    @import '../partials/common.scss';
+    #about { 
+        background-color: $subBgColor;
+    }
 </style>

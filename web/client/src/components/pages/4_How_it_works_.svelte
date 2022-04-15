@@ -20,5 +20,13 @@ import GridContent from "../sub/GridContent.svelte"
 
 
 <style lang="scss">
-
+    @import '../partials/common.scss';
+    #howItWorks {
+        @include flexRow();
+    }
+    @media screen and (min-width:$tablet) {
+        #howItWorks {
+            background-color: $subBgColor;
+        }
+    }
 </style>
