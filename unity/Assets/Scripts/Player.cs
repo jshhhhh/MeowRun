@@ -18,7 +18,6 @@ public class Player : MonoBehaviour
     private Animator animator;
     private Rigidbody playerRigidbody;
     private GameManager gameManager;
-
     private SoundManager SM;
     public AudioClip SJump;
     public AudioClip SDie;
@@ -27,26 +26,25 @@ public class Player : MonoBehaviour
 
     public float speed = 3.5f; //public으로 유니티 에디터에서 스피드 변수 조정 가능
     public float jumpPower = 6f; //public으로 유니티 에디터에서 점프 변수 조정 가능
-    public bool canJump = true;
+
+    private bool canJump = true;
     //데미지를 입을 수 있는 상태
-    public bool canDamaged = true;
+    private bool canDamaged = true;
     private bool playerDied = false;
     //true가 되는 순간의 좌표를 저장하여 플레이어를 고정시킴
-    public bool stopPosition = false;
+    private bool stopPosition = false;
     //플레이어 좌표를 고정하기 위한 임시 위치값
     private Vector3 tempPosition;
     private Quaternion tempRotation;
-
     private RaycastHit hit;
     //ray의 길이
     private float lengthOfRay = 0.2f;
     //BoxCast의 크기
     private Vector3 localScale = new Vector3(0.35f, 0.01f, 0.35f);
     //ray가 물체에 닿았는지의 여부
-    private bool isHit;
+    private bool isHit;    
     //플레이어의 발에 닿은 오브젝트의 태그
     public string tagOfFooting;
-
     //플레이어의 속도
     public float velocity;
     //상태를 체크하기 위한 사실상 정지 상태의 속도
@@ -55,7 +53,7 @@ public class Player : MonoBehaviour
     private Vector3 lastPosition;
 
     //회전값을 계산하기 위한 변수
-    public float horizontal, vertical;
+    private float horizontal, vertical;
 
     //태그명 const로 대체(오타 방지)
     private const string FLOOR = "Floor", ENEMIES = "Enemies", GAME_OVER = "GameOver", ANIMATION_STATE = "animationState";
@@ -168,11 +166,9 @@ public class Player : MonoBehaviour
 
         playerMove();
 
-        if (velocity > zeroVelocity)
-            _state = playerState.Move;
+        if (velocity > zeroVelocity)    _state = playerState.Move;
 
-        if (Input.GetKeyDown(KeyCode.Space) && canJump)
-            playerJump();
+        if (Input.GetKeyDown(KeyCode.Space) && canJump) playerJump();
     }
 
     //움직이는 상태
@@ -187,14 +183,11 @@ public class Player : MonoBehaviour
 
         //상태 전환 조건
         //바닥을 딛고 있지 않으면 Jump 상태로(낙하 포함)
-        if (tagOfFooting != FLOOR)
-            _state = playerState.Jump;
+        if (tagOfFooting != FLOOR)  _state = playerState.Jump;
         //속력이 없으면 Idle 상태로
-        else if (velocity <= zeroVelocity)
-            _state = playerState.Idle;
+        else if (velocity <= zeroVelocity)  _state = playerState.Idle;
 
-        if (Input.GetKeyDown(KeyCode.Space) && canJump)
-            playerJump();
+        if (Input.GetKeyDown(KeyCode.Space) && canJump) playerJump();
     }
 
     //점프 또는 떨어지는 상태
@@ -214,10 +207,8 @@ public class Player : MonoBehaviour
         //바닥을 딛고 있으면 Moving 상태로
         if (tagOfFooting == FLOOR)
         {
-            if (velocity > zeroVelocity)
-                _state = playerState.Move;
-            else
-                _state = playerState.Idle;
+            if (velocity > zeroVelocity)    _state = playerState.Move;
+            else    _state = playerState.Idle;
         }
     }
 
@@ -228,14 +219,12 @@ public class Player : MonoBehaviour
         {
             canJump = false;
             canDamaged = false;
-            gameManager.decreaseHealth();
+            gameManager.decreaseLife();
 
             //체력이 0 이하이면 죽음
-            if(gameManager.checkPlayerDied())
-                _state = playerState.Die;
+            if(gameManager.isDead())   _state = playerState.Die;
             //아니라면 데미지 애니메이션 출력
-            else
-                StartCoroutine(playerDamagedCoroutine());
+            else    StartCoroutine(playerDamagedCoroutine());
         }
     }
 
@@ -253,13 +242,10 @@ public class Player : MonoBehaviour
         //바닥을 딛고 있으면 Move, 아니면 Jump
         if (tagOfFooting == FLOOR)
         {
-            if (velocity >= zeroVelocity)
-                _state = playerState.Move;
-            else
-                _state = playerState.Idle;
+            if (velocity >= zeroVelocity)   _state = playerState.Move;
+            else    _state = playerState.Idle;
         }
-        else if (tagOfFooting != FLOOR)
-            _state = playerState.Jump;
+        else if (tagOfFooting != FLOOR) _state = playerState.Jump;
 
         yield return new WaitForSeconds(0.5f);
 
@@ -269,8 +255,7 @@ public class Player : MonoBehaviour
     //죽는 상태
     void UpdateDie()
     {
-        if (!playerDied)
-            StartCoroutine(playerDieCoroutine());
+        if (!playerDied)    StartCoroutine(playerDieCoroutine());
 
         playerDied = true;
     }
@@ -299,10 +284,8 @@ public class Player : MonoBehaviour
     {
         isHit = Physics.BoxCast(transform.position, localScale, -transform.up, out hit, transform.rotation, lengthOfRay);
 
-        if (isHit)
-            tagOfFooting = hit.collider.tag;
-        else
-            tagOfFooting = null;
+        if (isHit)  tagOfFooting = hit.collider.tag;
+        else    tagOfFooting = null;
     }
 
     //Gizmos.DrawWireCube로 시각적으로 ray 표시
@@ -328,10 +311,8 @@ public class Player : MonoBehaviour
     {
         // Fix : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-        {
             playerRigidbody.velocity =
                 new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
-        }
 
         playerTurn();
     }
@@ -352,9 +333,7 @@ public class Player : MonoBehaviour
         Vector3 direction = new Vector3(horizontal, 0, vertical);
 
         if (!(horizontal == 0 && vertical == 0))
-        {
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
-        }
     }
 
     private void preventFlip()
@@ -401,7 +380,7 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(GAME_OVER))
         {
-            gameManager.decreaseHealth(gameManager.maxHealth);
+            gameManager.decreaseLife(gameManager.TotalLife);
             _state = playerState.Die;
         }
     }
