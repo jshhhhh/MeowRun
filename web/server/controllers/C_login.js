@@ -1,8 +1,8 @@
 // controller for login 
-import User from "../models/M_User.js"
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
-import { validationResult } from "express-validator"
+const User = require("../models/M_User.js")
+const bcrypt =require("bcrypt")
+const jwt =require ("jsonwebtoken")
+const { validationResult}=require("express-validator")
 
 
 const StatusCode = {
@@ -23,7 +23,7 @@ const SignUp = async(req,res) => {
     console.log(errors);
     res.status(400).json({ errors });
     }else{ 
-        const {email,pwd} = req.body
+        const {email,pwd,role} = req.body
         // check for duplicate usernames in the db 
         const Duplicate = await User.findOne({ email: email}).exec();
         if (Duplicate) return res.sendStatus(StatusCode.CONFLICT); //Conflict
@@ -34,7 +34,8 @@ const SignUp = async(req,res) => {
             //create and store the new user
             const result = await User.create({
                  "email"   : email,
-                 "password": hashedPwd
+                 "encryptedPassword": hashedPwd,
+                 "roles" : role
             });
        
             console.log(result);
@@ -55,12 +56,8 @@ const HandleLogin = async(req,res) =>{
     const match = await bcrypt.compare(pwd,foundUser.password)
     if (match) {
         // create JWTs
-        const accessToken = jwt.sign({ 
-                "UserInfo": {
-                    "username": foundUser.username,
-                    "roles": foundUser.roles
-                }
-            },
+        const accessToken = jwt.sign(
+            {"email": foundUser.email},
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: '30s'}
         )
@@ -97,11 +94,9 @@ const HandleRefreshToken = async(req,res) =>{
             const roles = Object.values(foundUser.roles)
             const accessToken = jwt.sign(
                 {
-                    // 
-                    "UserInfo":{
+                    
                         "email": decoded.email,
-                        "roles": roles
-                    }
+                        
                 },
                 process.env.ACCESS_TOKEN_SECRET,
                 {expiresIn: "30s"}
@@ -112,8 +107,8 @@ const HandleRefreshToken = async(req,res) =>{
 }
 
 
-export {
-    SignUp,
+
+module.exports ={SignUp,
     HandleLogin,
     HandleRefreshToken
 }

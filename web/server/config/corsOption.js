@@ -13,7 +13,7 @@ const corsOptions = {
     optionsSuccessStatus: 200
 }
 
-export default corsOptions
+module.exports =corsOptions
 
 
 
