@@ -47,21 +47,24 @@ import PlayButton from "../sub/PlayButton.svelte";
 <style lang="scss">
     @import '../partials/common.scss';
     #whyMeowRun {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-    h1 {
-        text-align: center;
-        font-size: $unit *3;
-    }
-    #features {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(2 1fr);
-        gap: $unit*2;
-        padding: $unit;
-        justify-content: center;
-        align-items: center;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    @media screen and (min-width:$tablet) {
+        
+        h1 {
+            text-align: center;
+            font-size: $unit *3;
+        }
+        #features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2 1fr);
+            gap: $unit*2;
+            padding: $unit;
+            justify-content: center;
+            align-items: center;
+        }
     }
 
 </style>

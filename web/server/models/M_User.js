@@ -1,12 +1,17 @@
 // mongoose model for user 
 import mongoose  from 'mongoose';
+
 const Schema = mongoose.Schema;
+
+
+
 
 const userSchema = new Schema({
     email:{
         type: String,
         required: true,
-        minlength: 10
+        minlength:16,
+        maxlength:30
     },
 
     roles: {
