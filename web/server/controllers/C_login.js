@@ -127,16 +127,32 @@ const HandleLogout =  async (req, res) => {
     res.sendStatus(StatusCode.NO_CONTENT);
 }
 
-const DeleteUser = (req,res) =>{
+const DeleteUser = async(req,res) =>{
 
-    
+    const cookies = req.cookies
+    if (!cookies?.jwt) return res.sendStatus(StatusCode.NO_CONTENT); 
+    const refreshToken = cookies.jwt;
+
+    try{
+        const foundUser = await User.deleteOne({ refreshToken }).exec();
+        if (!foundUser) {
+            res.clearCookie('jwt', { httpOnly: true});
+            return res.sendStatus(StatusCode.NO_CONTENT);
+        }
+        console.log(foundUser)
+        return res.sendStatus(StatusCode.OK)
+    }catch(err){
+        console.log(err)
+    }   
+    res.clearCookie('jwt', { httpOnly: true});  
 }
 
 
 module.exports ={SignUp,
     HandleLogin,
     HandleRefreshToken,
-    HandleLogout
+    HandleLogout,
+    DeleteUser
 }
 
 
