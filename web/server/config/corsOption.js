@@ -1,6 +1,8 @@
 const whitelist = [
-    'http://localhost:3001',
-    'http://localhost:8080'
+    {   
+    "develop": ['http://localhost:3001', 'http://localhost:8080'], 
+    "prod": ['https://meowrun.netlify.app']
+    }
 ]
 const corsOptions = { 
     origin: (origin, callback) =>{
@@ -10,7 +12,8 @@ const corsOptions = {
             callback(new Error('Not allowed by CORS'));
         }
     },
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    methods: 'GET,POST,DELETE'
 }
 
 module.exports =corsOptions

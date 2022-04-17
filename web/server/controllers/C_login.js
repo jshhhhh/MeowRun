@@ -53,7 +53,7 @@ const HandleLogin = async(req,res) =>{
     const foundUser = await User.findOne({email : email}).exec()
     if (!foundUser) return res.sendStatus(StatusCode.NOT_FOUND)
 
-    const match = await bcrypt.compare(pwd,foundUser.password)
+    const match = await bcrypt.compare(pwd,foundUser.encryptedPassword)
     if (match) {
         // create JWTs
         const accessToken = jwt.sign(
@@ -91,12 +91,9 @@ const HandleRefreshToken = async(req,res) =>{
         process.env.REFRESH_TOKEN_SECRET,
         (err,decoded) =>{
             if(err || foundUser.email !== decoded.email) return res.sendStatus(StatusCode.FORBIDDEN)
-            const roles = Object.values(foundUser.roles)
             const accessToken = jwt.sign(
                 {
-                    
-                        "email": decoded.email,
-                        
+                  "email": decoded.email,               
                 },
                 process.env.ACCESS_TOKEN_SECRET,
                 {expiresIn: "30s"}
@@ -106,11 +103,36 @@ const HandleRefreshToken = async(req,res) =>{
     )
 }
 
+const HandleLogout =  async (req, res) => {
+    // On client, also delete the accessToken
+    
+    
+    const cookies = req.cookies
+    if (!cookies?.jwt) return res.sendStatus(204); //No content
+    const refreshToken = cookies.jwt;
+
+    // Is refreshToken in db?
+    const foundUser = await User.findOne({ refreshToken }).exec();
+    if (!foundUser) {
+        res.clearCookie('jwt', { httpOnly: true});
+        return res.sendStatus(204);
+    }
+
+    // Delete refreshToken in db
+    foundUser.refreshToken = '';
+    const result = await foundUser.save();
+    console.log(result);
+
+    res.clearCookie('jwt', { httpOnly: true}); // secure: true - only serves on https
+    res.sendStatus(204);
+
+}
 
 
 module.exports ={SignUp,
     HandleLogin,
-    HandleRefreshToken
+    HandleRefreshToken,
+    HandleLogout
 }
 
 
