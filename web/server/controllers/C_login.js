@@ -13,7 +13,8 @@ const StatusCode = {
     CONFLICT : 409,
     INTERNAL_SERVER_ERROR: 500,
     NOT_FOUND: 404,
-    FORBIDDEN: 403
+    FORBIDDEN: 403,
+    NO_CONTENT: 204
 }
 
 const SignUp = async(req,res) => {
@@ -80,12 +81,12 @@ const HandleLogin = async(req,res) =>{
 
 const HandleRefreshToken = async(req,res) =>{
     const cookies = req.cookies
-    if(!cookies?.jwt) res.sendStatus(StatusCode.UNAUTHORIZED)
+    if(!cookies?.jwt) return res.sendStatus(StatusCode.UNAUTHORIZED)
 
     // Check refreshToken
     const refreshToken = cookies.jwt
     const foundUser = await User.findOne({refreshToken} ).exec()
-    if(!foundUser) res.sendStatus(StatusCode.FORBIDDEN)
+    if(!foundUser) return res.sendStatus(StatusCode.FORBIDDEN)
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
@@ -105,17 +106,16 @@ const HandleRefreshToken = async(req,res) =>{
 
 const HandleLogout =  async (req, res) => {
     // On client, also delete the accessToken
-    
-    
+        
     const cookies = req.cookies
-    if (!cookies?.jwt) return res.sendStatus(204); //No content
+    if (!cookies?.jwt) return res.sendStatus(StatusCode.NO_CONTENT); 
     const refreshToken = cookies.jwt;
 
     // Is refreshToken in db?
     const foundUser = await User.findOne({ refreshToken }).exec();
     if (!foundUser) {
         res.clearCookie('jwt', { httpOnly: true});
-        return res.sendStatus(204);
+        return res.sendStatus(StatusCode.NO_CONTENT);
     }
 
     // Delete refreshToken in db
@@ -124,8 +124,12 @@ const HandleLogout =  async (req, res) => {
     console.log(result);
 
     res.clearCookie('jwt', { httpOnly: true}); // secure: true - only serves on https
-    res.sendStatus(204);
+    res.sendStatus(StatusCode.NO_CONTENT);
+}
 
+const DeleteUser = (req,res) =>{
+
+    
 }
 
 
