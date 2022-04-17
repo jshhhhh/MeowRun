@@ -6,11 +6,10 @@ using UnityEngine.AI;
 // Enemy type : Easy
 public class E_Easy : MonoBehaviour, IEnemyBehavior
 {
-    //  TO DO : enemy type => property + enum&ToString
     private Player player; 
     private float distance; // Player ~ enemy 추적 거리
     private string easyType;
-    private IEnemyBehavior.enemyState current; // enemy 상태
+    internal static IEnemyBehavior.enemyState current; // enemy 상태
     private IEnemyBehavior.playerDistanceState isDetected; // enemy의 player 탐지  
     public NavMeshAgent _agent; // enemy 인공지능 인스턴스
     [SerializeField] Transform[] AgentRoutes;
@@ -97,27 +96,21 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
     // ============== IEnemyBehavior implementation ============== // 
     public void Idle() 
     {
-        // 플레이어가 탐지 거리 바깥이면 주변 패트롤
-        print("Enemy being idle");
         Patrol();
     }
 
     public void Track() 
     {
-        print("Enemy detected a player, starting tracking");
         _agent.destination = player.transform.position;
-        // TO DO : jump 로직 추가
     }
 
     public void Fire() 
     {
-        print($"{easyType} enemy does not fire");
+        // do nothing
     }
 
     public void Die() 
     {
-        // TO DO : 플레이어가 밟고 지나가면 죽음
-        print("Enemy died by a player");
         Destroy(this.gameObject);
     }
 
@@ -132,5 +125,10 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
             routeIndex = (routeIndex+1)%AgentRoutes.Length;
         }
     }
+
+    public IEnemyBehavior.enemyState GetEnemyState()
+    {
+        return current;
+    } 
     // ============== IEnemyBehavior implementation ============== // 
 }
