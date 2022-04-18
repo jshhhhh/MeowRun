@@ -2,16 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CharacterSelection : MonoBehaviour
 {
     
     [SerializeField] GameObject[] characters;
     [SerializeField] int currentIndex = 0;
-    [SerializeField] GameObject spawnPoint;
+    [SerializeField] Sprite unclicked, clicked; // 2D graphic button images
+    [SerializeField] Image _image; // play button image object
+
+    private bool isClicked = false;
+
+    // =============== Characters sliders =============== //
     void Start()
     {
         disableAllCharacters();
+        characters[0].gameObject.SetActive(true);
     } 
     public void showNextCharacter()
     {
@@ -47,7 +54,11 @@ public class CharacterSelection : MonoBehaviour
             characters[i].gameObject.SetActive(false);
         }
     }
+    // =============== Characters sliders =============== //
 
+    // =============== Button logics =============== //
+
+    // TO DO: add start game on click
     public void StartGame() 
     {
         int currentSceneBuildindex = SceneManager.GetActiveScene().buildIndex;
@@ -55,5 +66,26 @@ public class CharacterSelection : MonoBehaviour
             SceneManager.GetSceneByBuildIndex(currentIndex+1).name
         );
         print($"next scene: {SceneManager.GetSceneByBuildIndex(currentIndex+1).name}");
+    
     }
+
+    public void OnMouseDown()
+    {
+        print("button down");
+        _image.sprite = clicked;
+        isClicked = true;
+    }
+
+    // FIX: on mouse up not wokring
+    public void OnMouseUp()
+    {
+        _image.sprite = unclicked;
+    }
+    public void ResetMouseDown()
+    {
+        print("button up");
+        _image.sprite = unclicked;
+    }
+    // =============== Button logics =============== //
+
 }
