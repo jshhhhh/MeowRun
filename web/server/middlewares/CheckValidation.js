@@ -1,4 +1,4 @@
-import {check} from "express-validator"
+const {check} = require('express-validator')
 
 
 const CheckValidation = [
@@ -12,7 +12,7 @@ const CheckValidation = [
     check('pwd')
         .exists()
         .withMessage('please enter the password')
-        .isLength({min: 8})
-        .withMessage('password is must be above six letters')
+        .isLength({min:8})
+        .withMessage('password is must be above eight letters')
 ]   
-export {CheckValidation}
+module.exports = CheckValidation

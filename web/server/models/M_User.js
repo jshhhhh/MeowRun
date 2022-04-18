@@ -1,7 +1,7 @@
-// mongoose model for user 
-import mongoose  from 'mongoose';
+// // mongoose model for user 
+ const mongoose = require( 'mongoose')
 
-const Schema = mongoose.Schema;
+ const Schema = mongoose.Schema;
 
 
 
@@ -14,16 +14,9 @@ const userSchema = new Schema({
         maxlength:30
     },
 
-    roles: {
-        User: {
-            type: Number,
-            default: 2001
-        },
-        Editor: Number,
-        Admin: Number
-    },
+    roles: { type: String, enum:['admin', 'restricted'],required: true },
 
-    password: {
+    encryptedPassword: {
         type: String,
         required: true,
         trim: true,
@@ -36,4 +29,6 @@ const userSchema = new Schema({
 const User = mongoose.model('User',userSchema);
 User.collection.createIndex( { email: 1 }, { unique: true } )
 
-export default User
+module.exports= User
+
+
