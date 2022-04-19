@@ -44,12 +44,11 @@ const handleLogout = async () => {
             <PlayButton
                 buttonText='Vote'
                 jumpTo='characterVote' />
-            <div id="logout" on:click={handleLogout}>
-                <PlayButton 
-                    isTransparent={false}
-                    buttonText='Logout'
-                    jumpTo='' />
-            </div>
+            <PlayButton
+                callback={handleLogout}
+                isTransparent={false}
+                buttonText='Logout'
+                jumpTo='' />
         </div>
     </div>
     {/if}

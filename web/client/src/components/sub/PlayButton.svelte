@@ -3,14 +3,15 @@
 export let buttonText;
 export let jumpTo;
 export let isTransparent = true;
+export let callback = function(){};
 </script>
 
 
 <main id="playButton">
     {#if isTransparent}
-        <a href={`#${jumpTo}`}><button id="transparent">{buttonText}</button></a>
+        <a href={`#${jumpTo}`} on:click={()=>callback()}><button id="transparent">{buttonText}</button></a>
         {:else}
-        <a href={`#${jumpTo}`}><button id="hasBackground">{buttonText}</button></a>
+        <a href={`#${jumpTo}`} on:click={()=>callback()}><button id="hasBackground">{buttonText}</button></a>
     {/if}
 </main>
 
