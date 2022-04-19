@@ -7,35 +7,41 @@
     export let characterName;
     export let imageSource;
     export let videoSource ='';
-    export let voteCount;
+    export let voteCount; // delivered from parent 
 
     let errorMessage = ''
-
     const TARGET_COUNTS = 500;
 
-    // fetchVotes should update votes
-    const fetchVotes = async () => {
-        // fetch vote counts from server
-        const res = await axios.get(API_URL.VOTE.currentVotes)
-
-        // store thevote count
-        voteCount = res.data
-    }
-
-    const updateVotes = async () => {
+    const addOneVote = async () => {
         const res = await axios.put(API_URL.VOTE.updateVotes, {
             voteCount: voteCount+1
         })
 
-        // update current vote count
-        if (res.status = 200 || 204 ) voteCount++
-        else errorMessage = 'Cannot update votes'
-    }
+        console.log(res)
 
+        // update current vote count
+        if (res.status = 200 || 204 ) { voteCount = res.data }
+        else handleError(res.data)
+    }
+ 
+    
     // form submission
     const handleSubmit = () => {
         console.log(document.forms.namedItem("characterVoteForm"))
+        addOneVote()
     }
+
+    // vote update failure
+    const handleError = (errorType:any) => {
+        switch(errorType) {
+            case 'error' : 
+                break;
+            default:
+                break;
+        }
+    }
+
+
 </script>
 
 
@@ -57,7 +63,7 @@
 
     <form name="characterVoteForm" class="voteContent" id="characterVoteForm" on:submit|preventDefault={handleSubmit}>
         <span id="characterName">{characterName}</span>
-        <PlayButton 
+        <PlayButton
             isTransparent={false}
             buttonText='Vote'
             jumpTo='' />     
@@ -66,9 +72,9 @@
     <div id="currentVotes" class="voteContent">
         <label for="vote">{voteCount} votes out of {TARGET_COUNTS}</label>
         <progress id="vote" max={TARGET_COUNTS} value={voteCount}>{TARGET_COUNTS}</progress>
-    </div>
+    </div> 
 
-    
+     
 </main>
 
 

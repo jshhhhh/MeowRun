@@ -1,25 +1,34 @@
 <script lang="ts">
     import axios from 'axios'
+import API_URL from '../API/url';
     import API from '../API/url'
     import { user } from '../store/store'
     import PlayButton from '../sub/PlayButton.svelte'
-    import TabProvider from '../sub/TabProvider.svelte'
     
     let validationMsg = {
         email: 'currently empty', 
         password: 'currently empty'
+    }
+
+    // differentiate buttons
+    let requestType = { 
+        login: false, 
+        signup: false
     }
     
     // bind JS value with form value
     let bindEmail=""
     let bindPassword=""
 
+    const loginForm = document.forms[1]
+    console.log(loginForm)
+    const email = loginForm?.elements.namedItem("email") as HTMLInputElement
+    const password = loginForm?.elements.namedItem("password") as HTMLInputElement
+
     const handleSubmit = async () => {
         // preventDefault => applied by event modifier
-        const loginForm = document.forms[1]
-        console.log(loginForm)
-        const email = loginForm.elements.namedItem("email") as HTMLInputElement
-        const password = loginForm.elements.namedItem("password") as HTMLInputElement
+        console.log("login button clicked")
+        requestType.login = true
 
         bindEmail = email?.value
         bindPassword = password?.value
@@ -49,8 +58,21 @@
         // initialize form again
         bindEmail = ""
         bindPassword = ""
-        
     }
+
+    const handleSignUp = async () => {
+        console.log("sign up button clicked")
+        requestType.signup = true
+        const res = await axios.post(API_URL.AUTH.signup, {
+            email: email?.value, 
+            password: password?.value
+        })
+
+        if (res.status === 200 || 204) {
+            alert("sign up success")
+            window.location.reload()
+        }
+    } 
 
     // check server validation error message and return the message to display
     const validateAuth = (errorType:any) => {
@@ -74,7 +96,9 @@
         <img src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/d4b335139168569.62301313cb03b.jpg" alt="welcome banner" loading='lazy'/>
     </div>
 
-    <form id="loginForm" name="loginForm" on:submit|preventDefault={handleSubmit}>
+    <form id="loginForm" name="loginForm" 
+        on:submit|preventDefault={
+            requestType.login ? handleSubmit : handleSignUp } >
         <span id="greetings">Join MeowRun family</span>
         <p>
             Login here using your email and password. Login user has voting capability for upcoming game character selection. 
@@ -82,21 +106,29 @@
         </p>
         <fieldset>
             <legend>Email address</legend>
-            <input type="email" name="email" id="email" placeholder="abcd@gmail.com" bind:value={bindEmail}>
+            <input 
+                type="email" name="email" id="email" 
+                placeholder="abcd@gmail.com" bind:value={bindEmail}
+                required>
             <p class="validationMsg">{validateAuth("email")}</p>
         </fieldset>
         <fieldset>
             <legend>Password</legend>
-            <input type="password" name="password" id="password" placeholder="more than 8 characters" bind:value={bindPassword}>
+            <input 
+                type="password" name="password" id="password" 
+                placeholder="more than 8 characters" bind:value={bindPassword}
+                required >
             <p class="validationMsg">{validateAuth("password")}</p>
         </fieldset>
 
         <div id="buttons">
             <PlayButton 
+            callback={handleSubmit}
             buttonText="Login"
             jumpTo="" 
             isTransparent={false} />
             <PlayButton 
+            callback={handleSignUp}
             buttonText="Sign up"
             jumpTo="" />
         </div>

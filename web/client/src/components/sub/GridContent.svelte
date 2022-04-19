@@ -6,6 +6,8 @@ export let imageSource="";
 export let isImage = true;
 export let videoSource = "";
 export let shouldImageComeFirst = false;
+export let videoWidth = 400
+export let videoHeight = 600
 </script>
 
 
@@ -22,7 +24,7 @@ export let shouldImageComeFirst = false;
         </h1>
         <p id="paragraphs">{paragraphs}</p>
     </div>
-    <div id={shouldImageComeFirst && "imageFirst"}>
+    <div id={shouldImageComeFirst && "imageFirst"} class="mediaContainer">
         {#if isImage}
             <img src={imageSource} id="imageSource" alt="grid content" loading='lazy'/>  
             {:else}
@@ -31,6 +33,8 @@ export let shouldImageComeFirst = false;
                 src={videoSource} 
                 title="MeowRun Play" 
                 frameborder="0" 
+                width={videoWidth}
+                height={videoHeight}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowfullscreen>
             </iframe>
@@ -50,6 +54,11 @@ export let shouldImageComeFirst = false;
         h1,h2 { text-align: center;}
         h1 p { line-height: $unit;}
         img { max-width: 100%; height: auto; margin: 0 auto; }
+        .mediaContainer {
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+        }
     }
     @media screen and (min-width:$tablet) {
         #gridContent {
