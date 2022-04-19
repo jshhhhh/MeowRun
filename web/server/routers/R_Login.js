@@ -1,5 +1,5 @@
 // router for login 
-const {SignUp,HandleLogin,HandleRefreshToken,HandleLogout,D, DeleteUser} = require('../controllers/C_Login.js')
+const {SignUp,HandleLogin,HandleRefreshToken,HandleLogout, DeleteUser} = require('../controllers/C_Login.js')
 const express = require('express')
 const CheckValidation = require('../middlewares/CheckValidation.js')
 
