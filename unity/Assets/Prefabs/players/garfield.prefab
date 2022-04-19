@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 3328142876019815908}
   - component: {fileID: 705665489316643118}
   m_Layer: 0
-  m_Name: garfield
-  m_TagString: Untagged
+  m_Name: Garfield
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

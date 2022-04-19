@@ -63,6 +63,7 @@ public class E_Intermediate_Anim : MonoBehaviour, IEnemyAnimation
             AnimationSetter(ANIM_FIRE, false);
         }
     }
+    public void DieAnim() {}
     // ============== IEnemyAnimation implementation ============== // 
 
 

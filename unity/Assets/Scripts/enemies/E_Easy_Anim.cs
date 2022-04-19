@@ -62,6 +62,7 @@ public class E_Easy_Anim : MonoBehaviour, IEnemyAnimation
             AnimationSetter(ANIM_SHOULD_ATTACK, false);
         }
     }
+    public void DieAnim() {}
     // ============== IEnemyAnimation implementation ============== // 
 
 
