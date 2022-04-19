@@ -28,7 +28,10 @@
         src="https://i.simmer.io/@developerasun/jumpingcar2" >
     </iframe>
     <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam, quod. Ut rem maxime modi perferendis repellendus sit?
+        We have put a tons of efforts to develop MeowRun and proudly would like to say this is a 
+        enjoyable game for everyone. Move your character with arrow key and collect awesome items
+        to improve your power! 
+        <i>Note that the game is currently only playable in web</i>
     </p>
 {/if}
 </main>
