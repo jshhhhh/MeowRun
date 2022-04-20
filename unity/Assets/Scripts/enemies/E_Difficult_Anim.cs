@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-    // TO DO 2: set animation controller script
-    // TO DO 3: use animator.stringtohash to increase performance
-    // TO DO 4: health system changes => delete enemy type 
 // animation state controller
 public class E_Difficult_Anim : MonoBehaviour, IEnemyAnimation
-{
-    private string ANIM_IDLE_OR_TRACK = "idleOrTrack";
-    private string ANIM_SHOULD_ATTACK = "shouldAttack";
+{    
     private IEnemyBehavior.enemyState enemyState;
+    private E_Difficult difficultEnemy;
     private Animator animator; // Animator has parameters in it, which set in Unity Editor
     void Start()
     {
@@ -19,11 +15,11 @@ public class E_Difficult_Anim : MonoBehaviour, IEnemyAnimation
     }
     void Update()
     {
-        updateState();
+        UpdateState();
         UpdateAnimation();
     }
 
-    private void updateState()
+    private void UpdateState()
     {
         enemyState = E_Difficult.current;
     }
@@ -31,7 +27,8 @@ public class E_Difficult_Anim : MonoBehaviour, IEnemyAnimation
     {
         switch(enemyState) {
             case IEnemyBehavior.enemyState.Idle :
-                IdleAnim();
+                // diffculty enemy has IdleOrTrack state
+                IdleOrTrackAnim();
                 break;
             case IEnemyBehavior.enemyState.Track :
                 TrackAnim();
@@ -40,28 +37,36 @@ public class E_Difficult_Anim : MonoBehaviour, IEnemyAnimation
                 AttackAnim();
                 break;
             case IEnemyBehavior.enemyState.Die :
-                print("die animation not set yet");
+                DieAnim();
+                break;
+            default : 
+                IdleOrTrackAnim();
                 break;
         }
     }
 
     // ============== IEnemyAnimation implementation ============== // 
     public void IdleAnim() {
-        // TO DO: add logic here
+        AnimationSetter(IEnemyAnimation.Parameters.IDLE.ToString(), true);
     }
     public void TrackAnim() {
-        // TO DO: add logic here
+        AnimationSetter(IEnemyAnimation.Parameters.TRACK.ToString(), true);
+    }
+    public void IdleOrTrackAnim() {
+        AnimationSetter(IEnemyAnimation.Parameters.IDLE_OR_TRACK.ToString(), true);
     }
     public void AttackAnim() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            AnimationSetter(ANIM_SHOULD_ATTACK, true);
+            AnimationSetter(IEnemyAnimation.Parameters.ATTACK.ToString(), true);
         } 
 
         if (!Input.GetKeyDown(KeyCode.Space)) {
-            AnimationSetter(ANIM_SHOULD_ATTACK, false);
+            AnimationSetter(IEnemyAnimation.Parameters.ATTACK.ToString(), false);
         }
     }
-    public void DieAnim() {}
+    public void DieAnim() {
+        AnimationSetter(IEnemyAnimation.Parameters.DIE.ToString(), true);
+    }
     // ============== IEnemyAnimation implementation ============== // 
 
 
