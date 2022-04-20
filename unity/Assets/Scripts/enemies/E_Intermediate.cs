@@ -10,7 +10,7 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     private float distance; // Player ~ enemy 사이 거리
     
     private string intermediateType;
-    private IEnemyBehavior.enemyState current; // enemy 상태
+    static internal IEnemyBehavior.enemyState current; // enemy 상태
     private IEnemyBehavior.playerDistanceState isDetected; // enemy의 player 탐지  
     private bool shouldFire = false; // intermediate, difficult enemy는 fire 가능
     private NavMeshAgent _agent; // enemy 인공지능 인스턴스
