@@ -7112,6 +7112,30 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: -0.056439042
       objectReference: {fileID: 0}
+    - target: {fileID: 4340919402875146375, guid: c6cf3a652276f144f8b1f39e4153199d, type: 3}
+      propertyPath: m_Size.x
+      value: 1.1555831
+      objectReference: {fileID: 0}
+    - target: {fileID: 4340919402875146375, guid: c6cf3a652276f144f8b1f39e4153199d, type: 3}
+      propertyPath: m_Size.y
+      value: 5.6433268
+      objectReference: {fileID: 0}
+    - target: {fileID: 4340919402875146375, guid: c6cf3a652276f144f8b1f39e4153199d, type: 3}
+      propertyPath: m_Center.x
+      value: 0.13408478
+      objectReference: {fileID: 0}
+    - target: {fileID: 4340919402875146375, guid: c6cf3a652276f144f8b1f39e4153199d, type: 3}
+      propertyPath: m_Center.y
+      value: 0.55617535
+      objectReference: {fileID: 0}
+    - target: {fileID: 4340919402875146375, guid: c6cf3a652276f144f8b1f39e4153199d, type: 3}
+      propertyPath: m_Center.z
+      value: 0.3512979
+      objectReference: {fileID: 0}
+    - target: {fileID: 4340919402875146375, guid: c6cf3a652276f144f8b1f39e4153199d, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5233458856421069167, guid: c6cf3a652276f144f8b1f39e4153199d, type: 3}
       propertyPath: m_Name
       value: portal
