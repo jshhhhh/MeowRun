@@ -29,6 +29,7 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
 
     [SerializeField] Rigidbody beeSting;
     [SerializeField] GameObject stingCreator;
+    [SerializeField] float forceRange = 10f;
     // ============== Object initialization and update ============== // 
     void Awake()
     {
@@ -125,6 +126,7 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     // ============== IEnemyBehavior implementation ============== // 
     public void Idle() 
     {
+        ShouldLookAtPlayer();
         Patrol();
     }
 
@@ -165,8 +167,8 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
         {
             Rigidbody clone = Instantiate(beeSting, stingCreator.transform.position, Quaternion.identity);
             clone.transform.LookAt(player.transform); // 발사체 오브젝트 방향 로테이션 => 플레이어
-            clone.name = beeSting.name; // 복제된 오브젝트 네이밍 리셋
-            clone.AddForce(stingCreator.transform.forward * 10f, ForceMode.VelocityChange); // 발사체 플레이어 방향으로 슈팅
+            stingCreator.transform.LookAt(player.transform);
+            clone.AddForce(stingCreator.transform.forward * forceRange, ForceMode.VelocityChange); // 발사체 플레이어 방향으로 슈팅
 
             // FIX : 발사 이후 오브젝트 파괴
             // @jshhhhh : 아래 코루틴 없을 경우 미니맵상에서 오브젝트가 사라지지 않고 
@@ -199,17 +201,13 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
             inAirRoutes[routeIndex].transform.position, 
             Time.deltaTime * patrolSpeed
         );
-
         // inAirRoutes에 맞춰 경로 상에서 반복 패트롤
         if (Vector3.Distance(transform.position, inAirRoutes[routeIndex].transform.position) < 1f) 
         {
             routeIndex = (routeIndex+1)%inAirRoutes.Length;
         }
     }
-    public IEnemyBehavior.enemyState GetEnemyState()
-    {
-        return current;
-    }
+    public IEnemyBehavior.enemyState GetEnemyState() { return current; }
     // ============== IEnemyBehavior implementation ============== // 
 
     // ============== Enemy rotation implementation ============== // 
@@ -222,7 +220,13 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
         ); 
 
         transform.LookAt(playerPosWithLockedYAxis); // fix y axis
-        transform.Rotate( 0, 90, 0 ); // rotate enemy 90 degree in Y axis to correct direction
+
+        // difficult type bee: should rotate 90 degree
+        // alien: default rotation works fine
+        if (this.gameObject.name.Contains("bee"))
+        {
+            transform.Rotate( 0, 90, 0 ); // rotate 90 degree in Y axis to correct direction
+        }
     }
 
     // ============== Enemy rotation implementation ============== // 
