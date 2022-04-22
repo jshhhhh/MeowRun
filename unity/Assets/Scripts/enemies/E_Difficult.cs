@@ -1,12 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-
-
-// difficult type enemy does not use NavMesh
-// should track
-// should fire
 
 // Enemy type : Difficult
 public class E_Difficult : MonoBehaviour, IEnemyBehavior
@@ -28,8 +22,12 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     [Range (0,15)] [SerializeField] float fireLimit = 2.5f; // enemy 사격 거리 한계, detectLimit보다 작게 설정할 것.
 
     [SerializeField] Rigidbody beeSting;
+    [SerializeField] Rigidbody heartProjectile;
     [SerializeField] GameObject stingCreator;
+    [SerializeField] GameObject heartCreator;
     [SerializeField] float forceRange = 10f;
+    private Animator anim;
+    private AnimationManager animationManager;
     // ============== Object initialization and update ============== // 
     void Awake()
     {
@@ -46,7 +44,13 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     {
         // 플레이어 & NavMesh 초기화
         player = FindObjectOfType<Player>(); 
-        // _agent = this.GetComponent<NavMeshAgent>(); 
+
+        // get animator controller from AnimControl script
+        anim = GetComponent<Animator>();
+
+        // create an instance (if without this, Unity throw null error)
+        animationManager = gameObject.AddComponent<AnimationManager>(); 
+        animationManager.instance = anim; // init the instance
 
         // Enemy 초기화 : awake시 상태는 idle, not detectable
         if (player != null ) // 오브젝트 null check && _agent != null
@@ -55,7 +59,6 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
             isDetected = IEnemyBehavior.playerDistanceState.TooFar;
             difficultType = IEnemyBehavior.enemyType.Difficult.ToString();
             this.GetComponent<Rigidbody>().useGravity = false; // flying enemy 중력사용 x
-            beeSting.useGravity = false; // 벌침 중력 사용 x
         } 
     }
     // ============== Object initialization and update ============== // 
@@ -158,33 +161,45 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
         StartCoroutine(EnemyFireCoroutine());
     }
 
-
     IEnumerator EnemyFireCoroutine()
     {
         // 사정 거리 이내면 sting 오브젝트 발사, 발사 궤도 시각화
         yield return new WaitForSeconds(0.1f);
         if (shouldFire && Input.GetKeyDown(KeyCode.Space))
         {
-            Rigidbody clone = Instantiate(beeSting, stingCreator.transform.position, Quaternion.identity);
-            clone.transform.LookAt(player.transform); // 발사체 오브젝트 방향 로테이션 => 플레이어
-            stingCreator.transform.LookAt(player.transform);
-            clone.AddForce(stingCreator.transform.forward * forceRange, ForceMode.VelocityChange); // 발사체 플레이어 방향으로 슈팅
+            animationManager.Setter(IEnemyAnimation.Parameters.ATTACK.ToString(), true);
 
-            // FIX : 발사 이후 오브젝트 파괴
-            // @jshhhhh : 아래 코루틴 없을 경우 미니맵상에서 오브젝트가 사라지지 않고 
-            // 계속 addForce 방향으로 직진함. But Destroy 메소드 사용에도 불구하고 
-            // 오브젝트 자체는 지워지지 않음.
-            StartCoroutine(DestroyCloneCoroutine(clone));
+            if (gameObject.name.Contains("bee"))
+            {
+                Rigidbody clone = Instantiate(beeSting, stingCreator.transform.position, Quaternion.identity);
+                clone.transform.LookAt(player.transform); // 발사체 오브젝트 방향 로테이션 => 플레이어
+                stingCreator.transform.LookAt(player.transform);
+                clone.AddForce(stingCreator.transform.forward * forceRange, ForceMode.VelocityChange); // 발사체 플레이어 방향으로 슈팅
+                StartCoroutine(DestroyCloneCoroutine(clone));
+            }
+
+            if (gameObject.name.Contains("Alien"))
+            {
+                Rigidbody clone = Instantiate(heartProjectile, heartCreator.transform.position, Quaternion.identity);
+                clone.transform.LookAt(player.transform); // 발사체 오브젝트 방향 로테이션 => 플레이어
+                heartCreator.transform.LookAt(player.transform);
+                clone.AddForce(heartCreator.transform.forward * forceRange, ForceMode.VelocityChange); // 발사체 플레이어 방향으로 슈팅
+                StartCoroutine(DestroyCloneCoroutine(clone));
+            }
+
         }
     }
     
     IEnumerator DestroyCloneCoroutine(Rigidbody _clone)
-    {
-        // 발사체 0.5초 후 파괴
-        yield return new WaitForSeconds(0.5f);
+    { 
+        // FIX : 발사 이후 오브젝트 파괴
+        // 발사체 1초 후 파괴
+        yield return new WaitForSeconds(1f);
         _clone.useGravity = true;
         Destroy(_clone);
-        print($"{_clone.name} destroyed");
+
+        // 애니메이션 종료
+        animationManager.Setter(IEnemyAnimation.Parameters.ATTACK.ToString(), false);
     }
 
     public void Die() 
@@ -207,7 +222,6 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
             routeIndex = (routeIndex+1)%inAirRoutes.Length;
         }
     }
-    public IEnemyBehavior.enemyState GetEnemyState() { return current; }
     // ============== IEnemyBehavior implementation ============== // 
 
     // ============== Enemy rotation implementation ============== // 
