@@ -147,18 +147,6 @@ MonoBehaviour:
   projectileCreator: {fileID: 0}
   detectLimit: 5
   fireLimit: 2.5
---- !u!114 &1796840472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9163874999387371891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 794e0fbd549bb4440ac3677e0361b208, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!195 &1796840474
 NavMeshAgent:
   m_ObjectHideFlags: 0

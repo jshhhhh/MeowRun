@@ -117,7 +117,7 @@ Animator:
   m_GameObject: {fileID: 2002492796022825743}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ba9f48252725c624cb29f9107e1d3ea6, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -165,15 +165,3 @@ MonoBehaviour:
   AgentRoutes: []
   routeIndex: 0
   detectLimit: 5
---- !u!114 &1524091040560925773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002492796022825743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 841834851c00d8743b4a4e9cb737e241, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
