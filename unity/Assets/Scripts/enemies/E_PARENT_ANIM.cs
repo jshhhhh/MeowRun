@@ -9,12 +9,6 @@ public interface IEnemyAnimation
         ATTACK, 
         DIE,
         IDLE_OR_TRACK,
+        RESET
     }
-
-    void IdleAnim();
-    void TrackAnim();
-    void IdleOrTrackAnim();
-    void AttackAnim();
-    void DieAnim();
-    void AnimationSetter<T>(string _name, T _condition);
 }
