@@ -1,4 +1,6 @@
-const User = require('../models/M_User.js')
+const User = require('../models/user.js')
+const bcrypt =require('bcrypt')
+
 
 const options = {
     resources: [{
@@ -18,10 +20,10 @@ const options = {
         actions: {
           new: {
             before: async (request) => {
-              if(request.payload.record.password) {
-                request.payload.record = {
-                  ...request.payload.record,
-                  encryptedPassword: await bcrypt.hash(request.payload.record.password, 10),
+              if(request.payload.password) {
+                request.payload = {
+                  ...request.payload,
+                  encryptedPassword: await bcrypt.hash(request.payload.password, 10),
                   password: undefined,
                 }
               }

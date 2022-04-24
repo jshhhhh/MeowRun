@@ -2,28 +2,37 @@ const express      = require("express")
 const cookieParser = require("cookie-parser")
 const cors         = require('cors')
 const dotenv       = require('dotenv')
-const mongoose     = require('mongoose')
 const corsOption   = require('./config/CorsOption.js')
+const sequelize = require('./config/configdb.js')
 
 
-// =================admin-bro========================= //
+//=================admin-bro========================= //
 const AdminBro = require('admin-bro')
-const AdminBroMongoose = require('admin-bro-mongoose')
+const AdminJSSequelize = require('admin-bro-sequelizejs')
 const options = require('./config/AdminOptions.js')
 const AdminBroExpress = require('admin-bro-expressjs')
 const auth = require('./middlewares/AdminAuth.js')
-// =================admin-bro========================= //
+//=================admin-bro========================= //
 
 
-// We have to tell AdminBro that we will manage mongoose resources with it
-AdminBro.registerAdapter(AdminBroMongoose)
+//We have to tell AdminBro that we will manage mongoose resources with it
+AdminBro.registerAdapter(AdminJSSequelize)
 const adminBro = new AdminBro(options)
 const router = AdminBroExpress.buildAuthenticatedRouter(adminBro,auth)
 
+   //... other AdminJSOptions
 dotenv.config()
 const app = express()
 const PORT = process.env.PORT 
 
+
+
+sequelize.authenticate()
+  .then(() => console.log('Connection has been established successfully.'))
+  .catch(err => console.log('Unable to connect to the database:', err ))
+
+
+    
 
 // middleware for cookies
 app.use(cookieParser());
@@ -39,7 +48,7 @@ app.use(cors(corsOption))
 // TO DO : 해당 파트 고쳐쓰기
 // 랜딩 페이지 루트
 app.get('/', (req, res) => {
-  
+   res.json('bulid success')
   
 })
 
@@ -53,7 +62,7 @@ app.get('/apis', (req,res) => {
 // ====================== middlewares ====================== //
 
 // admin-bro router
-app.use(adminBro.options.rootPath, router)
+ app.use(adminBro.options.rootPath, router)
 
 // built-in middleware for json
 app.use(express.json());
@@ -66,12 +75,12 @@ app.use('/auth', require("./routers/R_Login.js"))
 
 
   // Running the server
-  const run = async () => {
-      await mongoose.connect(process.env.MONGO_URI)
-      app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
-    }
+ 
 
-  run()
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+ 
+
+  
 
    
 

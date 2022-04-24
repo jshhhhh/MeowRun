@@ -2,7 +2,6 @@ const whitelist = [
     'http://localhost:3001',  //develop 
     'http://localhost:8080',  //develop
     'https://meowrun.netlify.app'  //prod
-   
 ]
 const corsOptions = { 
     origin: (origin, callback) =>{

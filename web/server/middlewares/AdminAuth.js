@@ -1,11 +1,11 @@
-const User = require('../models/M_User.js')
+const User = require('../models/user.js')
 const bcrypt = require('bcrypt')
 const dotenv =require('dotenv')
 dotenv.config()
 
 const auth = {
   authenticate: async (email, password) => {
-    const user = await User.findOne({ email })
+    const user = await User.findOne({where:{ email}})
     if (user) {
       const matched = await bcrypt.compare(password, user.encryptedPassword)
       if (matched) {
