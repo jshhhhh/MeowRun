@@ -10,7 +10,7 @@ class User extends Model {}
 User.init({
     email: {
         type: DataTypes.STRING,
-        allowNull: false     
+        allowNull: false,    
     },
     encryptedPassword: {
         type: DataTypes.STRING,

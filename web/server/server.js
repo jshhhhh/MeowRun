@@ -3,7 +3,7 @@ const cookieParser = require("cookie-parser")
 const cors         = require('cors')
 const dotenv       = require('dotenv')
 const corsOption   = require('./config/CorsOption.js')
-const sequelize = require('./config/configdb.js')
+const sequelize    = require('./config/configdb.js')
 
 
 //=================admin-bro========================= //
@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
    res.json('bulid success')
   
 })
-
+//dddd
 // api 루트
 app.get('/apis', (req,res) => {
   
