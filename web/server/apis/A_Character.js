@@ -1,1 +1,0 @@
-// APIs for 3D character images 
