@@ -16,6 +16,10 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    role:{
+        type: DataTypes.ENUM('admin','restricted'),
+        defaultValue: 'restricted'
+    },
     refreshToken: DataTypes.STRING
 },{sequelize})
 

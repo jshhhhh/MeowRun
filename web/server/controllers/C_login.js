@@ -30,10 +30,9 @@ const SignUp = async(req,res) => {
     res.status(400).json({ errors });
     }else{ 
         try {
-           
             await sequelize.sync()
             //if (duplicate) return res.sendStatus(statusCode.CONFLICT)
-            const {email,pwd} = req.body
+            const {email,pwd,role} = req.body
             const emailcheck = await User.findOne({where:{email:email}})
             if(emailcheck) return res.status(400).json({"err":'email already exists'})
             //encrypt the password 
@@ -42,7 +41,8 @@ const SignUp = async(req,res) => {
             //create and store the new user
             const result = await User.create({
                 email: email,
-                encryptedPassword: hashedPwd
+                encryptedPassword: hashedPwd,
+                role: role
             })
             console.log(result);
             res.status(statusCode.CREATED).json({'success' :`New user ${email} created!`});
