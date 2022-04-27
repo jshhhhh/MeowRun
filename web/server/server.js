@@ -3,24 +3,24 @@ const cookieParser = require("cookie-parser")
 const cors         = require('cors')
 const dotenv       = require('dotenv')
 const corsOption   = require('./config/CorsOption.js')
-const sequelize    = require('./config/configdb.js')
+const {sequelize}    = require('./models/index.js')
 
 
 //=================admin-bro========================= //
-const AdminBro = require('admin-bro')
-const AdminJSSequelize = require('admin-bro-sequelizejs')
+const AdminJS = require('adminjs')
+const AdminJSExpress = require('@adminjs/express')
 const options = require('./config/AdminOptions.js')
-const AdminBroExpress = require('admin-bro-expressjs')
 const auth = require('./middlewares/AdminAuth.js')
+
+const AdminJSSequelize = require('@adminjs/sequelize')
 //=================admin-bro========================= //
 
 
 //We have to tell AdminBro that we will manage mongoose resources with it
-AdminBro.registerAdapter(AdminJSSequelize)
-const adminBro = new AdminBro(options)
-const router = AdminBroExpress.buildAuthenticatedRouter(adminBro,auth)
-
-   //... other AdminJSOptions
+AdminJS.registerAdapter(AdminJSSequelize)
+const adminJs = new AdminJS(options)
+const router = AdminJSExpress.buildRouter(adminJs)
+//... other AdminJSOptions
 dotenv.config()
 const app = express()
 const PORT = process.env.PORT 
@@ -28,9 +28,10 @@ const PORT = process.env.PORT
 
 
 sequelize.authenticate()
-  .then(() => console.log('Connection has been established successfully.'))
-  .catch(err => console.log('Unable to connect to the database:', err ))
+.then(() => console.log('Connection has been established successfully.'))
+.catch(err => console.log('Unable to connect to the database:', err ))
 
+app.use(adminJs.options.rootPath, router)
 
     
 
@@ -62,7 +63,7 @@ app.get('/apis', (req,res) => {
 // ====================== middlewares ====================== //
 
 // admin-bro router
- app.use(adminBro.options.rootPath, router)
+ 
 
 // built-in middleware for json
 app.use(express.json());

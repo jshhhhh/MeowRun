@@ -1,13 +1,19 @@
-const {Model,DataTypes} = require('sequelize')
-const sequelize = require('../config/configdb.js')
-// class User extends Model {}
-// User.init({
-//     username: DataTypes.STRING,
-//     birthday: DataTypes.DATE
-// }, { sequelize, modelName: 'userad'});
-
-class User extends Model {}
-User.init({
+'use strict';
+const {
+  Model,DataTypes
+} = require('sequelize');
+module.exports = (sequelize) => {
+  class User extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  User.init({
     email: {
         type: DataTypes.STRING,
         allowNull: false,    
@@ -21,7 +27,9 @@ User.init({
         defaultValue: 'restricted'
     },
     refreshToken: DataTypes.STRING
-},{sequelize})
-
-module.exports = User
-
+    }, {
+      sequelize,
+      modelName: 'User',
+    });
+  return User;
+};

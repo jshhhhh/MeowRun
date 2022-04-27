@@ -1,10 +1,10 @@
-const User = require('../models/user.js')
 const bcrypt =require('bcrypt')
-
+const db = require('../models');
 
 const options = {
+    databases: [db],
     resources: [{
-      resource: User,
+      resource: db.User,
       options: {
         properties: {
           encryptedPassword: {

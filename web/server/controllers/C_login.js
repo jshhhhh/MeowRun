@@ -2,10 +2,18 @@
 const bcrypt =require("bcrypt")
 const jwt =require ("jsonwebtoken")
 const { validationResult}=require("express-validator")
-const User = require('../models/user.js')
-const sequelize =require('../config/configdb.js')
+
+
+
 const dotenv    = require('dotenv')
 dotenv.config()
+
+const model = require('../models')
+const sequelize =require('sequelize')
+// const DataTypes = sequelize.DataTypes
+// let sequelize = db.sequelize
+// const DataTypes = sequelize.DataTypes;
+
 
 
 
@@ -30,16 +38,20 @@ const SignUp = async(req,res) => {
     res.status(400).json({ errors });
     }else{ 
         try {
-            await sequelize.sync()
-            //if (duplicate) return res.sendStatus(statusCode.CONFLICT)
+            await model.sequelize.sync()
+        
             const {email,pwd,role} = req.body
-            const emailcheck = await User.findOne({where:{email:email}})
+            const emailcheck = await model.User.findOne({
+                where: {
+                    email: email
+                }
+            })
             if(emailcheck) return res.status(400).json({"err":'email already exists'})
-            //encrypt the password 
+            //encrypt the password
             const saltRounds = 10 // num of hashing
             const hashedPwd = await bcrypt.hash(pwd, saltRounds);
             //create and store the new user
-            const result = await User.create({
+            const result = await model.User.create({
                 email: email,
                 encryptedPassword: hashedPwd,
                 role: role
@@ -58,7 +70,7 @@ const HandleLogin = async(req,res) =>{
     const {email,pwd} = req.body
     
     // check if user exist 
-    const foundUser = await User.findOne({where:{email: email}})
+    const foundUser = await model.User.findOne({where:{email: email}})
     if (!foundUser) return res.status(statusCode.NOT_FOUND).json({"message": "The email is not exist"})
 
     const match = await bcrypt.compare(pwd,foundUser.encryptedPassword)
@@ -79,7 +91,7 @@ const HandleLogin = async(req,res) =>{
         const result = await foundUser.save()
         console.log(result)
     
-        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000,secure:true},); // secure:true only https
+        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000},); // secure:true only https
         res.json({accessToken});
     } else {
         res.status(statusCode.UNAUTHORIZED).json({"message":"email or password is not correct"});
@@ -92,7 +104,7 @@ const HandleRefreshToken = async(req,res) =>{
 
     // Check refreshToken
     const refreshToken = cookies.jwt
-    const foundUser = await User.findOne({where:{refreshToken:refreshToken}} )
+    const foundUser = await model.User.findOne({where:{refreshToken:refreshToken}} )
     if(!foundUser) return res.status(statusCode.FORBIDDEN).json({"message":"authentication error"})
     jwt.verify(
         refreshToken,
@@ -120,7 +132,7 @@ const HandleLogout =  async (req, res) => {
     const refreshToken = cookies.jwt;
 
     // Is refreshToken in db?
-    const foundUser = await User.findOne({ refreshToken })
+    const foundUser = await model.User.findOne({ refreshToken })
     if (!foundUser) {
         res.clearCookie('jwt', { httpOnly: true,secure:true});
         return res.sendStatus(statusCode.NO_CONTENT);
@@ -140,15 +152,16 @@ const DeleteUser = async(req,res) =>{
     const{email,pwd} = req.body
      
     try{
-        const foundUser = await User.findOne({where:{email:email}} )
+        const foundUser = await model.User.findOne({where:{email:email}} )
+        if (!foundUser) return res.status(statusCode.NOT_FOUND).json({'message': 'ID is not exist.'})
         const pwdCheck = bcrypt.compare(pwd,foundUser.encryptedPassword)
         if (pwdCheck) {
         //res.clearCookie('jwt', { httpOnly: true,});
-            const result = await User.destroy({where:{email:email}})
+            const result = await model.User.destroy({where:{email:email}})
             console.log(result)
-            return res.status(statusCode.OK).json({'message':'Deleted your id'});
+            return res.status(statusCode.OK).json({'message':'Successfully deleted.'});
         }else{
-            return res.status(statusCode.BAD_REQUEST).json({'message':'Please check your password'})
+            return res.status(statusCode.BAD_REQUEST).json({'message':'Please check your password.'})
     }
     }catch(err){
     console.log(err)
