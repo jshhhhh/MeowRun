@@ -91,7 +91,7 @@ const HandleLogin = async(req,res) =>{
         const result = await foundUser.save()
         console.log(result)
     
-        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000},); // secure:true only https
+        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000,secure : true}); // secure:true only https
         res.json({accessToken});
     } else {
         res.status(statusCode.UNAUTHORIZED).json({"message":"email or password is not correct"});

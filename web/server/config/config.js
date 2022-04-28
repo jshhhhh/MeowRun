@@ -1,4 +1,5 @@
 require('dotenv').config(); // this is important!
+
 module.exports = {
 "development": {
     "username": process.env.MUSER,
@@ -15,10 +16,13 @@ module.exports = {
     "dialect": "mysql"
 },
 "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "use_env_variable":"JAWSDB_MARIA_COPPER_URL",
+    "dialect":"mysql",
+    "dialectOptions": {
+        "ssl": {
+            "require": true,
+            "rejectUnauthorized": false
+        }
+    }
 }
 };
