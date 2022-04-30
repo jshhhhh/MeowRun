@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
             currentLife = 0;
 
         lifeManager.updateHeartImage();
+
+        if(isDead())    player._state = Player.playerState.Die;
     }
 
     //체력이 0인지 확인
