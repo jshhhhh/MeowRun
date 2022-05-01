@@ -6,11 +6,10 @@ public class GameManager : MonoBehaviour
 {
     private Player player;
     private LifeManager lifeManager;
-
     [SerializeField] private int currentLife;
-    public int TotalLife = 3;
+    [SerializeField] private int score;
+    public int TotalLife = 3;    
 
-    // Start is called before the first frame update
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -56,9 +55,8 @@ public class GameManager : MonoBehaviour
         return currentLife;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void addScore(int _score)
     {
-        
+        score += _score;
     }
 }
