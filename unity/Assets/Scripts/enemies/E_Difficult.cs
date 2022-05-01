@@ -16,7 +16,7 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     private string difficultType; // enemy 타입
     private bool shouldFire = false; // intermediate, difficult enemy는 fire 가능
     
-    private IEnemyBehavior.enemyState current; // enemy 상태
+    internal static IEnemyBehavior.enemyState current; // enemy 상태
     private IEnemyBehavior.playerDistanceState isDetected; // enemy의 player 탐지  
     // public NavMeshAgent _agent; // enemy 인공지능 인스턴스
     // [SerializeField] Transform[] AgentRoutes;
@@ -125,14 +125,11 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     // ============== IEnemyBehavior implementation ============== // 
     public void Idle() 
     {
-        // TO DO : 플레이어가 탐지 거리 바깥이면 주변 패트롤
-        print("Enemy being idle");
         Patrol();
     }
 
     public void Track() 
     {
-        print("Enemy detected a player, starting tracking");
         StartCoroutine(EnemyTrackCoroutine(0.01f));
     }
 
@@ -155,7 +152,6 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
 
     public void Fire() 
     {
-        print("Difficult Enemy firing projectiles faster");
         ShouldLookAtPlayer();
         StartCoroutine(EnemyFireCoroutine());
     }
@@ -192,7 +188,6 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     public void Die() 
     {
         // TO DO : 플레이어가 밟고 지나가면 죽음
-        print("Enemy died by a player");
         Destroy(this.gameObject);
     }
 
@@ -210,6 +205,10 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
         {
             routeIndex = (routeIndex+1)%inAirRoutes.Length;
         }
+    }
+    public IEnemyBehavior.enemyState GetEnemyState()
+    {
+        return current;
     }
     // ============== IEnemyBehavior implementation ============== // 
 
