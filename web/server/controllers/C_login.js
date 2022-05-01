@@ -5,48 +5,28 @@ const { validationResult}=require("express-validator")
 
 
 
-const dotenv    = require('dotenv')
-dotenv.config()
-
 const model = require('../models')
-const sequelize =require('sequelize')
-// const DataTypes = sequelize.DataTypes
-// let sequelize = db.sequelize
-// const DataTypes = sequelize.DataTypes;
+const statusCode = require('../config/statuscode.js')
 
 
-
-
-
-const statusCode = {
-    OK : 200, 
-    CREATED : 201, 
-    UNAUTHORIZED : 401,
-    BAD_REQUEST : 400,
-    CONFLICT : 409,
-    INTERNAL_SERVER_ERROR: 500,
-    NOT_FOUND: 404,
-    FORBIDDEN: 403,
-    NO_CONTENT: 204
-}
 
 const SignUp = async(req,res) => {
     // if email and password are invalid  throw the errors
     const errors = validationResult(req).array();
     if (errors && errors.length) {
     console.log(errors);
-    res.status(400).json({ errors });
+    res.status(statusCode.BAD_REQUEST).json({ errors });
     }else{ 
         try {
-            await model.sequelize.sync()
-        
+            await model.User.sync()
+            
             const {email,pwd,role} = req.body
             const emailcheck = await model.User.findOne({
                 where: {
                     email: email
                 }
             })
-            if(emailcheck) return res.status(400).json({"err":'email already exists'})
+            if(emailcheck) return res.status(statusCode.BAD_REQUEST).json({"err":'email already exists'})
             //encrypt the password
             const saltRounds = 10 // num of hashing
             const hashedPwd = await bcrypt.hash(pwd, saltRounds);

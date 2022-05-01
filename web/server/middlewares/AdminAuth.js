@@ -5,7 +5,7 @@ dotenv.config()
 
 const auth = {
   authenticate: async (email, password) => {
-    const user = await model.User.findOne({where:{ email}})
+    const user = await model.User.findAll({where:{ email}})
     if (user) {
       const matched = await bcrypt.compare(password, user.encryptedPassword)
       if (matched && user.role == 'admin') {

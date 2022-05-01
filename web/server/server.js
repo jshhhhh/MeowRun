@@ -19,7 +19,7 @@ const AdminJSSequelize = require('@adminjs/sequelize')
 //We have to tell AdminBro that we will manage mongoose resources with it
 AdminJS.registerAdapter(AdminJSSequelize)
 const adminJs = new AdminJS(options)
-const router = AdminJSExpress.buildRouter(adminJs)
+const router = AdminJSExpress.buildAuthenticatedRouter(adminJs,auth)
 //... other AdminJSOptions
 dotenv.config()
 const app = express()
@@ -71,6 +71,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false}));
 // login 
 app.use('/auth', require("./routers/R_Login.js"))
+// voting
+app.use('/voting', require('./routers/r_voting.js'))
 // ====================== middlewares ====================== //
 
 
