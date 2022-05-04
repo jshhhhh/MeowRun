@@ -8,6 +8,7 @@ public abstract class Item : MonoBehaviour
     protected Player player;
     protected GameManager gameManager;
     protected SoundManager soundManager;
+    protected score score;
     public AudioClip SItemStart;
 
     //각 아이템에 맞는 효과
