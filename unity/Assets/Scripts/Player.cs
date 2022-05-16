@@ -22,10 +22,14 @@ public class Player : MonoBehaviour
     public AudioClip SJump, SDie, SDamaged, SRespawn, SItemEnd;
 
     [SerializeField]private const float originalSpeed = 3.5f;
-    public float currentSpeed;
+    [SerializeField]private float maxSpeed = 10f, minspeed = 1f;
     [SerializeField]private const float originalJumpPower = 6f;
+    [SerializeField]private float maxJumpPower = 10f, minJumpPower = 0f;
+    public float currentSpeed;
     public float currentJumpPower;
-    [SerializeField]private bool moreJump = false;
+
+    public bool moreJump {get; private set;} = false;
+
     [SerializeField]private bool canJump = true;
     //데미지를 입을 수 있는 상태
     private bool canDamaged = true;
@@ -98,11 +102,11 @@ public class Player : MonoBehaviour
         currentSpeed = originalSpeed;
 
         playerForcedStop(true);
-        StartCoroutine(startMoveCoroutine());
+        StartCoroutine(delayCoroutine());
     }
 
     //게임 시작 전 딜레이를 주는 코루틴
-    IEnumerator startMoveCoroutine()
+    IEnumerator delayCoroutine()
     {
         yield return new WaitForSeconds(2f);
         playerForcedStop(false);
@@ -219,8 +223,7 @@ public class Player : MonoBehaviour
         //바닥을 딛고 있으면 Moving 상태로
         if (tagOfFooting == FLOOR)
         {
-            if (velocity > zeroVelocity)    _state = playerState.Move;
-            else                            _state = playerState.Idle;
+            _state = (velocity > zeroVelocity) ? playerState.Move : playerState.Idle;
         }
     }
 
@@ -252,8 +255,7 @@ public class Player : MonoBehaviour
         //바닥을 딛고 있으면 Move, 아니면 Jump
         if (tagOfFooting == FLOOR)
         {
-            if (velocity >= zeroVelocity)   _state = playerState.Move;
-            else                            _state = playerState.Idle;
+            _state = (velocity >= zeroVelocity) ? playerState.Move : playerState.Idle;
         }
         else if (tagOfFooting != FLOOR) _state = playerState.Jump;
 
@@ -296,8 +298,7 @@ public class Player : MonoBehaviour
     {
         isHit = Physics.BoxCast(transform.position, localScale, -transform.up, out hit, transform.rotation, lengthOfRay);
 
-        if (isHit)  tagOfFooting = hit.collider.tag;
-        else    tagOfFooting = null;
+        tagOfFooting = isHit ? hit.collider.tag : null;
     }
 
     //Gizmos.DrawWireCube로 시각적으로 ray 표시
@@ -338,15 +339,15 @@ public class Player : MonoBehaviour
         StartCoroutine(controlSpeedCoroutine(_time, _addSpeed, _addJumpPower));
     }
 
-    public IEnumerator controlSpeedCoroutine(float _time, float _addSpeed, float _addJumpPower)
+    private IEnumerator controlSpeedCoroutine(float _time, float _addSpeed = 0f, float _addJumpPower = 0f)
     {
         currentSpeed += _addSpeed;
         currentJumpPower += _addJumpPower;
-        
+
         yield return new WaitForSeconds(_time);
 
-        currentSpeed = originalSpeed;
-        currentJumpPower = originalJumpPower;
+        currentSpeed -= _addSpeed;
+        currentJumpPower -= _addJumpPower;
         soundManager.RandomizeSfx(SItemEnd);
     }
 
@@ -424,6 +425,8 @@ public class Player : MonoBehaviour
         {
             gameManager.decreaseLife(gameManager.TotalLife);
         }
+
+        OnCollisionStay(collision);
     }
 
     // 오브젝트 태그가 'Enemies'일 경우 Damaged 상태로

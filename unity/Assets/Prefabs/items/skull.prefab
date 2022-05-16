@@ -79,6 +79,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: skull
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c929bf5a7b9f20240999d09434880725, type: 3}
+      propertyPath: m_TagString
+      value: Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c929bf5a7b9f20240999d09434880725, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c929bf5a7b9f20240999d09434880725, type: 3}
 --- !u!1 &5757557766474345458 stripped
@@ -111,4 +119,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65e5b2a7032eb7e4b93decc28f030821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemIndex: 0
   SItemStart: {fileID: 8300000, guid: ff5f85da24bc943d1abdc5760a22bc81, type: 3}

@@ -75,6 +75,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: can
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 72745f04a1301064e8cb91bd49e549dd, type: 3}
+      propertyPath: m_TagString
+      value: Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 72745f04a1301064e8cb91bd49e549dd, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5229671145523556658, guid: 72745f04a1301064e8cb91bd49e549dd, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -111,4 +119,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de892760a929b44b9277afeff28bc48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemIndex: 0
   SItemStart: {fileID: 8300000, guid: 35fbad8cdde724f11ba6481f1e64af71, type: 3}
