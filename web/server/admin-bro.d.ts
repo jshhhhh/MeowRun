@@ -1,2 +1,2 @@
 declare module 'admin-bro-expressjs'
-declare module 'admin-bro-mongoose'
+declare module 'admin-bro-sequelizejs'

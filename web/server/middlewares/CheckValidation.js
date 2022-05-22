@@ -14,5 +14,8 @@ const CheckValidation = [
         .withMessage('please enter the password')
         .isLength({min:8})
         .withMessage('password is must be above eight letters')
-]   
+]
+
+
+
 module.exports = CheckValidation

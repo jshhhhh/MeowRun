@@ -1,7 +1,7 @@
 node_modules/
 reminder.md
 .env
-
+config/configdb.js
 # Logs
 logs
 *.log
