@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class coin : Item
+{
+    //점수 올라감
+    void Start()
+    {
+        player = FindObjectOfType<Player>();
+        gameManager = FindObjectOfType<GameManager>();
+        soundManager = FindObjectOfType<SoundManager>();
+    }
+
+    protected override void itemEffect()
+    {
+        soundManager.RandomizeSfx(SItemStart);
+
+        gameManager.addScore(1);
+    }
+}
