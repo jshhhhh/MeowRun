@@ -12,11 +12,11 @@
 # :runner: DaeguDev_MeowRun
 ## 개요
 - 종류 : Unity 3D game + Web landing page
-- 기간 : 2022.02.15 ~ 2022.05.31
+- 기간 : 2022.02.15 ~ 2022.07.31
 - 인원 : 3명
 
 ## 기획 배경
-will be added
+귀여운 고양이가 되어 고난과 역경을 헤치며 열심히 달려보면 어떨까 하는 생각에서 출발한 게임
 
 ## 📝 프로젝트 디테일
 <details>
@@ -66,7 +66,7 @@ will be added
     </thead>
     <tbody>
         <td>
-          <img src="" width=200 height=300 />
+          <img src="https://user-images.githubusercontent.com/86046319/169686339-cc7d635c-428b-4cf3-8489-72679e0da1c1.jpg" width=200 height=300 />
         </td>
         <td>
           <img src="https://user-images.githubusercontent.com/83855174/162847523-89d32ab6-e16b-4767-abba-629d92121a76.png" width=200 height=300 />
@@ -74,7 +74,6 @@ will be added
     </tbody>
   </table>
  
-
   <table>
     <thead>
       <th>웹 서버: 정기</td>
