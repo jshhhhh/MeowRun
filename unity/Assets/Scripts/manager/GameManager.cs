@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     private LifeManager lifeManager;
     [SerializeField] private int currentLife;
     [SerializeField] private int score;
-    public int TotalLife = 3;    
+    public int TotalLife = 3;
 
     void Start()
     {
@@ -22,30 +22,30 @@ public class GameManager : MonoBehaviour
     public void decreaseLife(int _life = 1)
     {
         currentLife -= _life;
-        
-        if(currentLife <= 0)
+
+        if (currentLife <= 0)
             currentLife = 0;
 
         lifeManager.updateHeartImage();
 
-        if(isDead())    player._state = Player.playerState.Die;
+        if (isDead()) player._state = Player.playerState.Die;
     }
 
     //체력이 0인지 확인
     public bool isDead()
     {
-        if(currentLife <= 0)    return true;
-        else                    return false;
+        if (currentLife <= 0) return true;
+        else return false;
     }
 
     //체력 증가
     public void increaseLife(int _life = 1)
     {
-        currentLife += _life; 
+        currentLife += _life;
 
-        if(currentLife > TotalLife)
+        if (currentLife > TotalLife)
             currentLife = TotalLife;
-        
+
         lifeManager.updateHeartImage();
     }
 
@@ -58,5 +58,10 @@ public class GameManager : MonoBehaviour
     public void addScore(int _score)
     {
         score += _score;
+    }
+
+    public int checkScore()
+    {
+        return score;
     }
 }

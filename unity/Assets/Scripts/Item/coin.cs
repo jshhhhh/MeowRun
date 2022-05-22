@@ -10,6 +10,7 @@ public class coin : Item
         player = FindObjectOfType<Player>();
         gameManager = FindObjectOfType<GameManager>();
         soundManager = FindObjectOfType<SoundManager>();
+        score = FindObjectOfType<score>();
     }
 
     protected override void itemEffect()
@@ -17,5 +18,6 @@ public class coin : Item
         soundManager.RandomizeSfx(SItemStart);
 
         gameManager.addScore(1);
+        score.updateScore();
     }
 }
