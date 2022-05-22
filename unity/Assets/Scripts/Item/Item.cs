@@ -9,9 +9,12 @@ public abstract class Item : MonoBehaviour
     protected GameManager gameManager;
     protected SoundManager soundManager;
     protected score score;
+    protected ItemIcon itemIcon;
+    protected float itemDuration, addSpeed, addJumpPower;
+    protected string itemName;
     public AudioClip SItemStart;
 
-    //각 아이템에 맞는 효과
+    //각 아이템에 맞는 효과(자식 클래스에서 구현)
     protected abstract void itemEffect();
 
     //Box Collider에 Is Trigger 체크 시 사용할 수 있는 함수
@@ -20,6 +23,7 @@ public abstract class Item : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
+            itemName = "Icon_" + this.GetType().Name;
             itemEffect();
             Destroy(this.gameObject);
         }

@@ -10,13 +10,25 @@ public class skull : Item
         player = FindObjectOfType<Player>();
         gameManager = FindObjectOfType<GameManager>();
         soundManager = FindObjectOfType<SoundManager>();
+        itemIcon = FindObjectOfType<ItemIcon>();
+
+        itemDuration = 5f;
+        addSpeed = -2f;
+        addJumpPower = -2f;
     }
 
     protected override void itemEffect()
     {
         soundManager.RandomizeSfx(SItemStart);
-        player.StopAllCoroutines();
         gameManager.decreaseLife();
-        player.controlSpeed(3f, -2f, -3f);
+        player.controlSpeed(itemDuration, addSpeed, addJumpPower);
+    }
+
+    protected override void OnTriggerEnter(Collider collision)
+    {
+        base.OnTriggerEnter(collision);
+
+        if(collision.gameObject.CompareTag("Player"))
+            itemIcon.updateItemIcon(itemName, itemDuration);
     }
 }

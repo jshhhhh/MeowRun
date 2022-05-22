@@ -55,6 +55,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: coin
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3170e5ce7d0d137439404c81223e5b45, type: 3}
+      propertyPath: m_TagString
+      value: Item
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3170e5ce7d0d137439404c81223e5b45, type: 3}
 --- !u!1 &6834009608562160143 stripped
@@ -107,4 +111,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2b1942b213b75408b0f3503f022525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemIndex: 0
   SItemStart: {fileID: 8300000, guid: 7bd6b897eb5ca4b7d88a205c4a51640c, type: 3}

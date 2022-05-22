@@ -83,6 +83,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: witchHat
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bfb7ccac1d87c6f44b9fb0a9327d06cf, type: 3}
+      propertyPath: m_TagString
+      value: Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bfb7ccac1d87c6f44b9fb0a9327d06cf, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfb7ccac1d87c6f44b9fb0a9327d06cf, type: 3}
 --- !u!1 &5703002401185279411 stripped
@@ -115,4 +123,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd50b3ab5a5a59c4e91b62b536ec411e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemIndex: 0
   SItemStart: {fileID: 8300000, guid: 52320e590bf774734a288886eba557ba, type: 3}
