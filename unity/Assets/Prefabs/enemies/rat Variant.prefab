@@ -7,26 +7,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -8769661528982303890, guid: 2e3ad52e30ffb0d479844aae9b01d271, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8769661528982303890, guid: 2e3ad52e30ffb0d479844aae9b01d271, type: 3}
-      propertyPath: m_AABB.m_Center.x
-      value: -0.00000622496
-      objectReference: {fileID: 0}
-    - target: {fileID: -8769661528982303890, guid: 2e3ad52e30ffb0d479844aae9b01d271, type: 3}
-      propertyPath: m_AABB.m_Center.y
-      value: 0.033379983
-      objectReference: {fileID: 0}
-    - target: {fileID: -8769661528982303890, guid: 2e3ad52e30ffb0d479844aae9b01d271, type: 3}
-      propertyPath: m_AABB.m_Center.z
-      value: -0.033708587
-      objectReference: {fileID: 0}
-    - target: {fileID: -8769661528982303890, guid: 2e3ad52e30ffb0d479844aae9b01d271, type: 3}
-      propertyPath: m_AABB.m_Extent.y
-      value: 0.030827368
-      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2e3ad52e30ffb0d479844aae9b01d271, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -112,21 +92,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &3423429133069055559
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8059027963063375597}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1.8578905, z: 2.650892}
-  m_Center: {x: -0.000000003499798, y: 1.1209717, z: -0.41260913}
 --- !u!95 &-5038928082095961305
 Animator:
   serializedVersion: 4
@@ -147,6 +114,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-6312140088486874774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8059027963063375597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 841834851c00d8743b4a4e9cb737e241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!195 &1466563705
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -182,6 +161,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _agent: {fileID: 0}
-  AgentRoutes: []
+  AgentRoutes:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   routeIndex: 0
   detectLimit: 5
+--- !u!65 &6110850654584698526
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8059027963063375597}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

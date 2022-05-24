@@ -18,16 +18,19 @@ public class Player : MonoBehaviour
     private Animator animator;
     private Rigidbody playerRigidbody;
     private GameManager gameManager;
-    private SoundManager SM;
-    public AudioClip SJump;
-    public AudioClip SDie;
-    public AudioClip SDamaged;
-    public AudioClip SRespawn;
+    private SoundManager soundManager;
+    public AudioClip SJump, SDie, SDamaged, SRespawn, SItemEnd;
 
-    public float speed = 3.5f; //public으로 유니티 에디터에서 스피드 변수 조정 가능
-    public float jumpPower = 6f; //public으로 유니티 에디터에서 점프 변수 조정 가능
+    [SerializeField]private const float originalSpeed = 3.5f;
+    [SerializeField]private float maxSpeed = 10f, minspeed = 1f;
+    [SerializeField]private const float originalJumpPower = 6f;
+    [SerializeField]private float maxJumpPower = 10f, minJumpPower = 0f;
+    public float currentSpeed;
+    public float currentJumpPower;
 
-    private bool canJump = true;
+    public bool moreJump {get; private set;} = false;
+
+    [SerializeField]private bool canJump = true;
     //데미지를 입을 수 있는 상태
     private bool canDamaged = true;
     private bool playerDied = false;
@@ -88,19 +91,22 @@ public class Player : MonoBehaviour
 
         animator = GetComponent<Animator>();
         playerRigidbody = this.GetComponent<Rigidbody>();
-        SM = FindObjectOfType<SoundManager>();
+        soundManager = FindObjectOfType<SoundManager>();
         gameManager = FindObjectOfType<GameManager>();
 
         tempPosition = transform.position;
         tempRotation = transform.rotation;
         lastPosition = transform.position;
 
+        currentJumpPower = originalJumpPower;
+        currentSpeed = originalSpeed;
+
         playerForcedStop(true);
-        StartCoroutine(startMoveCoroutine());
+        StartCoroutine(delayCoroutine());
     }
 
     //게임 시작 전 딜레이를 주는 코루틴
-    IEnumerator startMoveCoroutine()
+    IEnumerator delayCoroutine()
     {
         yield return new WaitForSeconds(2f);
         playerForcedStop(false);
@@ -196,19 +202,28 @@ public class Player : MonoBehaviour
     {
         AnimationSetter(ANIMATION_STATE, 2);
 
-        canJump = false;
+        if(moreJump)
+        {
+            canJump = true;
+
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                playerJump();
+                animator.Play("PlayerJump", -1, 0f);
+                currentJumpPower = originalJumpPower;
+                moreJump = false;
+            }
+        }
+        else
+            canJump = false;
 
         playerMove();
-
-        //공중에서 플레이어 수평으로 보정
-        //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0), Time.deltaTime);
 
         //상태 전환 조건
         //바닥을 딛고 있으면 Moving 상태로
         if (tagOfFooting == FLOOR)
         {
-            if (velocity > zeroVelocity)    _state = playerState.Move;
-            else    _state = playerState.Idle;
+            _state = (velocity > zeroVelocity) ? playerState.Move : playerState.Idle;
         }
     }
 
@@ -221,17 +236,15 @@ public class Player : MonoBehaviour
             canDamaged = false;
             gameManager.decreaseLife();
 
-            //체력이 0 이하이면 죽음
-            if(gameManager.isDead())   _state = playerState.Die;
-            //아니라면 데미지 애니메이션 출력
-            else    StartCoroutine(playerDamagedCoroutine());
+            //체력이 남아 있다면 데미지 애니메이션 출력
+            if(!gameManager.isDead())   StartCoroutine(playerDamagedCoroutine());
         }
     }
 
     IEnumerator playerDamagedCoroutine()
     {
         AnimationSetter(ANIMATION_STATE, 3);
-        SM.PlaySingle(SDamaged);
+        soundManager.PlaySingle(SDamaged);
         playerForcedStop(true);
 
         yield return new WaitForSeconds(1f);
@@ -242,8 +255,7 @@ public class Player : MonoBehaviour
         //바닥을 딛고 있으면 Move, 아니면 Jump
         if (tagOfFooting == FLOOR)
         {
-            if (velocity >= zeroVelocity)   _state = playerState.Move;
-            else    _state = playerState.Idle;
+            _state = (velocity >= zeroVelocity) ? playerState.Move : playerState.Idle;
         }
         else if (tagOfFooting != FLOOR) _state = playerState.Jump;
 
@@ -260,9 +272,11 @@ public class Player : MonoBehaviour
         playerDied = true;
     }
 
+    //======================================================================
+
     //애니메이션 파라미터 타입에 따른 제네릭 함수
     //향후 애니메이션이 많아질 경우 여러 파라미터를 함수 하나로 제어 가능
-    private void AnimationSetter<T>(string _name, T _condition)
+    public void AnimationSetter<T>(string _name, T _condition)
     {
         // 조건 T에 따라 animator.SetBool 또는 animator.SetInteger 실행
         if (_condition.GetType() == typeof(bool))
@@ -284,8 +298,7 @@ public class Player : MonoBehaviour
     {
         isHit = Physics.BoxCast(transform.position, localScale, -transform.up, out hit, transform.rotation, lengthOfRay);
 
-        if (isHit)  tagOfFooting = hit.collider.tag;
-        else    tagOfFooting = null;
+        tagOfFooting = isHit ? hit.collider.tag : null;
     }
 
     //Gizmos.DrawWireCube로 시각적으로 ray 표시
@@ -307,21 +320,51 @@ public class Player : MonoBehaviour
 
     // ================= 플레이어 이동 로직 ================= //
     // 키보드 세팅
+    //UpdateIdle, UpdateMove, UpdateJump에서 호출
     void playerMove()
     {
         // Fix : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             playerRigidbody.velocity =
-                new Vector3(Input.GetAxis("Horizontal") * speed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * speed);
+                new Vector3(Input.GetAxis("Horizontal") * currentSpeed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * currentSpeed);
 
         playerTurn();
+    }
+
+    //이동 속도, 점프력 조절
+    //속도 관련 아이템을 먹으면 그 아이템 스크립트에서 호출됨
+    //아이템에서 코루틴을 바로 호출하면 아이템 오브젝트가 파괴되면서 코루틴이 멈추기 때문에 Player에서 코루틴 호출
+    public void controlSpeed(float _time, float _addSpeed = 0f, float _addJumpPower = 0f)
+    {
+        StartCoroutine(controlSpeedCoroutine(_time, _addSpeed, _addJumpPower));
+    }
+
+    private IEnumerator controlSpeedCoroutine(float _time, float _addSpeed = 0f, float _addJumpPower = 0f)
+    {
+        currentSpeed += _addSpeed;
+        currentJumpPower += _addJumpPower;
+
+        yield return new WaitForSeconds(_time);
+
+        currentSpeed -= _addSpeed;
+        currentJumpPower -= _addJumpPower;
+        soundManager.RandomizeSfx(SItemEnd);
     }
 
     // 점프(점프할 때 한 번만 호출)
     void playerJump()
     {
-        SM.RandomizeSfx(SJump);
-        playerRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        soundManager.RandomizeSfx(SJump);
+        playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
+        playerRigidbody.AddForce(Vector3.up * currentJumpPower, ForceMode.Impulse);
+    }
+
+    //추가 점프, 추가 점프 횟수를 소모할 때까지 일시적 점프력 상승
+    //witchHat을 먹으면 witchHat 스크립트에서 호출
+    public void moreJumping(float _addJumpPower = 0f)
+    {
+        moreJump = true;
+        currentJumpPower += _addJumpPower;
     }
 
     //방향키에 따라 플레이어가 회전하는 함수
@@ -381,8 +424,9 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag(GAME_OVER))
         {
             gameManager.decreaseLife(gameManager.TotalLife);
-            _state = playerState.Die;
         }
+
+        OnCollisionStay(collision);
     }
 
     // 오브젝트 태그가 'Enemies'일 경우 Damaged 상태로
@@ -404,15 +448,15 @@ public class Player : MonoBehaviour
     {
         playerForcedStop(true);
 
-        SM.PlaySingle(SDie);
+        soundManager.PlaySingle(SDie);
         AnimationSetter(ANIMATION_STATE, 4);
 
         yield return new WaitForSeconds(1f);
 
-        SM.PlaySingle(SRespawn);
+        soundManager.PlaySingle(SRespawn);
 
         //오디오가 끝날 때까지 대기
-        yield return new WaitUntil(() => !SM.efxSource.isPlaying);
+        yield return new WaitUntil(() => !soundManager.efxSource.isPlaying);
 
         //플레이어 오브젝트가 재생성되면서 초기값인 false로 바뀌므로 변경 불필요
         //playerForcedStop(false);

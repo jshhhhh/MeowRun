@@ -15,8 +15,6 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
     [SerializeField] Transform[] AgentRoutes;
     public int routeIndex = 0;
     public float detectLimit = 5f; // enemy 감지 거리 한계, 에디터에서 설정 가능하도록 세팅
-    private Animator anim; 
-    private AnimationManager animationManager;
     
     // ============== Object initialization and update ============== // 
     void Awake()
@@ -33,10 +31,6 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
         // 플레이어 & NavMesh 초기화
         player = FindObjectOfType<Player>(); 
         _agent = this.GetComponent<NavMeshAgent>(); 
-
-        anim = GetComponent<Animator>();
-        animationManager = gameObject.AddComponent<AnimationManager>(); 
-        animationManager.instance = anim;
 
         // Enemy 초기화 : awake시 상태는 idle, not detectable
         if (player != null && _agent != null) // 오브젝트 null check
@@ -58,8 +52,7 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
                 current = IEnemyBehavior.enemyState.Idle;
                 break;
             case IEnemyBehavior.playerDistanceState.Within : 
-                if (calculateDistance() < 1f) current = IEnemyBehavior.enemyState.Fire;
-                else current = IEnemyBehavior.enemyState.Track;
+                current = IEnemyBehavior.enemyState.Track;
                 break;
             default : 
                 current = IEnemyBehavior.enemyState.Idle;
@@ -87,7 +80,7 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
                 break;
         }
     }
-    public float calculateDistance() { 
+    public void calculateDistance() { 
         // 플레이어가 일정 거리 이상 좁혀지면 추적 시작
         distance = Vector3.Distance(player.transform.position, this.transform.position);
         if (distance < detectLimit) {
@@ -96,8 +89,6 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
 
         //  플레이어가 탐지 거리 바깥이면 패트롤 시작
         if (distance > detectLimit) isDetected = IEnemyBehavior.playerDistanceState.TooFar;
-
-        return distance;
     }
     // ============== Enemy state and behavior ============== // 
 
@@ -115,17 +106,7 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
 
     public void Fire() 
     {
-        StartCoroutine(EnemyAttackCoroutine());
-    }
-
-    // FIX: attack animation is not working
-    IEnumerator EnemyAttackCoroutine()
-    {
-        animationManager.Setter(
-            IEnemyAnimation.Parameters.IDLE.ToString(), 
-            IEnemyAnimation.Parameters.RESET
-        ); 
-        yield return new WaitForSeconds(0.5f);
+        // do nothing
     }
 
     public void Die() 
@@ -144,5 +125,10 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
             routeIndex = (routeIndex+1)%AgentRoutes.Length;
         }
     }
+
+    public IEnemyBehavior.enemyState GetEnemyState()
+    {
+        return current;
+    } 
     // ============== IEnemyBehavior implementation ============== // 
 }

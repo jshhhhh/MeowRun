@@ -5062,7 +5062,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!65 &968105945
 BoxCollider:
@@ -5075,8 +5075,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.8597867, y: 2.8818357, z: 2.0900333}
-  m_Center: {x: 0.0050444994, y: 1.500065, z: 0.2598967}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &7742974860150385564
 Animator:
   serializedVersion: 4
@@ -5131,7 +5131,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b858c80afb750724d8ed936ce84b853a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AgentRoutes: []
+  AgentRoutes:
+  - {fileID: 0}
+  - {fileID: 0}
   shootingEffect: {fileID: 1280585157}
   forceRange: 5.9
   projectile: {fileID: 0}
@@ -5139,6 +5141,18 @@ MonoBehaviour:
   projectileCreator: {fileID: 1987906879}
   detectLimit: 5
   fireLimit: 3
+--- !u!114 &2244434175211685650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3993053985476534202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 794e0fbd549bb4440ac3677e0361b208, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4333023442404705536 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 753a11f1c9f8a3e4e9a93f84177ea52d, type: 3}
