@@ -34,5 +34,4 @@ public interface IEnemyBehavior
     void Idle(); 
     void Track();
     void Patrol();
-    enemyState GetEnemyState();
 }
