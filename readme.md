@@ -9,7 +9,9 @@
 
 외계인, 독사, 독거미 같은 위험한 적들이 당신의 고양이를 위협해요! 방향키를 움직여 적들을 피하고 고양이를 안전한 곳까지 이동해주세요 - 귀찮은 다운로드 및 설치 없이 URL로 바로 플레이가 가능한 MeowRun을 지금 만나보세요! 
 
-**[지금 플레이하기](https://meowrun.netlify.app/)** (아직 개발 진행중이에요)
+**[지금 플레이하기](https://meowrun.netlify.app/)** 열심히 개발 진행중이에요!
+
+**[MeowRun 슬랙 채널 들어오기](https://join.slack.com/t/meowrun/shared_invite/zt-19i2b63d3-lDpazDDEm_pLnWgjQjKJcQ)** MeowRun 오픈 소스를 지향해요! 
 
 - 모바일에서는 아직 플레이가 불가능해요!
 - 
@@ -83,7 +85,7 @@
   <table>
     <thead>
       <th>웹 서버: 정기</td>
-      <th>웹 클라이언트: Jake</td>
+      <th>웹 클라이언트, 웹 서버: Jake</td>
     </thead>
     <tbody>
         <td>
