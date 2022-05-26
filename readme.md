@@ -3,13 +3,16 @@
 </div>
 <br/>
 
-
 # :runner: MeowRun 소개
-<img src="https://img.shields.io/badge/version-v0.4-red" alt="version0.4" /> &nbsp; [![Netlify Status](https://api.netlify.com/api/v1/badges/497f054e-0bba-44ad-a528-05c7436daef2/deploy-status)](https://app.netlify.com/sites/meowrun/deploys)
+
+<img src="https://img.shields.io/badge/version-v0.4-red" alt="version0.4" /> &nbsp; [![Netlify Status](https://api.netlify.com/api/v1/badges/497f054e-0bba-44ad-a528-05c7436daef2/deploy-status)](https://app.netlify.com/sites/meowrun/deploys) &nbsp; [![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/a7b5aed7-1827-4bc5-868a-60ddef463cbd.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/a7b5aed7-1827-4bc5-868a-60ddef463cbd)
 
 외계인, 독사, 독거미 같은 위험한 적들이 당신의 고양이를 위협해요! 방향키를 움직여 적들을 피하고 고양이를 안전한 곳까지 이동해주세요 - 귀찮은 다운로드 및 설치 없이 URL로 바로 플레이가 가능한 MeowRun을 지금 만나보세요! 
 
 **[지금 플레이하기](https://meowrun.netlify.app/)** (아직 개발 진행중이에요)
+
+- 모바일에서는 아직 플레이가 불가능해요!
+- 
 
 ## 📝 프로젝트 디테일
 
@@ -24,15 +27,26 @@
       <th>인원</th>
     </thead>
     <tbody>
-        <td>
-          유니티 3D 게임 + 웹 랜딩 페이지
-        </td>
-        <td>
-          5개월(2022.02~07)
-        </td>
-        <td>
-          3명
-      </td>
+      <tr>
+        <td>기획 + 유니티 3D 게임 + 웹 랜딩 페이지 UI + 웹 서버 auth</td>
+        <td>2개월(2022.02~04)</td>
+        <td>3명</td>
+      </tr>
+      <tr>
+        <td>유니티 3D 게임</td>
+        <td>1개월(2022.04~05)</td>
+        <td>1명</td>
+      </tr>
+      <tr>
+        <td>유니티 3D 게임 + 웹 서버 배포, 백엔드 리팩토링</td>
+        <td>2개월(2022.05~06)</td>
+        <td>2명</td>
+      </tr>
+      <tr>
+        <td>유니티 3D 게임 프로토 타입 배포, 프로젝트 홍보(소셜 미디어, 프로모션 비디오)</td>
+        <td>2주(2022.06~07)</td>
+        <td>2명</td>
+      </tr>
     </tbody>
   </table>
   
@@ -41,7 +55,7 @@
 <details>
   <summary>:man_technologist:	기술 스택</summary>
   
-  <img src="https://user-images.githubusercontent.com/83855174/169710176-8939770a-cb57-4d71-aca3-7b7fb52b4209.png" width="600" height="600" alt="project architecture" />
+  <img src="https://user-images.githubusercontent.com/83855174/169710176-8939770a-cb57-4d71-aca3-7b7fb52b4209.png" width="600" height="400" alt="project architecture" />
  
  </details> 
 
