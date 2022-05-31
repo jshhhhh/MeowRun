@@ -15,7 +15,7 @@ Player logic flow
 public class Player : MonoBehaviour
 {
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
-    private Animator animator;
+    [SerializeField]private Animator animator;
     private Rigidbody playerRigidbody;
     private GameManager gameManager;
     private SoundManager soundManager;
@@ -90,6 +90,10 @@ public class Player : MonoBehaviour
         print("Game started"); // UnityEngine.Debug.Log => print(same but shorter)
 
         animator = GetComponent<Animator>();
+
+        if(animator == null)
+            animator = this.transform.GetChild(0).GetComponent<Animator>();
+
         playerRigidbody = this.GetComponent<Rigidbody>();
         soundManager = FindObjectOfType<SoundManager>();
         gameManager = FindObjectOfType<GameManager>();
