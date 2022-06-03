@@ -17,7 +17,7 @@ public class StageProgressBar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player");
+        player = GameObject.FindGameObjectWithTag("Player");
         clearArea = GameObject.Find("ClearArea");
         init_pos = player.transform.position.z;
 

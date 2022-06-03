@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 609822258342312979}
   - component: {fileID: 3427926876378515673}
   m_Layer: 0
-  m_Name: WithFish
+  m_Name: withFish
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3788245427432843532}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -28.770536, y: -7.99, z: 0.9690938}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []

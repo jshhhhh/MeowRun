@@ -5275,7 +5275,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5397509519141705525}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -26.547396, y: -5.6727796, z: 17.035145}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.15000007, y: 0.15, z: 0.15000007}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -5365,15 +5365,16 @@ MonoBehaviour:
   SDie: {fileID: 8300000, guid: 4b4dd7245f6104c8c8eb07ccf6b386ed, type: 3}
   SDamaged: {fileID: 8300000, guid: b9eff218e132a4e76be78840eca96fb2, type: 3}
   SRespawn: {fileID: 8300000, guid: 4e1ff8faed12a475eba9be0e46072269, type: 3}
-  speed: 3.5
-  jumpPower: 6
+  SItemEnd: {fileID: 0}
+  maxSpeed: 10
+  minspeed: 1
+  maxJumpPower: 10
+  minJumpPower: 0
+  currentSpeed: 0
+  currentJumpPower: 0
   canJump: 1
-  canDamaged: 1
-  stopPosition: 0
   tagOfFooting: 
   velocity: 0
-  horizontal: 0
-  vertical: 0
   _state: 0
   easyEnemyType: Easy
 --- !u!114 &975522570
@@ -5388,8 +5389,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24d31ef6a98076c4cae5c84f73877909, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 3
+  currentLife: 0
+  score: 0
+  TotalLife: 3
 --- !u!1 &5397509519141705527
 GameObject:
   m_ObjectHideFlags: 0
