@@ -29,7 +29,7 @@ public class E_Difficult : MonoBehaviour, IEnemyBehavior
     private Animator anim;
     private AnimationManager animationManager;
     // ============== Object initialization and update ============== // 
-    void Awake()
+    void Start()
     {
         InitSetup();
     }

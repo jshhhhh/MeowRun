@@ -447,7 +447,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    //TO DO : 게임오버의 조건 설정, playerDieCoroutine과 게임오버 기능(씬 로드 포함)을 GameManager 스크립트로 분리 필요
     IEnumerator playerDieCoroutine()
     {
         playerForcedStop(true);
@@ -460,11 +459,13 @@ public class Player : MonoBehaviour
         soundManager.PlaySingle(SRespawn);
 
         //오디오가 끝날 때까지 대기
-        yield return new WaitUntil(() => !soundManager.efxSource.isPlaying);
+        //yield return new WaitUntil(() => !soundManager.efxSource.isPlaying);
+        //현재 실행 중인 애니메이션이 끝날 때까지 대기
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
 
         //플레이어 오브젝트가 재생성되면서 초기값인 false로 바뀌므로 변경 불필요
         //playerForcedStop(false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        gameManager.resetPlayScene();
     }
 
     // To do : 인공지능 적군 추가할 것.

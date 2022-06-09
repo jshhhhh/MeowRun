@@ -22,6 +22,6 @@ public class score : MonoBehaviour
     public void updateScore()
     {
         //ToString("D4"): 10진수 4자리로 형변환
-        textMesh.text = "SCORE : " + gameManager.checkScore().ToString("D4");
+        textMesh.text = "SCORE : " + gameManager.score.ToString("D4");
     }
 }

@@ -8,34 +8,39 @@ using TMPro;
 // 1. 모든 캐릭터 disable
 // 2. 현재 인덱스 캐릭터 enable
 // 3. 특정 위치에 캐릭터 display
+// 4. 실시간으로 바뀌는 spawnPoint 회전값에 맞추어 캐릭터 회전
 public class CharacterSelection : MonoBehaviour
 {
-    [SerializeField] GameObject[] characters;
     [SerializeField] GameObject spawnPoint; // character generation point
-    //[SerializeField] Transform rotationPoint;
     [SerializeField] float rotationY;
     [SerializeField] WaitForSeconds changeCycle = new WaitForSeconds(3f);
     [SerializeField] TextMeshProUGUI label; // character name label
-    [SerializeField] int currentIndex = 0;
     [SerializeField] string characterName;
-    //[SerializeField] bool stopCharacterRotate = false;
+
+    public GameObject[] characters {get; private set;}
+    public int currentIndex {get; private set;} = 0;
+    public AsyncOperation nextScene;
 
     // =============== Init setup =============== //
     void Start()
     {
-        loadObject();
+        loadObjects();
+
+        for (int i = 0; i < characters.Length; i++)
+        {
+            switchCharactersComponents(i, false);
+        }
 
         spawnPoint.transform.eulerAngles = new Vector3(0, rotationY, 0);
         StartCoroutine(changeRotateY());
 
-        switchAllCharactersComponents(false);
         disableAllCharacters();
         characters[0].gameObject.SetActive(true); // set first character as default
         setCharacterName();
         spawnCharacterOnPoint(currentIndex);
     }
 
-    private void loadObject()
+    private void loadObjects()
     {
         spawnPoint = GameObject.Find("spawnPoint");
         label = GameObject.Find("label").GetComponent<TextMeshProUGUI>();
@@ -53,28 +58,34 @@ public class CharacterSelection : MonoBehaviour
         disableAllCharacters();
 
         // if within range, enable characters
-        if (currentIndex+1 < characters.Length) {
-            characters[currentIndex+1].gameObject.SetActive(true);
-            spawnCharacterOnPoint(currentIndex+1);
+        if (currentIndex + 1 < characters.Length)
+        {
+            characters[currentIndex + 1].gameObject.SetActive(true);
+            spawnCharacterOnPoint(currentIndex + 1);
             currentIndex++;
-        } else {
+        }
+        else
+        {
             currentIndex = 0;
             characters[currentIndex].gameObject.SetActive(true);
             spawnCharacterOnPoint(currentIndex);
         }
         setCharacterName();
-    } 
+    }
 
     public void showPrevCharacter()
     {
         disableAllCharacters();
         // if within range, enable characters
-        if (currentIndex > 0) {
-            characters[currentIndex-1].gameObject.SetActive(true);
-            spawnCharacterOnPoint(currentIndex-1);
+        if (currentIndex > 0)
+        {
+            characters[currentIndex - 1].gameObject.SetActive(true);
+            spawnCharacterOnPoint(currentIndex - 1);
             currentIndex--;
-        } else {
-            currentIndex = characters.Length-1;
+        }
+        else
+        {
+            currentIndex = characters.Length - 1;
             characters[currentIndex].gameObject.SetActive(true);
             spawnCharacterOnPoint(currentIndex);
         }
@@ -83,19 +94,18 @@ public class CharacterSelection : MonoBehaviour
 
     private void disableAllCharacters()
     {
-        for (int i=0; i<characters.Length; i++) {
+        for (int i = 0; i < characters.Length; i++)
+        {
             characters[i].gameObject.SetActive(false);
         }
     }
 
-    private void switchAllCharactersComponents(bool _bool)
+    public void switchCharactersComponents(int _index, bool _bool)
     {
-        foreach(GameObject characters in characters)
-        {
-            characters.gameObject.GetComponent<Player>().enabled = _bool;
-            characters.gameObject.GetComponent<Rigidbody>().isKinematic = _bool;
-            characters.gameObject.GetComponent<Rigidbody>().detectCollisions = _bool;
-        }
+        characters[_index].gameObject.GetComponent<Player>().enabled = _bool;
+        characters[_index].gameObject.GetComponent<Rigidbody>().isKinematic = _bool;
+        characters[_index].gameObject.GetComponent<Rigidbody>().detectCollisions = _bool;
+        characters[_index].gameObject.GetComponent<BoxCollider>().enabled = _bool;
     }
 
     private string getCharacterName()
@@ -112,19 +122,19 @@ public class CharacterSelection : MonoBehaviour
     private void spawnCharacterOnPoint(int activeIndex)
     {
         characters[activeIndex].gameObject.transform.position = new Vector3(
-                spawnPoint.transform.position.x, 
+                spawnPoint.transform.position.x,
                 spawnPoint.transform.position.y,
                 spawnPoint.transform.position.z);
     }
 
-    private void rotateCharacters() 
+    private void rotateCharacters()
     {
         this.transform.rotation = Quaternion.Lerp(this.transform.rotation, spawnPoint.transform.rotation, Time.deltaTime);
     }
 
     IEnumerator changeRotateY()
     {
-        while(true)
+        while (true)
         {
             yield return changeCycle;
             rotationY *= -1f;
@@ -135,16 +145,9 @@ public class CharacterSelection : MonoBehaviour
     // =============== Characters sliders =============== //
 
     // =============== Button logics =============== //
-    // TO DO: add start game on click
-    public void StartGame() 
-    {
-        switchAllCharactersComponents(true);
-        int currentSceneBuildindex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(
-            SceneManager.GetSceneByBuildIndex(currentIndex+1).name
-        );
-        print($"next scene: {SceneManager.GetSceneByBuildIndex(currentIndex+1).name}");
-    }
+
+    // StartGame 함수를 GameManager로 옮김
+
     // =============== Button logics =============== //
 
     void Update()

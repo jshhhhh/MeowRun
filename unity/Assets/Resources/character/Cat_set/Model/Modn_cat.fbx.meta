@@ -513,8 +513,8 @@ ModelImporter:
       name: ModnCat_Sleep
       takeName: Take 001
       internalID: 0
-      firstFrame: 138
-      lastFrame: 245
+      firstFrame: 748
+      lastFrame: 800
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

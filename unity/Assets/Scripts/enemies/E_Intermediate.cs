@@ -28,7 +28,7 @@ public class E_Intermediate : MonoBehaviour, IEnemyBehavior
     private AnimationManager animationManager;
     
     // ============== Object initialization and update ============== // 
-    void Awake()
+    void Start()
     {
         InitSetup();
     }
