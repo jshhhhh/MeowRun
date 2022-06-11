@@ -2044,7 +2044,6 @@ GameObject:
   - component: {fileID: 95035249457405970}
   - component: {fileID: -3721903548117376577}
   - component: {fileID: -913986839254968316}
-  - component: {fileID: 3214139005471043833}
   - component: {fileID: 661411838203234969}
   m_Layer: 0
   m_Name: Nimble_cat
@@ -2136,21 +2135,6 @@ MonoBehaviour:
   velocity: 0
   _state: 0
   easyEnemyType: Easy
---- !u!114 &3214139005471043833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1886114893786462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24d31ef6a98076c4cae5c84f73877909, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentLife: 0
-  score: 0
-  TotalLife: 3
 --- !u!65 &661411838203234969
 BoxCollider:
   m_ObjectHideFlags: 0

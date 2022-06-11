@@ -19,7 +19,7 @@ public class E_Easy : MonoBehaviour, IEnemyBehavior
     private AnimationManager animationManager;
     
     // ============== Object initialization and update ============== // 
-    void Awake()
+    void Start()
     {
         InitSetup();
     }

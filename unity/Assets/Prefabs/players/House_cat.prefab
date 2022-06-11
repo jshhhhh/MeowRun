@@ -1700,7 +1700,6 @@ GameObject:
   - component: {fileID: 95442000286678772}
   - component: {fileID: -2988349555622468165}
   - component: {fileID: 169677901547944836}
-  - component: {fileID: -3664616339061515320}
   - component: {fileID: -200099268390056244}
   m_Layer: 0
   m_Name: House_cat
@@ -1788,21 +1787,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.01, y: 0.02, z: 0.03}
   m_Center: {x: 0, y: 0.009, z: 0}
---- !u!114 &-3664616339061515320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1784300060926926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24d31ef6a98076c4cae5c84f73877909, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentLife: 0
-  score: 0
-  TotalLife: 3
 --- !u!54 &-200099268390056244
 Rigidbody:
   m_ObjectHideFlags: 0

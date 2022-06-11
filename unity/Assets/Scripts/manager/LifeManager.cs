@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class LifeManager : MonoBehaviour
 {
-    private GameManager gameManager;
+    [SerializeField] private GameManager gameManager;
 
     public RawImage[] heartSlot;
     //텍스쳐(이미지)
@@ -26,16 +26,10 @@ public class LifeManager : MonoBehaviour
     //life가 변경될 때마다 GameManager에서 호출됨
     public void updateHeartImage()
     {
-        for(int i = 0; i < gameManager.checkLife(); i++)
+        for(int i = 0; i < gameManager.currentLife; i++)
             heartSlot[i].texture = heart;
 
-        for(int i = gameManager.TotalLife - 1; i > gameManager.checkLife() - 1; i--)
+        for(int i = gameManager.TotalLife - 1; i > gameManager.currentLife - 1; i--)
             heartSlot[i].texture = heart_empty;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
