@@ -15,22 +15,22 @@ Player logic flow
 public class Player : MonoBehaviour
 {
     //애니메이터 컴포넌트의 레퍼런스 가져와 저장
-    [SerializeField]private Animator animator;
+    [SerializeField] private Animator animator;
     private Rigidbody playerRigidbody;
     private GameManager gameManager;
     private SoundManager soundManager;
     public AudioClip SJump, SDie, SDamaged, SRespawn, SItemEnd;
 
-    [SerializeField]private const float originalSpeed = 3.5f;
-    [SerializeField]private float maxSpeed = 10f, minspeed = 1f;
-    [SerializeField]private const float originalJumpPower = 6f;
-    [SerializeField]private float maxJumpPower = 10f, minJumpPower = 0f;
+    [SerializeField] private const float originalSpeed = 3.5f;
+    [SerializeField] private float maxSpeed = 10f, minspeed = 1f;
+    [SerializeField] private const float originalJumpPower = 6f;
+    [SerializeField] private float maxJumpPower = 10f, minJumpPower = 0f;
     public float currentSpeed;
     public float currentJumpPower;
 
-    public bool moreJump {get; private set;} = false;
+    public bool moreJump { get; private set; } = false;
 
-    [SerializeField]private bool canJump = true;
+    [SerializeField] private bool canJump = true;
     //데미지를 입을 수 있는 상태
     private bool canDamaged = true;
     private bool playerDied = false;
@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
     //BoxCast의 크기
     private Vector3 localScale = new Vector3(0.35f, 0.01f, 0.35f);
     //ray가 물체에 닿았는지의 여부
-    private bool isHit;    
+    private bool isHit;
     //플레이어의 발에 닿은 오브젝트의 태그
     public string tagOfFooting;
     //플레이어의 속도
@@ -91,7 +91,7 @@ public class Player : MonoBehaviour
 
         animator = GetComponent<Animator>();
 
-        if(animator == null)
+        if (animator == null)
             animator = this.transform.GetChild(0).GetComponent<Animator>();
 
         playerRigidbody = this.GetComponent<Rigidbody>();
@@ -130,7 +130,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         returnTag();
-        
+
         //플레이어가 구르지 않게 회전속도 멈춤
         playerRigidbody.angularVelocity = Vector3.zero;
 
@@ -176,7 +176,7 @@ public class Player : MonoBehaviour
 
         playerMove();
 
-        if (velocity > zeroVelocity)    _state = playerState.Move;
+        if (velocity > zeroVelocity) _state = playerState.Move;
 
         if (Input.GetKeyDown(KeyCode.Space) && canJump) playerJump();
     }
@@ -193,9 +193,9 @@ public class Player : MonoBehaviour
 
         //상태 전환 조건
         //바닥을 딛고 있지 않으면 Jump 상태로(낙하 포함)
-        if (tagOfFooting != FLOOR)  _state = playerState.Jump;
+        if (tagOfFooting != FLOOR) _state = playerState.Jump;
         //속력이 없으면 Idle 상태로
-        else if (velocity <= zeroVelocity)  _state = playerState.Idle;
+        else if (velocity <= zeroVelocity) _state = playerState.Idle;
 
         if (Input.GetKeyDown(KeyCode.Space) && canJump) playerJump();
     }
@@ -206,11 +206,11 @@ public class Player : MonoBehaviour
     {
         AnimationSetter(ANIMATION_STATE, 2);
 
-        if(moreJump)
+        if (moreJump)
         {
             canJump = true;
 
-            if(Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 playerJump();
                 animator.Play("PlayerJump", -1, 0f);
@@ -241,7 +241,7 @@ public class Player : MonoBehaviour
             gameManager.decreaseLife();
 
             //체력이 남아 있다면 데미지 애니메이션 출력
-            if(!gameManager.isDead())   StartCoroutine(playerDamagedCoroutine());
+            if (!gameManager.isDead()) StartCoroutine(playerDamagedCoroutine());
         }
     }
 
@@ -271,7 +271,7 @@ public class Player : MonoBehaviour
     //죽는 상태
     void UpdateDie()
     {
-        if (!playerDied)    StartCoroutine(playerDieCoroutine());
+        if (!playerDied) StartCoroutine(playerDieCoroutine());
 
         playerDied = true;
     }
@@ -328,9 +328,14 @@ public class Player : MonoBehaviour
     void playerMove()
     {
         // Fix : 3d 지형 맵에서는 플레이어 자유도가 높은 게 좋아서 상/하/좌/우 + 카메라 시점
-        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-            playerRigidbody.velocity =
-                new Vector3(Input.GetAxis("Horizontal") * currentSpeed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * currentSpeed);
+        // if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        //     playerRigidbody.velocity =
+        //         new Vector3(Input.GetAxis("Horizontal") * currentSpeed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * currentSpeed);
+
+        Vector2 moveDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+
+        //moveDir.y를 z값으로 사용
+        playerRigidbody.velocity = new Vector3(moveDir.x * currentSpeed, playerRigidbody.velocity.y, moveDir.y * currentSpeed);
 
         playerTurn();
     }
