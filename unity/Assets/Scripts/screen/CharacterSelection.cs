@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -16,10 +17,12 @@ public class CharacterSelection : MonoBehaviour
     [SerializeField] WaitForSeconds changeCycle = new WaitForSeconds(3f);
     [SerializeField] TextMeshProUGUI label; // character name label
     [SerializeField] string characterName;
-
-    public GameObject[] characters {get; private set;}
-    public int currentIndex {get; private set;} = 0;
-    public AsyncOperation nextScene;
+    [SerializeField] GameManager gameManager;
+    // [SerializeField] GameObject button;
+    // [SerializeField] Button[] buttons;
+    [SerializeField] public GameObject[] characters {get; private set;}
+    [SerializeField] public int currentIndex {get; private set;} = 0;
+    [SerializeField] public AsyncOperation nextScene;
 
     // =============== Init setup =============== //
     void Start()
@@ -42,13 +45,22 @@ public class CharacterSelection : MonoBehaviour
 
     private void loadObjects()
     {
+        gameManager = FindObjectOfType<GameManager>();
         spawnPoint = GameObject.Find("spawnPoint");
         label = GameObject.Find("label").GetComponent<TextMeshProUGUI>();
+
         characters = new GameObject[transform.childCount];
         for (int i = 0; i < characters.Length; i++)
         {
             characters[i] = this.transform.GetChild(i).gameObject;
         }
+
+        // button = GameObject.Find("Canvas/buttons");
+        // buttons = new Button[button.transform.childCount];
+        // for (int i = 0; i < buttons.Length; i++)
+        // {
+        //     buttons[i] = button.transform.GetChild(i).GetComponent<Button>();
+        // }
     }
     // =============== Init setup =============== //
 
@@ -105,6 +117,7 @@ public class CharacterSelection : MonoBehaviour
         characters[_index].gameObject.GetComponent<Player>().enabled = _bool;
         characters[_index].gameObject.GetComponent<Rigidbody>().isKinematic = _bool;
         characters[_index].gameObject.GetComponent<Rigidbody>().detectCollisions = _bool;
+        characters[_index].gameObject.GetComponent<Rigidbody>().useGravity = _bool;
         characters[_index].gameObject.GetComponent<BoxCollider>().enabled = _bool;
     }
 
@@ -146,7 +159,10 @@ public class CharacterSelection : MonoBehaviour
 
     // =============== Button logics =============== //
 
-    // StartGame 함수를 GameManager로 옮김
+    public void StartGameButton()
+    {
+        gameManager.StartGame();
+    }
 
     // =============== Button logics =============== //
 

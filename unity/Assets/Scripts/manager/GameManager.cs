@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject selectedCaracter;
     [SerializeField] private CharacterSelection characterSelection;
     //캐릭터 선택 후 로딩될 씬
-    [SerializeField] private string playScene = "Development";
+    [SerializeField] private string playScene = "Playground";
+    [SerializeField] private string selectScene = "CharacterSelect";
     public int currentLife {get; private set;}
     public int score {get; private set;}
     public string selectedCaracterName;
@@ -104,5 +105,12 @@ public class GameManager : MonoBehaviour
         lifeManager = FindObjectOfType<LifeManager>();
 
         currentLife = TotalLife;
+    }
+
+    public IEnumerator resetCharacterSelectSceneCoroutine()
+    {
+        SceneManager.LoadScene(selectScene, LoadSceneMode.Single);
+        yield return null;
+        Start();
     }
 }
