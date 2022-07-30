@@ -66,6 +66,10 @@ public class Menu : MonoBehaviour
     public void ExitButton()
     {
         //종료 기능(에디터에선 게임 종료 안 됨)
-        Application.Quit();
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit(); // 어플리케이션 종료
+#endif
     }
 }
