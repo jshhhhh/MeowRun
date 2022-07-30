@@ -11,7 +11,33 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject selectedCaracter;
     [SerializeField] private CharacterSelection characterSelection;
     //캐릭터 선택 후 로딩될 씬
-    [SerializeField] private string playScene = "Development";
+struct  labelManager {
+    private string["Development",  "Playground", "CharacterSelect"] labels;
+     
+    public void getOneLabel(string _scene) {
+        for ( i=0; i<this.labels.length; i++) {
+            if(_scene == this.labels[i]) {
+                return this.labels[i]
+            }
+        }
+       return false;
+    }
+    
+    public void addLabel(string _scene) {
+        try {
+            this.labels.push(_scene)
+            return this.labels.length; 
+        } catch(Exception ex)
+           return ex.message;
+    }
+   
+}
+
+// instance 
+string private DEV = "development"
+labelManager instance = labelManager( )
+instance.getOneLabel(DEV)
+    [SerializeField] private string selectScene = "CharacterSelect";
     public int currentLife {get; private set;}
     public int score {get; private set;}
     public string selectedCaracterName;
@@ -104,5 +130,12 @@ public class GameManager : MonoBehaviour
         lifeManager = FindObjectOfType<LifeManager>();
 
         currentLife = TotalLife;
+    }
+
+    public IEnumerator resetCharacterSelectSceneCoroutine()
+    {
+        SceneManager.LoadScene(selectScene, LoadSceneMode.Single);
+        yield return null;
+        Start();
     }
 }

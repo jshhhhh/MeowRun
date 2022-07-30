@@ -3,6 +3,18 @@
 </div>
 <br/>
 
+**Notice**
+
+2022년 7월 기준 MeowRun 프로젝트는 아래와 같은 이유로 1명의 개발자가 운영 중이에요!
+
+- 팀원 A: 프로젝트 진행 중 헤드헌팅 스카웃 
+- 팀원 B: 프로젝트 중도 포기
+- **팀원 C: 프로젝트 진행 중, 개인 작업 병행**
+
+<details>
+
+<summary>Readme</summary>
+
 # :runner: MeowRun 소개
 
 <img src="https://img.shields.io/badge/version-v0.4-red" alt="version0.4" />  &nbsp; [![Netlify Status](https://api.netlify.com/api/v1/badges/497f054e-0bba-44ad-a528-05c7436daef2/deploy-status)](https://app.netlify.com/sites/meowrun/deploys) &nbsp; ![Heroku](https://img.shields.io/badge/heroku-api-darkgreen?style=square&logo=heroku&logoColor=white) &nbsp; ![Simmer.io](https://img.shields.io/badge/simmer.io-webGL-purple?style=square&logo=simmer.io&logoColor=white) &nbsp; [![wakatime](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/a7b5aed7-1827-4bc5-868a-60ddef463cbd.svg)](https://wakatime.com/badge/user/e56daee8-7aae-4b0e-814c-b6bb7f5f841c/project/a7b5aed7-1827-4bc5-868a-60ddef463cbd) 
@@ -100,3 +112,6 @@
 - [개인 태스크 관리](https://github.com/DaeguDev/MeowRun/projects)
 - [프로젝트 트러블슈팅](https://github.com/DaeguDev/MeowRun/issues)
 </details>
+
+</details>
+

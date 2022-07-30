@@ -13,21 +13,21 @@ public class SoundManager : MonoBehaviour
     public float highPitchRange = 1.1f;
 
     //싱글톤    
-    #region Singleton
-    static public SoundManager instance;
-    private void Awake() {
-        if(instance != null)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-        //이 오브젝트를 다른 씬을 불러올 때마다 파괴시키지 말라는 명령어
-            DontDestroyOnLoad(this.gameObject);
-            instance = this;
-        }
-    }
-    #endregion
+    // #region Singleton
+    // static public SoundManager instance;
+    // private void Awake() {
+    //     if(instance != null)
+    //     {
+    //         Destroy(this.gameObject);
+    //     }
+    //     else
+    //     {
+    //     //이 오브젝트를 다른 씬을 불러올 때마다 파괴시키지 말라는 명령어
+    //         DontDestroyOnLoad(this.gameObject);
+    //         instance = this;
+    //     }
+    // }
+    // #endregion
 
     //하나의 오디오 클립을 재생하는 함수
     public void PlaySingle(AudioClip clip)
