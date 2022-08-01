@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator resetPlaySceneCoroutine()
     {
-        SceneManager.LoadScene(LabelManager.PG);
+        SceneManager.LoadScene(LabelManager.PLAYGROUND);
 
         yield return null;
 
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator resetCharacterSelectSceneCoroutine()
     {
-        SceneManager.LoadScene(LabelManager.SELECT, LoadSceneMode.Single);
+        SceneManager.LoadScene(LabelManager.SELECT_CHARACTER, LoadSceneMode.Single);
         yield return null;
         Start();
     }
