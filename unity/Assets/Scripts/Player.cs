@@ -129,7 +129,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        returnTag();
+        //returnTag();
 
         //플레이어가 구르지 않게 회전속도 멈춤
         playerRigidbody.angularVelocity = Vector3.zero;
