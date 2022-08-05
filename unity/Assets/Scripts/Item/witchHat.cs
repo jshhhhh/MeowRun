@@ -7,7 +7,7 @@ public class witchHat : Item
     //추가 점프 효과, 추가 점프의 점프력 상승
     void Start()
     {
-        player = FindObjectOfType<Player>();
+        playerMove = FindObjectOfType<PlayerMove>();
         soundManager = FindObjectOfType<SoundManager>();
         itemIcon = FindObjectOfType<ItemIcon>();
 
@@ -17,7 +17,7 @@ public class witchHat : Item
     protected override void itemEffect()
     {
         soundManager.RandomizeSfx(SItemStart);
-        player.moreJumping(addJumpPower);
+        playerMove.moreJump(addJumpPower);
     }
 
     protected override void OnTriggerEnter(Collider collision)

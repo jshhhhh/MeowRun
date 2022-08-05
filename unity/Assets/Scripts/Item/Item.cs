@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public abstract class Item : MonoBehaviour
 {
-    protected Player player;
+    protected PlayerMove playerMove;
     protected GameManager gameManager;
     protected SoundManager soundManager;
     protected score score;

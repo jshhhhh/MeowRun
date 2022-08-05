@@ -7,7 +7,7 @@ public class skull : Item
     //이동 속도, 점프력 감소, 데미지
     void Start()
     {
-        player = FindObjectOfType<Player>();
+        playerMove = FindObjectOfType<PlayerMove>();
         gameManager = FindObjectOfType<GameManager>();
         soundManager = FindObjectOfType<SoundManager>();
         itemIcon = FindObjectOfType<ItemIcon>();
@@ -21,7 +21,7 @@ public class skull : Item
     {
         soundManager.RandomizeSfx(SItemStart);
         gameManager.decreaseLife();
-        player.controlSpeed(itemDuration, addSpeed, addJumpPower);
+        playerMove.controlSpeed(itemDuration, addSpeed, addJumpPower);
     }
 
     protected override void OnTriggerEnter(Collider collision)
