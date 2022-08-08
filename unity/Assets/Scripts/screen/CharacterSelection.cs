@@ -115,10 +115,7 @@ public class CharacterSelection : MonoBehaviour
     public void switchCharactersComponents(int _index, bool _bool)
     {
         characters[_index].gameObject.GetComponent<Player>().enabled = _bool;
-        characters[_index].gameObject.GetComponent<Rigidbody>().isKinematic = _bool;
-        characters[_index].gameObject.GetComponent<Rigidbody>().detectCollisions = _bool;
-        characters[_index].gameObject.GetComponent<Rigidbody>().useGravity = _bool;
-        characters[_index].gameObject.GetComponent<BoxCollider>().enabled = _bool;
+        characters[_index].gameObject.GetComponent<CharacterController>().enabled = _bool;
     }
 
     private string getCharacterName()

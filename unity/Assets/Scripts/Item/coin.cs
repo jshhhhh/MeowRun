@@ -7,7 +7,6 @@ public class coin : Item
     //점수 올라감
     void Start()
     {
-        player = FindObjectOfType<Player>();
         gameManager = FindObjectOfType<GameManager>();
         soundManager = FindObjectOfType<SoundManager>();
         score = FindObjectOfType<score>();

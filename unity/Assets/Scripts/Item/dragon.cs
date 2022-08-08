@@ -7,7 +7,7 @@ public class dragon : Item
     //이동 속도 증가
     void Start()
     {
-        player = FindObjectOfType<Player>();
+        playerMove = FindObjectOfType<PlayerMove>();
         soundManager = FindObjectOfType<SoundManager>();
         itemIcon = FindObjectOfType<ItemIcon>();
 
@@ -18,7 +18,7 @@ public class dragon : Item
     protected override void itemEffect()
     {
         soundManager.RandomizeSfx(SItemStart);
-        player.controlSpeed(itemDuration, addSpeed);
+        playerMove.controlSpeed(itemDuration, addSpeed);
     }
 
     protected override void OnTriggerEnter(Collider collision)

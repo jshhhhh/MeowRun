@@ -48,13 +48,7 @@ public class GameManager : MonoBehaviour
 
         lifeManager.updateHeartImage();
 
-        if (isDead()) player._state = Player.playerState.Die;
-    }
-
-    //체력이 0인지 확인
-    public bool isDead()
-    {
-        return (currentLife <= 0) ? true : false;
+        player.isDead();
     }
 
     //체력 증가
@@ -94,7 +88,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator resetPlaySceneCoroutine()
     {
-        SceneManager.LoadScene(LabelManager.PLAYGROUND);
+        SceneManager.LoadScene(LabelManager.playScene);
 
         yield return null;
 
