@@ -18,7 +18,7 @@ logic flow
 public class ItemIcon : MonoBehaviour
 {
     [SerializeField] private GameObject[] iconArray;
-    private Player player;
+    private PlayerMove playerMove;
     //같은 아이콘의 코루틴이 중복 실행될 경우 이전에 실행된 코루틴을 멈추기 위해 배열 선언
     private Coroutine[] coroutineArray;
     //지속 중인 아이템 이름 저장
@@ -29,7 +29,7 @@ public class ItemIcon : MonoBehaviour
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
+        playerMove = FindObjectOfType<PlayerMove>();
 
         iconArray = new GameObject[transform.childCount];
         coroutineArray = new Coroutine[transform.childCount];
@@ -65,7 +65,7 @@ public class ItemIcon : MonoBehaviour
                 if (iconArray.name == ICON_WITCHHAT)
                 {
                     iconArray.SetActive(true);
-                    yield return new WaitUntil(() => !player.moreJump);
+                    yield return new WaitUntil(() => !playerMove.canMoreJump);
                     iconArray.SetActive(false);
                 }
                 //그 외 지속시간이 존재하는 아이템의 경우

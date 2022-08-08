@@ -935,8 +935,8 @@ GameObject:
   - component: {fileID: 4106248567623272}
   - component: {fileID: 95802669015345742}
   - component: {fileID: 7670924429609265110}
-  - component: {fileID: -6879424138223188765}
-  - component: {fileID: -6986376240496794517}
+  - component: {fileID: 6720106754073532386}
+  - component: {fileID: -1633038156362566417}
   m_Layer: 0
   m_Name: Modn_cat
   m_TagString: Player
@@ -995,25 +995,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76aadac887eb5704d98ba9ec59f6eb6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  SJump: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
   SDie: {fileID: 8300000, guid: 4b4dd7245f6104c8c8eb07ccf6b386ed, type: 3}
   SDamaged: {fileID: 8300000, guid: b9eff218e132a4e76be78840eca96fb2, type: 3}
   SRespawn: {fileID: 8300000, guid: 4e1ff8faed12a475eba9be0e46072269, type: 3}
-  SItemEnd: {fileID: 8300000, guid: a235d590ef2a04d1b85b61ef4c21337c, type: 3}
-  maxSpeed: 10
-  minspeed: 1
-  maxJumpPower: 10
-  minJumpPower: 0
-  currentSpeed: 0
-  currentJumpPower: 0
-  canJump: 1
-  tagOfFooting: 
-  velocity: 0
   _state: 0
   easyEnemyType: Easy
---- !u!65 &-6879424138223188765
-BoxCollider:
+--- !u!143 &6720106754073532386
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1023,24 +1011,32 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.01, y: 0.02, z: 0.03}
-  m_Center: {x: 0, y: 0.009, z: 0}
---- !u!54 &-6986376240496794517
-Rigidbody:
+  m_Height: 0
+  m_Radius: 0.02
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.017, z: 0}
+--- !u!114 &-1633038156362566417
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1364823692345502}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acbbfe4acb2eb704b81e389d221563cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 6720106754073532386}
+  SJump: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
+  SItemEnd: {fileID: 8300000, guid: a235d590ef2a04d1b85b61ef4c21337c, type: 3}
+  moveDir: {x: 0, y: 0, z: 0}
+  <velocity>k__BackingField: 0
+  currentSpeed: 0
+  currentJumpPower: 0
 --- !u!1 &1370374334300704
 GameObject:
   m_ObjectHideFlags: 0
