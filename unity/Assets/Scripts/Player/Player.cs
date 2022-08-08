@@ -36,15 +36,15 @@ public class Player : MonoBehaviour
 
     //플레이어의 상태
     //상태에 따라 플레이어의 행동 구분
-    public enum playerState
+    private enum playerState
     {
-        Idle,
-        Move,
-        Jump,
-        Damaged,
-        Die
+        IDLE,
+        MOVE,
+        JUMP,
+        DAMAGED,
+        DIE
     }
-    public playerState _state = playerState.Idle;
+    private playerState _state = playerState.IDLE;
 
     //적 타입 선언
     public enum enemyType
@@ -69,7 +69,6 @@ public class Player : MonoBehaviour
         if (animator == null)
             animator = this.transform.GetChild(0).GetComponent<Animator>();
 
-        //playerRigidbody = this.GetComponent<Rigidbody>();
         soundManager = FindObjectOfType<SoundManager>();
         gameManager = FindObjectOfType<GameManager>();
 
@@ -92,47 +91,38 @@ public class Player : MonoBehaviour
         //상태에 따라 다른 Update문 호출
         switch (_state)
         {
-            case playerState.Idle:
-                UpdateIdle();
+            case playerState.IDLE:
+                UpdateIDLE();
                 break;
-            case playerState.Move:
+            case playerState.MOVE:
                 UpdateMove();
                 break;
-            case playerState.Jump:
+            case playerState.JUMP:
                 UpdateJump();
                 break;
-            case playerState.Damaged:
+            case playerState.DAMAGED:
                 UpdateDamaged();
                 break;
-            case playerState.Die:
+            case playerState.DIE:
                 UpdateDie();
                 break;
         }
-
-        //true가 되는 순간의 좌표를 저장하여 플레이어를 고정시킴
-        // if (stopPosition)
-        // {
-        //     this.transform.position = tempPosition;
-        //     this.transform.rotation = tempRotation;
-        //     playerMove.enabled = false;
-        // }
-
     }
 
     private void checkState()
     {
         if(playerController.isGrounded)
-            _state = playerMove.velocity > playerMove.zeroVelocity ? playerState.Move : playerState.Idle;
-        else    _state = playerState.Jump;
+            _state = playerMove.velocity > playerMove.zeroVelocity ? playerState.MOVE : playerState.IDLE;
+        else    _state = playerState.JUMP;
     }
 
     //서 있는 상태
-    //Idle 애니메이션만 재생됨
-    void UpdateIdle()
+    //IDLE 애니메이션만 재생됨
+    void UpdateIDLE()
     {
         /*
         애니메이션 파라미터 제어
-        0: Idle, 1: Walk, 2: Jump, 3: Damaged, 4: Die
+        0: IDLE, 1: Walk, 2: JUMP, 3: DAMAGED, 4: DIE
         Animator의 파라미터 참고
         */
         AnimationSetter(ANIMATION_STATE, 0);
@@ -176,7 +166,7 @@ public class Player : MonoBehaviour
             gameManager.decreaseLife();
 
             //체력이 남아 있다면 데미지 애니메이션 출력
-            if (!gameManager.isDead()) StartCoroutine(playerDamagedCoroutine());
+            isDead();
         }
     }
 
@@ -191,7 +181,7 @@ public class Player : MonoBehaviour
         playerForcedStop(false);
 
         //상태 전환 조건
-        //바닥을 딛고 있으면 Move, 아니면 Jump
+        //바닥을 딛고 있으면 MOVE, 아니면 JUMP
         checkState();
 
         yield return new WaitForSeconds(0.5f);
@@ -231,47 +221,12 @@ public class Player : MonoBehaviour
     //강제로 멈추는 함수
     private void playerForcedStop(bool stop)
     {
-        if (stop)
-        {
-            //충돌했을 때의 위치값 저장
-            // tempPosition = transform.position;
-            // tempRotation = transform.rotation;            
-            // stopPosition = true;
-            playerMove.enabled = false;
-        }
-        else
-        {
-            // stopPosition = false;
-            playerMove.enabled = true;
-        }
+        if (stop)   playerMove.enabled = false;
+        else        playerMove.enabled = true;
     }
 
     // ================= 플레이어 리스폰 로직 ================= //
-    //오브젝트 태그가 'GameOver'일 경우 즉사(health를 다 깎고 Die 상태로)
-    /* public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag(GAME_OVER))
-        {
-            gameManager.decreaseLife(gameManager.TotalLife);
-        }
-
-        OnCollisionStay(collision);
-    }
-
-    // 오브젝트 태그가 'Enemies'일 경우 Damaged 상태로
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.gameObject.CompareTag(ENEMIES))
-        {
-            //데미지를 입을 수 있는 상태라면
-            if (canDamaged)
-            {
-                print("적과 충돌함");
-                _state = playerState.Damaged;
-            }
-        }
-    } */
-
+    //오브젝트 태그가 'GameOver'일 경우 즉사(health를 다 깎고 DIE 상태로)
     private void OnControllerColliderHit(ControllerColliderHit _hit)
     {
         if (_hit.gameObject.CompareTag(GAME_OVER))
@@ -284,9 +239,16 @@ public class Player : MonoBehaviour
             if (canDamaged)
             {
                 print("적과 충돌함");
-                _state = playerState.Damaged;
+                _state = playerState.DAMAGED;
             }
         }
+    }
+
+    //체력이 0인지 확인
+    public void isDead()
+    {
+        if(gameManager.currentLife <= 0)    _state = playerState.DIE;
+        else                                StartCoroutine(playerDamagedCoroutine());
     }
 
     IEnumerator playerDieCoroutine()

@@ -7,23 +7,31 @@ public class PlayerMove : MonoBehaviour
     public CharacterController playerController;
     private SoundManager soundManager;
     public AudioClip SJump, SItemEnd;
+    
     public Vector3 moveDir = Vector3.zero;
     //플레이어의 속도
     [field:SerializeField] public float velocity{get; private set;}
     public float zeroVelocity{get;} = 0.01f;
+
     private const float originalSpeed = 3.5f;
     private float maxSpeed = 10f, minspeed = 1f;
+    public float currentSpeed;
+
     private const float originalJumpPower = 6f;
     private float maxJumpPower = 10f, minJumpPower = 0f;
     private float addJumpPower = 0;
-    public float currentSpeed, currentJumpPower;
+    public float currentJumpPower;    
     public bool canMoreJump { get; private set; } = false;
+
     private float gravity = 9.81f;
+    const string HORIZONTAL = "Horizontal", VERTICAL = "Vertical";
     //회전값을 계산하기 위한 변수
     private float horizontal, vertical;
 
     //현재 위치값과 1프레임 뒤의 위치값을 비교하기 위한 변수
     private Vector3 lastPosition;
+
+    Jump jump = new Jump(1,2,3,4);
 
     void Start()
     {
@@ -49,7 +57,7 @@ public class PlayerMove : MonoBehaviour
         //바닥에 붙어 있을 때
         if (playerController.isGrounded)
         {
-            moveDir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            moveDir = new Vector3(Input.GetAxis(HORIZONTAL), 0, Input.GetAxis(VERTICAL));
             moveDir *= currentSpeed;
 
             if (Input.GetKeyDown(KeyCode.Space))
@@ -58,8 +66,8 @@ public class PlayerMove : MonoBehaviour
         //공중일 때
         else
         {
-            moveDir.x = Input.GetAxis("Horizontal") * currentSpeed;
-            moveDir.z = Input.GetAxis("Vertical") * currentSpeed;
+            moveDir.x = Input.GetAxis(HORIZONTAL) * currentSpeed;
+            moveDir.z = Input.GetAxis(VERTICAL) * currentSpeed;
         }
 
         moveDir.y -= gravity * Time.deltaTime;
@@ -92,13 +100,15 @@ public class PlayerMove : MonoBehaviour
     //방향키에 따라 플레이어가 회전하는 함수
     public void playerTurn()
     {
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
+        float ROTATION_SPEED = 10f;
+
+        horizontal = Input.GetAxis(HORIZONTAL);
+        vertical = Input.GetAxis(VERTICAL);
 
         Vector3 direction = new Vector3(horizontal, 0, vertical);
 
         if (!(horizontal == 0 && vertical == 0))
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * ROTATION_SPEED);
     }
 
     //이동 속도, 점프력 조절
