@@ -166,7 +166,8 @@ public class Player : MonoBehaviour
             gameManager.decreaseLife();
 
             //체력이 남아 있다면 데미지 애니메이션 출력
-            isDead();
+            if(isDead())    _state = playerState.DIE;
+            else            StartCoroutine(playerDamagedCoroutine());
         }
     }
 
@@ -245,10 +246,9 @@ public class Player : MonoBehaviour
     }
 
     //체력이 0인지 확인
-    public void isDead()
+    public bool isDead()
     {
-        if(gameManager.currentLife <= 0)    _state = playerState.DIE;
-        else                                StartCoroutine(playerDamagedCoroutine());
+        return (gameManager.currentLife <= 0) ? true : false;        
     }
 
     IEnumerator playerDieCoroutine()
@@ -267,8 +267,6 @@ public class Player : MonoBehaviour
         //현재 실행 중인 애니메이션이 끝날 때까지 대기
         //yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
 
-        //플레이어 오브젝트가 재생성되면서 초기값인 false로 바뀌므로 변경 불필요
-        //playerForcedStop(false);
         gameManager.resetPlayScene();
     }
 
