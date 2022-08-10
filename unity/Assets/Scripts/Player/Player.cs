@@ -233,6 +233,7 @@ public class Player : MonoBehaviour
         if (_hit.gameObject.CompareTag(GAME_OVER))
         {
             gameManager.decreaseLife(gameManager.TotalLife);
+            _state = playerState.DIE;
         }
         else if (_hit.gameObject.CompareTag(ENEMIES))
         {

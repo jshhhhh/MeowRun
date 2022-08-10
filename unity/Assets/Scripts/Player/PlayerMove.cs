@@ -11,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     public Vector3 moveDir = Vector3.zero;
     //플레이어의 속도
     [field:SerializeField] public float velocity{get; private set;}
+    [SerializeField] Vector3 controllerVelocity;
     public float zeroVelocity{get;} = 0.01f;
 
     private const float originalSpeed = 3.5f;
@@ -31,8 +32,6 @@ public class PlayerMove : MonoBehaviour
     //현재 위치값과 1프레임 뒤의 위치값을 비교하기 위한 변수
     private Vector3 lastPosition;
 
-    Jump jump = new Jump(1,2,3,4);
-
     void Start()
     {
         playerController = GetComponent<CharacterController>();
@@ -49,6 +48,8 @@ public class PlayerMove : MonoBehaviour
         velocity = (((transform.position - lastPosition).magnitude) / Time.deltaTime);
         lastPosition = transform.position;
 
+        controllerVelocity = playerController.velocity;
+
         playerMove();
     }
 
@@ -57,10 +58,10 @@ public class PlayerMove : MonoBehaviour
         //바닥에 붙어 있을 때
         if (playerController.isGrounded)
         {
-            moveDir = new Vector3(Input.GetAxis(HORIZONTAL), 0, Input.GetAxis(VERTICAL));
+            moveDir = new Vector3(Input.GetAxis(HORIZONTAL), 0, Input.GetAxis(VERTICAL)).normalized;
             moveDir *= currentSpeed;
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
                 playerJump();
         }
         //공중일 때
@@ -71,7 +72,7 @@ public class PlayerMove : MonoBehaviour
         }
 
         moveDir.y -= gravity * Time.deltaTime;
-
+        
         playerController.Move(moveDir * Time.deltaTime);
 
         playerTurn();
@@ -100,7 +101,10 @@ public class PlayerMove : MonoBehaviour
     //방향키에 따라 플레이어가 회전하는 함수
     public void playerTurn()
     {
-        float ROTATION_SPEED = 10f;
+        float ROTATION_SPEED;
+
+        if (playerController.isGrounded)    ROTATION_SPEED = 10f;
+        else                                ROTATION_SPEED = 5f;
 
         horizontal = Input.GetAxis(HORIZONTAL);
         vertical = Input.GetAxis(VERTICAL);
