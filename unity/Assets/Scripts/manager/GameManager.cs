@@ -47,8 +47,6 @@ public class GameManager : MonoBehaviour
             currentLife = 0;
 
         lifeManager.updateHeartImage();
-
-        player.isDead();
     }
 
     //체력 증가
